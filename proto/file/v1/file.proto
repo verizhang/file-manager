@@ -109,17 +109,16 @@ message FileObject {
   string id = 1;
   string bucket = 2;
   string object_key = 3;
-
   string file_name = 4;
   string content_type = 5;
-
   int64 size = 6;
   string etag = 7;
-
   FileStatus status = 8;
-
-  google.protobuf.Timestamp created_at = 9;
-  google.protobuf.Timestamp updated_at = 10;
+  VirusScanStatus virus_scan_status = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+  google.protobuf.Timestamp completed_at = 12;
+  google.protobuf.Timestamp deleted_at = 13;
 }
 
 //
@@ -140,6 +139,15 @@ message CreateUploadUrlResponse {
   map<string, string> headers = 4;
 }
 
+enum VirusScanStatus {
+  VIRUS_SCAN_STATUS_UNSPECIFIED = 0;
+  VIRUS_SCAN_STATUS_PENDING = 1;
+  VIRUS_SCAN_STATUS_SCANNING = 2;
+  VIRUS_SCAN_STATUS_CLEAN = 3;
+  VIRUS_SCAN_STATUS_INFECTED = 4;
+  VIRUS_SCAN_STATUS_FAILED = 5;
+}
+
 //
 // MULTIPART
 //
@@ -154,12 +162,16 @@ message CreateMultipartUploadResponse {
   string file_id = 1;
   string upload_id = 2;
   string object_key = 3;
+  int64 part_size = 4;
+  int32 total_parts = 5;
+  google.protobuf.Timestamp expires_at = 6;
 }
 
 message CreateMultipartUploadUrlRequest {
-  string upload_id = 1;
-  string object_key = 2;
-  int32 part_number = 3;
+  string file_id = 1;
+  string upload_id = 2;
+  string object_key = 3;
+  int32 part_number = 4;
 }
 
 message CreateMultipartUploadUrlResponse {
