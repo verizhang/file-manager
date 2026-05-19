@@ -16,7 +16,6 @@ func main() {
 	//
 	// repository
 	//
-
 	fileRepository := repository.NewFileRepository()
 
 	//
@@ -35,14 +34,12 @@ func main() {
 			Region: cfg.S3.Region,
 		},
 	)
-
 	if err != nil {
 		logger.Log.Fatal(
 			"failed initialize minio client",
 			zap.Error(err),
 		)
 	}
-
 	logger.Log.Info("minio client initialized")
 
 	storage := storage.New(minioClient, cfg.S3.Bucket)

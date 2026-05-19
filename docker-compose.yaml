@@ -24,11 +24,21 @@ services:
       MYSQL_DATABASE: file_manager
       MYSQL_USER: mysqladmin
       MYSQL_PASSWORD: mysqladmin
-    command:
-      - --default-authentication-plugin=mysql_native_password
     volumes:
       - mysql_data:/var/lib/mysql
+
+  clamav:
+    image: mkodockx/docker-clamav:alpine
+    container_name: file-manager-clamav
+    restart: unless-stopped
+    ports:
+      - "3310:3310"
+    environment:
+      CLAMAV_NO_FRESHCLAMD: "true"
+    volumes:
+      - clamav_data:/var/lib/clamav
 
 volumes:
   mysql_data:
   minio_data:
+  clamav_data:
