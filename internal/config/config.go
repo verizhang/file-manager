@@ -21,7 +21,7 @@ type AppConfig struct {
 	Name  string `envconfig:"APP_NAME" default:"file-manager"`
 	Env   string `envconfig:"APP_ENV" default:"development"`
 	HTTPPort  int    `envconfig:"APP_HTTP_PORT" default:"8080"`
-	gRPCPort  int    `envconfig:"APP_GRPC_PORT" default:"8080"`
+	GRPCPort  int    `envconfig:"APP_GRPC_PORT" default:"9090"`
 	Debug bool   `envconfig:"APP_DEBUG" default:"true"`
 }
 

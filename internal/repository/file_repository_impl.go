@@ -2,15 +2,16 @@ package repository
 
 import (
 	"context"
-
+	"gorm.io/gorm"
 	"github.com/verizhang/file-manager/internal/model"
 )
 
 type fileRepository struct {
+	db *gorm.DB
 }
 
-func NewFileRepository() FileRepository {
-	return &fileRepository{}
+func NewFileRepository(db *gorm.DB) FileRepository {
+	return &fileRepository{db: db}
 }
 
 func (r *fileRepository) Create(
