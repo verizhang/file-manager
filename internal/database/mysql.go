@@ -2,13 +2,14 @@ package database
 
 import (
 	"fmt"
+
+	"github.com/verizhang/file-manager/internal/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"github.com/verizhang/file-manager/internal/config"
 )
 
 func NewMySQLConnection(
-	cfg configs.DBConfig,
+	cfg config.DBConfig,
 ) (*gorm.DB, error) {
 
 	dsn := fmt.Sprintf(

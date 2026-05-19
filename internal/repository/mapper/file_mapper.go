@@ -2,6 +2,7 @@ package mapper
 
 import (
 	"time"
+
 	"github.com/verizhang/file-manager/internal/model"
 	"github.com/verizhang/file-manager/internal/repository/entity"
 )
@@ -19,6 +20,7 @@ func ToFileModel(
 	return &model.File{
 		ID:          fileEntity.ID,
 		UploadID:    fileEntity.UploadID,
+		Bucket:      fileEntity.Bucket,
 		ObjectKey:   fileEntity.ObjectKey,
 		FileName:    fileEntity.FileName,
 		ContentType: fileEntity.ContentType,
@@ -38,6 +40,7 @@ func ToFileEntity(
 	fileEntity := &entity.File{
 		ID:          fileModel.ID,
 		UploadID:    fileModel.UploadID,
+		Bucket:      fileModel.Bucket,
 		ObjectKey:   fileModel.ObjectKey,
 		FileName:    fileModel.FileName,
 		ContentType: fileModel.ContentType,
