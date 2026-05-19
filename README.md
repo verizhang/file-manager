@@ -4,13 +4,13 @@ Production-ready file manager service built with Go, gRPC, gRPC-Gateway, and S3-
 
 This project is designed to provide scalable and cloud-native file management capabilities with support for:
 
-* Presigned upload/download URL
-* Multipart upload
-* Direct-to-storage upload architecture
-* Preview URL generation
-* Virus scanning ready architecture
-* gRPC + REST API
-* Kubernetes-friendly deployment
+- Presigned upload/download URL
+- Multipart upload
+- Direct-to-storage upload architecture
+- Preview URL generation
+- gRPC + REST API
+- Kubernetes-friendly deployment
+- Virus scanning ready architecture
 
 ---
 
@@ -18,11 +18,11 @@ This project is designed to provide scalable and cloud-native file management ca
 
 ## Simple Upload
 
-Generate presigned upload URLs for small files.
+Generate presigned upload URLs for small file uploads.
 
-* Direct upload to S3/MinIO
-* Backend does not handle binary traffic
-* Better scalability and lower bandwidth usage
+- Direct upload to S3/MinIO
+- Reduced API server bandwidth usage
+- Optimized for cloud-native environments
 
 ---
 
@@ -30,30 +30,31 @@ Generate presigned upload URLs for small files.
 
 Designed for large file uploads.
 
-* Multipart upload session
-* Chunk upload support
-* Parallel upload ready
-* Retry-per-chunk architecture
-* Resumable-ready design
+- Multipart upload session
+- Chunk upload support
+- Parallel upload ready
+- Retry-per-chunk architecture
+- Large file upload support
+- Resumable-ready design
 
 ---
 
 ## File Access
 
-* Generate presigned download URL
-* Generate preview URL
-* File metadata retrieval
-* File deletion
+- Generate presigned download URL
+- Generate preview URL
+- Retrieve file metadata
+- Soft delete support
 
 ---
 
 ## Infrastructure Ready
 
-* Docker Compose local development
-* Kubernetes-ready architecture
-* External object storage support
-* Environment-based configuration
-* Structured logging support
+- Docker Compose local development
+- Kubernetes-ready architecture
+- Environment-based configuration
+- Structured logging support
+- External object storage support
 
 ---
 
@@ -79,56 +80,72 @@ Client
 
 The API server only handles upload orchestration and metadata.
 
-Actual file transfer happens directly between client and object storage.
+Actual binary transfer happens directly between client and object storage.
 
 Benefits:
 
-* Lower API server bandwidth usage
-* Better scalability
-* Easier horizontal scaling
-* Optimized for Kubernetes environments
+- Lower API server bandwidth usage
+- Better horizontal scalability
+- Reduced infrastructure bottleneck
+- Optimized for Kubernetes environments
 
 ---
 
 # Tech Stack
 
-| Area             | Technology            |
-| ---------------- | --------------------- |
-| Language         | Go                    |
-| API              | gRPC                  |
-| REST Gateway     | gRPC-Gateway          |
-| Database         | MySQL                 |
-| ORM              | GORM                  |
-| Object Storage   | MinIO / S3 Compatible |
-| Containerization | Docker                |
-| Deployment       | Kubernetes            |
-| Configuration    | envconfig             |
-| Logging          | Zap                   |
+| Area | Technology |
+|---|---|
+| Language | Go |
+| API Protocol | gRPC |
+| REST Gateway | gRPC-Gateway |
+| Database | MySQL |
+| ORM | GORM |
+| Object Storage | MinIO / S3 Compatible |
+| Containerization | Docker |
+| Deployment | Kubernetes |
+| Configuration | envconfig |
+| Logging | Zap |
 
 ---
 
 # Project Structure
 
 ```bash
-cmd/
-├── api/
-
-internal/
-├── configs/
-├── handler/
-├── logger/
-├── model/
-├── repository/
-│   ├── entity/
-│   └── mapper/
-├── service/
-├── storage/
-
-proto/
-
-migrations/
-
-gen/
+.
+├── cmd/
+│   └── api/
+│
+├── internal/
+│   ├── config/
+│   ├── database/
+│   ├── handler/
+│   ├── logger/
+│   ├── middleware/
+│   ├── model/
+│   ├── repository/
+│   │   ├── entity/
+│   │   └── mapper/
+│   ├── server/
+│   ├── service/
+│   └── storage/
+│
+├── proto/
+│   └── file/
+│       └── v1/
+│
+├── gen/
+│   ├── go/
+│   └── openapi/
+│
+├── migrations/
+│
+├── docker-compose.yaml
+├── buf.yaml
+├── buf.gen.yaml
+├── go.mod
+├── go.sum
+├── .env.example
+└── README.md
 ```
 
 ---
@@ -137,9 +154,9 @@ gen/
 
 ## Requirements
 
-* Go 1.24+
-* Docker
-* Docker Compose
+- Go 1.24+
+- Docker
+- Docker Compose
 
 ---
 
@@ -151,9 +168,9 @@ docker compose up -d
 
 This will start:
 
-* MinIO
-* MySQL
-* ClamAV
+- MinIO
+- MySQL
+- ClamAV
 
 ---
 
@@ -208,6 +225,20 @@ migrate \
 
 ---
 
+## Generate Protobuf Files
+
+```bash
+buf generate
+```
+
+This will generate:
+
+- gRPC code
+- gRPC-Gateway code
+- OpenAPI/Swagger specification
+
+---
+
 ## Run Application
 
 ```bash
@@ -230,7 +261,7 @@ Then adjust values as needed.
 
 # API Documentation
 
-Swagger/OpenAPI documentation can be generated from protobuf definitions.
+Swagger/OpenAPI documentation is generated from protobuf definitions.
 
 Example endpoints:
 
@@ -276,17 +307,35 @@ Complete multipart upload
 
 ---
 
+# Docker Compose
+
+Example local infrastructure:
+
+```yaml
+services:
+  minio:
+    image: minio/minio:latest
+
+  mysql:
+    image: mysql:8.4
+
+  clamav:
+    image: mkodockx/docker-clamav:alpine
+```
+
+---
+
 # Future Roadmap
 
-* Resumable upload
-* Upload session recovery
-* Async virus scanning worker
-* Multi-tenant support
-* Object lifecycle management
-* Upload rate limiting
-* Background cleanup worker
-* File versioning
-* Storage abstraction improvements
+- Resumable upload
+- Upload session recovery
+- Async virus scanning worker
+- Multi-tenant support
+- Upload rate limiting
+- Object lifecycle management
+- Background cleanup worker
+- File versioning
+- Storage abstraction improvements
 
 ---
 
@@ -296,11 +345,11 @@ This service is designed to be deployed in cloud-native environments.
 
 Recommended production stack:
 
-* Kubernetes / GKE
-* Managed MySQL / Cloud SQL
-* S3-compatible object storage
-* External secret management
-* Horizontal scaling
+- Kubernetes / GKE
+- Managed MySQL / Cloud SQL
+- S3-compatible object storage
+- External secret management
+- Horizontal scaling
 
 ---
 
