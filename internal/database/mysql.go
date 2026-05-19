@@ -6,7 +6,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
-	"github.com/yourusername/file-manager/configs"
+	"github.com/verizhang/file-manager/internal/config"
 )
 
 func NewMySQLConnection(
