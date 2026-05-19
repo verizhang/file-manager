@@ -1,28 +1,29 @@
-package configs
+package config
 
 import (
 	"log"
 	"time"
+
 	"github.com/kelseyhightower/envconfig"
 )
 
 type Config struct {
-	App        AppConfig
-	DB         DBConfig
-	S3         S3Config
-	Presigned  PresignedConfig
-	Multipart  MultipartConfig
-	File       FileConfig
-	ClamAV     ClamAVConfig
-	RateLimit  RateLimitConfig
+	App       AppConfig
+	DB        DBConfig
+	S3        S3Config
+	Presigned PresignedConfig
+	Multipart MultipartConfig
+	File      FileConfig
+	ClamAV    ClamAVConfig
+	RateLimit RateLimitConfig
 }
 
 type AppConfig struct {
-	Name  string `envconfig:"APP_NAME" default:"file-manager"`
-	Env   string `envconfig:"APP_ENV" default:"development"`
-	HTTPPort  int    `envconfig:"APP_HTTP_PORT" default:"8080"`
-	GRPCPort  int    `envconfig:"APP_GRPC_PORT" default:"9090"`
-	Debug bool   `envconfig:"APP_DEBUG" default:"true"`
+	Name     string `envconfig:"APP_NAME" default:"file-manager"`
+	Env      string `envconfig:"APP_ENV" default:"development"`
+	HTTPPort int    `envconfig:"APP_HTTP_PORT" default:"8080"`
+	GRPCPort int    `envconfig:"APP_GRPC_PORT" default:"9090"`
+	Debug    bool   `envconfig:"APP_DEBUG" default:"true"`
 }
 
 type DBConfig struct {
@@ -53,8 +54,8 @@ type MultipartConfig struct {
 }
 
 type FileConfig struct {
-	MaxFileSize    int64    `envconfig:"MAX_FILE_SIZE" default:"104857600"`
-	AllowedTypes   []string `envconfig:"ALLOWED_FILE_TYPES"`
+	MaxFileSize  int64    `envconfig:"MAX_FILE_SIZE" default:"104857600"`
+	AllowedTypes []string `envconfig:"ALLOWED_FILE_TYPES"`
 }
 
 type ClamAVConfig struct {
@@ -64,7 +65,7 @@ type ClamAVConfig struct {
 }
 
 type RateLimitConfig struct {
-	Request int           `envconfig:"RATE_LIMIT_REQUEST" default:"100"`
+	Request  int           `envconfig:"RATE_LIMIT_REQUEST" default:"100"`
 	Duration time.Duration `envconfig:"RATE_LIMIT_DURATION" default:"1m"`
 }
 

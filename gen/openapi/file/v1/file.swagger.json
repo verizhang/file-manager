@@ -420,12 +420,27 @@
         },
         "objectKey": {
           "type": "string"
+        },
+        "partSize": {
+          "type": "string",
+          "format": "int64"
+        },
+        "totalParts": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },
     "v1CreateMultipartUploadUrlRequest": {
       "type": "object",
       "properties": {
+        "fileId": {
+          "type": "string"
+        },
         "uploadId": {
           "type": "string"
         },
@@ -526,11 +541,22 @@
         "status": {
           "$ref": "#/definitions/v1FileStatus"
         },
+        "virusScanStatus": {
+          "$ref": "#/definitions/v1VirusScanStatus"
+        },
         "createdAt": {
           "type": "string",
           "format": "date-time"
         },
         "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "completedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deletedAt": {
           "type": "string",
           "format": "date-time"
         }
@@ -567,6 +593,18 @@
           "type": "string"
         }
       }
+    },
+    "v1VirusScanStatus": {
+      "type": "string",
+      "enum": [
+        "VIRUS_SCAN_STATUS_UNSPECIFIED",
+        "VIRUS_SCAN_STATUS_PENDING",
+        "VIRUS_SCAN_STATUS_SCANNING",
+        "VIRUS_SCAN_STATUS_CLEAN",
+        "VIRUS_SCAN_STATUS_INFECTED",
+        "VIRUS_SCAN_STATUS_FAILED"
+      ],
+      "default": "VIRUS_SCAN_STATUS_UNSPECIFIED"
     }
   }
 }

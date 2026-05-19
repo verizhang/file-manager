@@ -81,20 +81,81 @@ func (FileStatus) EnumDescriptor() ([]byte, []int) {
 	return file_file_v1_file_proto_rawDescGZIP(), []int{0}
 }
 
+type VirusScanStatus int32
+
+const (
+	VirusScanStatus_VIRUS_SCAN_STATUS_UNSPECIFIED VirusScanStatus = 0
+	VirusScanStatus_VIRUS_SCAN_STATUS_PENDING     VirusScanStatus = 1
+	VirusScanStatus_VIRUS_SCAN_STATUS_SCANNING    VirusScanStatus = 2
+	VirusScanStatus_VIRUS_SCAN_STATUS_CLEAN       VirusScanStatus = 3
+	VirusScanStatus_VIRUS_SCAN_STATUS_INFECTED    VirusScanStatus = 4
+	VirusScanStatus_VIRUS_SCAN_STATUS_FAILED      VirusScanStatus = 5
+)
+
+// Enum value maps for VirusScanStatus.
+var (
+	VirusScanStatus_name = map[int32]string{
+		0: "VIRUS_SCAN_STATUS_UNSPECIFIED",
+		1: "VIRUS_SCAN_STATUS_PENDING",
+		2: "VIRUS_SCAN_STATUS_SCANNING",
+		3: "VIRUS_SCAN_STATUS_CLEAN",
+		4: "VIRUS_SCAN_STATUS_INFECTED",
+		5: "VIRUS_SCAN_STATUS_FAILED",
+	}
+	VirusScanStatus_value = map[string]int32{
+		"VIRUS_SCAN_STATUS_UNSPECIFIED": 0,
+		"VIRUS_SCAN_STATUS_PENDING":     1,
+		"VIRUS_SCAN_STATUS_SCANNING":    2,
+		"VIRUS_SCAN_STATUS_CLEAN":       3,
+		"VIRUS_SCAN_STATUS_INFECTED":    4,
+		"VIRUS_SCAN_STATUS_FAILED":      5,
+	}
+)
+
+func (x VirusScanStatus) Enum() *VirusScanStatus {
+	p := new(VirusScanStatus)
+	*p = x
+	return p
+}
+
+func (x VirusScanStatus) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (VirusScanStatus) Descriptor() protoreflect.EnumDescriptor {
+	return file_file_v1_file_proto_enumTypes[1].Descriptor()
+}
+
+func (VirusScanStatus) Type() protoreflect.EnumType {
+	return &file_file_v1_file_proto_enumTypes[1]
+}
+
+func (x VirusScanStatus) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use VirusScanStatus.Descriptor instead.
+func (VirusScanStatus) EnumDescriptor() ([]byte, []int) {
+	return file_file_v1_file_proto_rawDescGZIP(), []int{1}
+}
+
 type FileObject struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Bucket        string                 `protobuf:"bytes,2,opt,name=bucket,proto3" json:"bucket,omitempty"`
-	ObjectKey     string                 `protobuf:"bytes,3,opt,name=object_key,json=objectKey,proto3" json:"object_key,omitempty"`
-	FileName      string                 `protobuf:"bytes,4,opt,name=file_name,json=fileName,proto3" json:"file_name,omitempty"`
-	ContentType   string                 `protobuf:"bytes,5,opt,name=content_type,json=contentType,proto3" json:"content_type,omitempty"`
-	Size          int64                  `protobuf:"varint,6,opt,name=size,proto3" json:"size,omitempty"`
-	Etag          string                 `protobuf:"bytes,7,opt,name=etag,proto3" json:"etag,omitempty"`
-	Status        FileStatus             `protobuf:"varint,8,opt,name=status,proto3,enum=file.v1.FileStatus" json:"status,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Id              string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Bucket          string                 `protobuf:"bytes,2,opt,name=bucket,proto3" json:"bucket,omitempty"`
+	ObjectKey       string                 `protobuf:"bytes,3,opt,name=object_key,json=objectKey,proto3" json:"object_key,omitempty"`
+	FileName        string                 `protobuf:"bytes,4,opt,name=file_name,json=fileName,proto3" json:"file_name,omitempty"`
+	ContentType     string                 `protobuf:"bytes,5,opt,name=content_type,json=contentType,proto3" json:"content_type,omitempty"`
+	Size            int64                  `protobuf:"varint,6,opt,name=size,proto3" json:"size,omitempty"`
+	Etag            string                 `protobuf:"bytes,7,opt,name=etag,proto3" json:"etag,omitempty"`
+	Status          FileStatus             `protobuf:"varint,8,opt,name=status,proto3,enum=file.v1.FileStatus" json:"status,omitempty"`
+	VirusScanStatus VirusScanStatus        `protobuf:"varint,9,opt,name=virus_scan_status,json=virusScanStatus,proto3,enum=file.v1.VirusScanStatus" json:"virus_scan_status,omitempty"`
+	CreatedAt       *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt       *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	CompletedAt     *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=completed_at,json=completedAt,proto3" json:"completed_at,omitempty"`
+	DeletedAt       *timestamppb.Timestamp `protobuf:"bytes,13,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *FileObject) Reset() {
@@ -183,6 +244,13 @@ func (x *FileObject) GetStatus() FileStatus {
 	return FileStatus_FILE_STATUS_UNSPECIFIED
 }
 
+func (x *FileObject) GetVirusScanStatus() VirusScanStatus {
+	if x != nil {
+		return x.VirusScanStatus
+	}
+	return VirusScanStatus_VIRUS_SCAN_STATUS_UNSPECIFIED
+}
+
 func (x *FileObject) GetCreatedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.CreatedAt
@@ -193,6 +261,20 @@ func (x *FileObject) GetCreatedAt() *timestamppb.Timestamp {
 func (x *FileObject) GetUpdatedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.UpdatedAt
+	}
+	return nil
+}
+
+func (x *FileObject) GetCompletedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CompletedAt
+	}
+	return nil
+}
+
+func (x *FileObject) GetDeletedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.DeletedAt
 	}
 	return nil
 }
@@ -390,6 +472,9 @@ type CreateMultipartUploadResponse struct {
 	FileId        string                 `protobuf:"bytes,1,opt,name=file_id,json=fileId,proto3" json:"file_id,omitempty"`
 	UploadId      string                 `protobuf:"bytes,2,opt,name=upload_id,json=uploadId,proto3" json:"upload_id,omitempty"`
 	ObjectKey     string                 `protobuf:"bytes,3,opt,name=object_key,json=objectKey,proto3" json:"object_key,omitempty"`
+	PartSize      int64                  `protobuf:"varint,4,opt,name=part_size,json=partSize,proto3" json:"part_size,omitempty"`
+	TotalParts    int32                  `protobuf:"varint,5,opt,name=total_parts,json=totalParts,proto3" json:"total_parts,omitempty"`
+	ExpiresAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -445,11 +530,33 @@ func (x *CreateMultipartUploadResponse) GetObjectKey() string {
 	return ""
 }
 
+func (x *CreateMultipartUploadResponse) GetPartSize() int64 {
+	if x != nil {
+		return x.PartSize
+	}
+	return 0
+}
+
+func (x *CreateMultipartUploadResponse) GetTotalParts() int32 {
+	if x != nil {
+		return x.TotalParts
+	}
+	return 0
+}
+
+func (x *CreateMultipartUploadResponse) GetExpiresAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.ExpiresAt
+	}
+	return nil
+}
+
 type CreateMultipartUploadUrlRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UploadId      string                 `protobuf:"bytes,1,opt,name=upload_id,json=uploadId,proto3" json:"upload_id,omitempty"`
-	ObjectKey     string                 `protobuf:"bytes,2,opt,name=object_key,json=objectKey,proto3" json:"object_key,omitempty"`
-	PartNumber    int32                  `protobuf:"varint,3,opt,name=part_number,json=partNumber,proto3" json:"part_number,omitempty"`
+	FileId        string                 `protobuf:"bytes,1,opt,name=file_id,json=fileId,proto3" json:"file_id,omitempty"`
+	UploadId      string                 `protobuf:"bytes,2,opt,name=upload_id,json=uploadId,proto3" json:"upload_id,omitempty"`
+	ObjectKey     string                 `protobuf:"bytes,3,opt,name=object_key,json=objectKey,proto3" json:"object_key,omitempty"`
+	PartNumber    int32                  `protobuf:"varint,4,opt,name=part_number,json=partNumber,proto3" json:"part_number,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -482,6 +589,13 @@ func (x *CreateMultipartUploadUrlRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CreateMultipartUploadUrlRequest.ProtoReflect.Descriptor instead.
 func (*CreateMultipartUploadUrlRequest) Descriptor() ([]byte, []int) {
 	return file_file_v1_file_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *CreateMultipartUploadUrlRequest) GetFileId() string {
+	if x != nil {
+		return x.FileId
+	}
+	return ""
 }
 
 func (x *CreateMultipartUploadUrlRequest) GetUploadId() string {
@@ -1149,7 +1263,7 @@ var File_file_v1_file_proto protoreflect.FileDescriptor
 
 const file_file_v1_file_proto_rawDesc = "" +
 	"\n" +
-	"\x12file/v1/file.proto\x12\afile.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xde\x02\n" +
+	"\x12file/v1/file.proto\x12\afile.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x9e\x04\n" +
 	"\n" +
 	"FileObject\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x16\n" +
@@ -1160,12 +1274,16 @@ const file_file_v1_file_proto_rawDesc = "" +
 	"\fcontent_type\x18\x05 \x01(\tR\vcontentType\x12\x12\n" +
 	"\x04size\x18\x06 \x01(\x03R\x04size\x12\x12\n" +
 	"\x04etag\x18\a \x01(\tR\x04etag\x12+\n" +
-	"\x06status\x18\b \x01(\x0e2\x13.file.v1.FileStatusR\x06status\x129\n" +
+	"\x06status\x18\b \x01(\x0e2\x13.file.v1.FileStatusR\x06status\x12D\n" +
+	"\x11virus_scan_status\x18\t \x01(\x0e2\x18.file.v1.VirusScanStatusR\x0fvirusScanStatus\x129\n" +
 	"\n" +
-	"created_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"l\n" +
+	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12=\n" +
+	"\fcompleted_at\x18\f \x01(\v2\x1a.google.protobuf.TimestampR\vcompletedAt\x129\n" +
+	"\n" +
+	"deleted_at\x18\r \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\"l\n" +
 	"\x16CreateUploadUrlRequest\x12\x1b\n" +
 	"\tfile_name\x18\x01 \x01(\tR\bfileName\x12!\n" +
 	"\fcontent_type\x18\x02 \x01(\tR\vcontentType\x12\x12\n" +
@@ -1183,17 +1301,23 @@ const file_file_v1_file_proto_rawDesc = "" +
 	"\x1cCreateMultipartUploadRequest\x12\x1b\n" +
 	"\tfile_name\x18\x01 \x01(\tR\bfileName\x12!\n" +
 	"\fcontent_type\x18\x02 \x01(\tR\vcontentType\x12\x12\n" +
-	"\x04size\x18\x03 \x01(\x03R\x04size\"t\n" +
+	"\x04size\x18\x03 \x01(\x03R\x04size\"\xed\x01\n" +
 	"\x1dCreateMultipartUploadResponse\x12\x17\n" +
 	"\afile_id\x18\x01 \x01(\tR\x06fileId\x12\x1b\n" +
 	"\tupload_id\x18\x02 \x01(\tR\buploadId\x12\x1d\n" +
 	"\n" +
-	"object_key\x18\x03 \x01(\tR\tobjectKey\"~\n" +
-	"\x1fCreateMultipartUploadUrlRequest\x12\x1b\n" +
-	"\tupload_id\x18\x01 \x01(\tR\buploadId\x12\x1d\n" +
+	"object_key\x18\x03 \x01(\tR\tobjectKey\x12\x1b\n" +
+	"\tpart_size\x18\x04 \x01(\x03R\bpartSize\x12\x1f\n" +
+	"\vtotal_parts\x18\x05 \x01(\x05R\n" +
+	"totalParts\x129\n" +
 	"\n" +
-	"object_key\x18\x02 \x01(\tR\tobjectKey\x12\x1f\n" +
-	"\vpart_number\x18\x03 \x01(\x05R\n" +
+	"expires_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\x97\x01\n" +
+	"\x1fCreateMultipartUploadUrlRequest\x12\x17\n" +
+	"\afile_id\x18\x01 \x01(\tR\x06fileId\x12\x1b\n" +
+	"\tupload_id\x18\x02 \x01(\tR\buploadId\x12\x1d\n" +
+	"\n" +
+	"object_key\x18\x03 \x01(\tR\tobjectKey\x12\x1f\n" +
+	"\vpart_number\x18\x04 \x01(\x05R\n" +
 	"partNumber\"\xcf\x01\n" +
 	" CreateMultipartUploadUrlResponse\x12\x1d\n" +
 	"\n" +
@@ -1241,7 +1365,14 @@ const file_file_v1_file_proto_rawDesc = "" +
 	"\x15FILE_STATUS_UPLOADING\x10\x02\x12\x19\n" +
 	"\x15FILE_STATUS_COMPLETED\x10\x03\x12\x16\n" +
 	"\x12FILE_STATUS_FAILED\x10\x04\x12\x17\n" +
-	"\x13FILE_STATUS_DELETED\x10\x052\x96\t\n" +
+	"\x13FILE_STATUS_DELETED\x10\x05*\xce\x01\n" +
+	"\x0fVirusScanStatus\x12!\n" +
+	"\x1dVIRUS_SCAN_STATUS_UNSPECIFIED\x10\x00\x12\x1d\n" +
+	"\x19VIRUS_SCAN_STATUS_PENDING\x10\x01\x12\x1e\n" +
+	"\x1aVIRUS_SCAN_STATUS_SCANNING\x10\x02\x12\x1b\n" +
+	"\x17VIRUS_SCAN_STATUS_CLEAN\x10\x03\x12\x1e\n" +
+	"\x1aVIRUS_SCAN_STATUS_INFECTED\x10\x04\x12\x1c\n" +
+	"\x18VIRUS_SCAN_STATUS_FAILED\x10\x052\x96\t\n" +
 	"\vFileService\x12u\n" +
 	"\x0fCreateUploadUrl\x12\x1f.file.v1.CreateUploadUrlRequest\x1a .file.v1.CreateUploadUrlResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/v1/files/upload-url\x12\x86\x01\n" +
 	"\x15CreateMultipartUpload\x12%.file.v1.CreateMultipartUploadRequest\x1a&.file.v1.CreateMultipartUploadResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/v1/files/multipart\x12\x93\x01\n" +
@@ -1266,66 +1397,71 @@ func file_file_v1_file_proto_rawDescGZIP() []byte {
 	return file_file_v1_file_proto_rawDescData
 }
 
-var file_file_v1_file_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_file_v1_file_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_file_v1_file_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_file_v1_file_proto_goTypes = []any{
 	(FileStatus)(0),                          // 0: file.v1.FileStatus
-	(*FileObject)(nil),                       // 1: file.v1.FileObject
-	(*CreateUploadUrlRequest)(nil),           // 2: file.v1.CreateUploadUrlRequest
-	(*CreateUploadUrlResponse)(nil),          // 3: file.v1.CreateUploadUrlResponse
-	(*CreateMultipartUploadRequest)(nil),     // 4: file.v1.CreateMultipartUploadRequest
-	(*CreateMultipartUploadResponse)(nil),    // 5: file.v1.CreateMultipartUploadResponse
-	(*CreateMultipartUploadUrlRequest)(nil),  // 6: file.v1.CreateMultipartUploadUrlRequest
-	(*CreateMultipartUploadUrlResponse)(nil), // 7: file.v1.CreateMultipartUploadUrlResponse
-	(*MultipartPart)(nil),                    // 8: file.v1.MultipartPart
-	(*CompleteMultipartUploadRequest)(nil),   // 9: file.v1.CompleteMultipartUploadRequest
-	(*CompleteMultipartUploadResponse)(nil),  // 10: file.v1.CompleteMultipartUploadResponse
-	(*AbortMultipartUploadRequest)(nil),      // 11: file.v1.AbortMultipartUploadRequest
-	(*AbortMultipartUploadResponse)(nil),     // 12: file.v1.AbortMultipartUploadResponse
-	(*GetFileRequest)(nil),                   // 13: file.v1.GetFileRequest
-	(*GetFileResponse)(nil),                  // 14: file.v1.GetFileResponse
-	(*CreateDownloadUrlRequest)(nil),         // 15: file.v1.CreateDownloadUrlRequest
-	(*CreateDownloadUrlResponse)(nil),        // 16: file.v1.CreateDownloadUrlResponse
-	(*CreatePreviewUrlRequest)(nil),          // 17: file.v1.CreatePreviewUrlRequest
-	(*CreatePreviewUrlResponse)(nil),         // 18: file.v1.CreatePreviewUrlResponse
-	(*DeleteFileRequest)(nil),                // 19: file.v1.DeleteFileRequest
-	(*DeleteFileResponse)(nil),               // 20: file.v1.DeleteFileResponse
-	nil,                                      // 21: file.v1.CreateUploadUrlResponse.HeadersEntry
-	nil,                                      // 22: file.v1.CreateMultipartUploadUrlResponse.HeadersEntry
-	(*timestamppb.Timestamp)(nil),            // 23: google.protobuf.Timestamp
+	(VirusScanStatus)(0),                     // 1: file.v1.VirusScanStatus
+	(*FileObject)(nil),                       // 2: file.v1.FileObject
+	(*CreateUploadUrlRequest)(nil),           // 3: file.v1.CreateUploadUrlRequest
+	(*CreateUploadUrlResponse)(nil),          // 4: file.v1.CreateUploadUrlResponse
+	(*CreateMultipartUploadRequest)(nil),     // 5: file.v1.CreateMultipartUploadRequest
+	(*CreateMultipartUploadResponse)(nil),    // 6: file.v1.CreateMultipartUploadResponse
+	(*CreateMultipartUploadUrlRequest)(nil),  // 7: file.v1.CreateMultipartUploadUrlRequest
+	(*CreateMultipartUploadUrlResponse)(nil), // 8: file.v1.CreateMultipartUploadUrlResponse
+	(*MultipartPart)(nil),                    // 9: file.v1.MultipartPart
+	(*CompleteMultipartUploadRequest)(nil),   // 10: file.v1.CompleteMultipartUploadRequest
+	(*CompleteMultipartUploadResponse)(nil),  // 11: file.v1.CompleteMultipartUploadResponse
+	(*AbortMultipartUploadRequest)(nil),      // 12: file.v1.AbortMultipartUploadRequest
+	(*AbortMultipartUploadResponse)(nil),     // 13: file.v1.AbortMultipartUploadResponse
+	(*GetFileRequest)(nil),                   // 14: file.v1.GetFileRequest
+	(*GetFileResponse)(nil),                  // 15: file.v1.GetFileResponse
+	(*CreateDownloadUrlRequest)(nil),         // 16: file.v1.CreateDownloadUrlRequest
+	(*CreateDownloadUrlResponse)(nil),        // 17: file.v1.CreateDownloadUrlResponse
+	(*CreatePreviewUrlRequest)(nil),          // 18: file.v1.CreatePreviewUrlRequest
+	(*CreatePreviewUrlResponse)(nil),         // 19: file.v1.CreatePreviewUrlResponse
+	(*DeleteFileRequest)(nil),                // 20: file.v1.DeleteFileRequest
+	(*DeleteFileResponse)(nil),               // 21: file.v1.DeleteFileResponse
+	nil,                                      // 22: file.v1.CreateUploadUrlResponse.HeadersEntry
+	nil,                                      // 23: file.v1.CreateMultipartUploadUrlResponse.HeadersEntry
+	(*timestamppb.Timestamp)(nil),            // 24: google.protobuf.Timestamp
 }
 var file_file_v1_file_proto_depIdxs = []int32{
 	0,  // 0: file.v1.FileObject.status:type_name -> file.v1.FileStatus
-	23, // 1: file.v1.FileObject.created_at:type_name -> google.protobuf.Timestamp
-	23, // 2: file.v1.FileObject.updated_at:type_name -> google.protobuf.Timestamp
-	21, // 3: file.v1.CreateUploadUrlResponse.headers:type_name -> file.v1.CreateUploadUrlResponse.HeadersEntry
-	22, // 4: file.v1.CreateMultipartUploadUrlResponse.headers:type_name -> file.v1.CreateMultipartUploadUrlResponse.HeadersEntry
-	8,  // 5: file.v1.CompleteMultipartUploadRequest.parts:type_name -> file.v1.MultipartPart
-	1,  // 6: file.v1.CompleteMultipartUploadResponse.file:type_name -> file.v1.FileObject
-	1,  // 7: file.v1.GetFileResponse.file:type_name -> file.v1.FileObject
-	2,  // 8: file.v1.FileService.CreateUploadUrl:input_type -> file.v1.CreateUploadUrlRequest
-	4,  // 9: file.v1.FileService.CreateMultipartUpload:input_type -> file.v1.CreateMultipartUploadRequest
-	6,  // 10: file.v1.FileService.CreateMultipartUploadUrl:input_type -> file.v1.CreateMultipartUploadUrlRequest
-	9,  // 11: file.v1.FileService.CompleteMultipartUpload:input_type -> file.v1.CompleteMultipartUploadRequest
-	11, // 12: file.v1.FileService.AbortMultipartUpload:input_type -> file.v1.AbortMultipartUploadRequest
-	13, // 13: file.v1.FileService.GetFile:input_type -> file.v1.GetFileRequest
-	15, // 14: file.v1.FileService.CreateDownloadUrl:input_type -> file.v1.CreateDownloadUrlRequest
-	17, // 15: file.v1.FileService.CreatePreviewUrl:input_type -> file.v1.CreatePreviewUrlRequest
-	19, // 16: file.v1.FileService.DeleteFile:input_type -> file.v1.DeleteFileRequest
-	3,  // 17: file.v1.FileService.CreateUploadUrl:output_type -> file.v1.CreateUploadUrlResponse
-	5,  // 18: file.v1.FileService.CreateMultipartUpload:output_type -> file.v1.CreateMultipartUploadResponse
-	7,  // 19: file.v1.FileService.CreateMultipartUploadUrl:output_type -> file.v1.CreateMultipartUploadUrlResponse
-	10, // 20: file.v1.FileService.CompleteMultipartUpload:output_type -> file.v1.CompleteMultipartUploadResponse
-	12, // 21: file.v1.FileService.AbortMultipartUpload:output_type -> file.v1.AbortMultipartUploadResponse
-	14, // 22: file.v1.FileService.GetFile:output_type -> file.v1.GetFileResponse
-	16, // 23: file.v1.FileService.CreateDownloadUrl:output_type -> file.v1.CreateDownloadUrlResponse
-	18, // 24: file.v1.FileService.CreatePreviewUrl:output_type -> file.v1.CreatePreviewUrlResponse
-	20, // 25: file.v1.FileService.DeleteFile:output_type -> file.v1.DeleteFileResponse
-	17, // [17:26] is the sub-list for method output_type
-	8,  // [8:17] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	1,  // 1: file.v1.FileObject.virus_scan_status:type_name -> file.v1.VirusScanStatus
+	24, // 2: file.v1.FileObject.created_at:type_name -> google.protobuf.Timestamp
+	24, // 3: file.v1.FileObject.updated_at:type_name -> google.protobuf.Timestamp
+	24, // 4: file.v1.FileObject.completed_at:type_name -> google.protobuf.Timestamp
+	24, // 5: file.v1.FileObject.deleted_at:type_name -> google.protobuf.Timestamp
+	22, // 6: file.v1.CreateUploadUrlResponse.headers:type_name -> file.v1.CreateUploadUrlResponse.HeadersEntry
+	24, // 7: file.v1.CreateMultipartUploadResponse.expires_at:type_name -> google.protobuf.Timestamp
+	23, // 8: file.v1.CreateMultipartUploadUrlResponse.headers:type_name -> file.v1.CreateMultipartUploadUrlResponse.HeadersEntry
+	9,  // 9: file.v1.CompleteMultipartUploadRequest.parts:type_name -> file.v1.MultipartPart
+	2,  // 10: file.v1.CompleteMultipartUploadResponse.file:type_name -> file.v1.FileObject
+	2,  // 11: file.v1.GetFileResponse.file:type_name -> file.v1.FileObject
+	3,  // 12: file.v1.FileService.CreateUploadUrl:input_type -> file.v1.CreateUploadUrlRequest
+	5,  // 13: file.v1.FileService.CreateMultipartUpload:input_type -> file.v1.CreateMultipartUploadRequest
+	7,  // 14: file.v1.FileService.CreateMultipartUploadUrl:input_type -> file.v1.CreateMultipartUploadUrlRequest
+	10, // 15: file.v1.FileService.CompleteMultipartUpload:input_type -> file.v1.CompleteMultipartUploadRequest
+	12, // 16: file.v1.FileService.AbortMultipartUpload:input_type -> file.v1.AbortMultipartUploadRequest
+	14, // 17: file.v1.FileService.GetFile:input_type -> file.v1.GetFileRequest
+	16, // 18: file.v1.FileService.CreateDownloadUrl:input_type -> file.v1.CreateDownloadUrlRequest
+	18, // 19: file.v1.FileService.CreatePreviewUrl:input_type -> file.v1.CreatePreviewUrlRequest
+	20, // 20: file.v1.FileService.DeleteFile:input_type -> file.v1.DeleteFileRequest
+	4,  // 21: file.v1.FileService.CreateUploadUrl:output_type -> file.v1.CreateUploadUrlResponse
+	6,  // 22: file.v1.FileService.CreateMultipartUpload:output_type -> file.v1.CreateMultipartUploadResponse
+	8,  // 23: file.v1.FileService.CreateMultipartUploadUrl:output_type -> file.v1.CreateMultipartUploadUrlResponse
+	11, // 24: file.v1.FileService.CompleteMultipartUpload:output_type -> file.v1.CompleteMultipartUploadResponse
+	13, // 25: file.v1.FileService.AbortMultipartUpload:output_type -> file.v1.AbortMultipartUploadResponse
+	15, // 26: file.v1.FileService.GetFile:output_type -> file.v1.GetFileResponse
+	17, // 27: file.v1.FileService.CreateDownloadUrl:output_type -> file.v1.CreateDownloadUrlResponse
+	19, // 28: file.v1.FileService.CreatePreviewUrl:output_type -> file.v1.CreatePreviewUrlResponse
+	21, // 29: file.v1.FileService.DeleteFile:output_type -> file.v1.DeleteFileResponse
+	21, // [21:30] is the sub-list for method output_type
+	12, // [12:21] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_file_v1_file_proto_init() }
@@ -1338,7 +1474,7 @@ func file_file_v1_file_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_file_v1_file_proto_rawDesc), len(file_file_v1_file_proto_rawDesc)),
-			NumEnums:      1,
+			NumEnums:      2,
 			NumMessages:   22,
 			NumExtensions: 0,
 			NumServices:   1,

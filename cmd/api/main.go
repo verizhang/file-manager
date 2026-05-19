@@ -2,26 +2,27 @@ package main
 
 import (
 	"context"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
-	"github.com/minio/minio-go/v7"
-	"github.com/minio/minio-go/v7/pkg/credentials"
-	"github.com/verizhang/file-manager/internal/config"
+
+	"github.com/joho/godotenv"
+	configs "github.com/verizhang/file-manager/internal/config"
 	"github.com/verizhang/file-manager/internal/database"
 	grpcHandler "github.com/verizhang/file-manager/internal/handler"
 	"github.com/verizhang/file-manager/internal/logger"
-	"github.com/verizhang/file-manager/internal/repository"
+	"github.com/verizhang/file-manager/internal/repository/mysql"
 	"github.com/verizhang/file-manager/internal/server"
 	"github.com/verizhang/file-manager/internal/service"
-	minioStorage "github.com/verizhang/file-manager/internal/storage"
+	"github.com/verizhang/file-manager/internal/storage/s3"
 	"go.uber.org/zap"
-	"github.com/joho/godotenv"
-	"log"
 )
 
 func main() {
+	ctx := context.Background()
+
 	//
 	// =====================================================
 	// LOAD ENV
@@ -72,36 +73,24 @@ func main() {
 
 	//
 	// =====================================================
-	// MINIO
+	// MINIO / S3
 	// =====================================================
 	//
-
-	minioClient, err := minio.New(
-		cfg.S3.Endpoint,
-		&minio.Options{
-			Creds: credentials.NewStaticV4(
-				cfg.S3.AccessKey,
-				cfg.S3.SecretKey,
-				"",
-			),
-			Secure: cfg.S3.UseSSL,
-			Region: cfg.S3.Region,
+	s3Client, err := s3.NewClient(
+		ctx,
+		s3.Config{
+			Endpoint:  cfg.S3.Endpoint,
+			Region:    cfg.S3.Region,
+			AccessKey: cfg.S3.AccessKey,
+			SecretKey: cfg.S3.SecretKey,
+			UseSSL:    cfg.S3.UseSSL,
 		},
 	)
-
 	if err != nil {
-		logger.Log.Fatal(
-			"failed initialize minio client",
-			zap.Error(err),
-		)
+		logger.Log.Fatal("failed init s3 client", zap.Error(err))
 	}
 
-	logger.Log.Info("minio initialized")
-
-	minioProvider := minioStorage.New(
-		minioClient,
-		cfg.S3.Bucket,
-	)
+	storageClient := s3.NewStorage(s3Client)
 
 	//
 	// =====================================================
@@ -109,7 +98,7 @@ func main() {
 	// =====================================================
 	//
 
-	fileRepository := repository.NewFileRepository(
+	fileRepository := mysql.NewFileRepository(
 		db,
 	)
 
@@ -120,8 +109,10 @@ func main() {
 	//
 
 	fileService := service.NewFileService(
+		cfg,
+		logger.Log,
+		storageClient,
 		fileRepository,
-		minioProvider,
 	)
 
 	//
@@ -131,6 +122,7 @@ func main() {
 	//
 
 	fileHandler := grpcHandler.NewFileHandler(
+		logger.Log,
 		fileService,
 	)
 
