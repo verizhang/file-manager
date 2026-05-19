@@ -17,23 +17,19 @@ func RunGRPCServer(
 	fileHandler *grpcHandler.FileHandler,
 	logger *zap.Logger,
 ) (*grpc.Server, error) {
-
 	lis, err := net.Listen(
 		"tcp",
 		fmt.Sprintf(":%d", port),
 	)
-
 	if err != nil {
 		return nil, err
 	}
 
 	grpcServer := grpc.NewServer()
-
 	filev1.RegisterFileServiceServer(
 		grpcServer,
 		fileHandler,
 	)
-
 	go func() {
 		logger.Info(
 			"grpc server started",

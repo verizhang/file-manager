@@ -2,9 +2,7 @@ package service
 
 import (
 	"context"
-
 	filev1 "github.com/verizhang/file-manager/gen/go/file/v1"
-
 	"github.com/verizhang/file-manager/internal/repository"
 	"github.com/verizhang/file-manager/internal/storage"
 )

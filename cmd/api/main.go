@@ -6,30 +6,18 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
-
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
-
 	"github.com/verizhang/file-manager/internal/config"
-
 	"github.com/verizhang/file-manager/internal/database"
-
 	grpcHandler "github.com/verizhang/file-manager/internal/handler"
-
 	"github.com/verizhang/file-manager/internal/logger"
-
 	"github.com/verizhang/file-manager/internal/repository"
-
 	"github.com/verizhang/file-manager/internal/server"
-
 	"github.com/verizhang/file-manager/internal/service"
-
 	minioStorage "github.com/verizhang/file-manager/internal/storage"
-
 	"go.uber.org/zap"
-
 	"github.com/joho/godotenv"
-
 	"log"
 )
 

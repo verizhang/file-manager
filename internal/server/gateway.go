@@ -4,13 +4,9 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-
 	filev1 "github.com/verizhang/file-manager/gen/go/file/v1"
-
 	"go.uber.org/zap"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -20,11 +16,8 @@ func RunGatewayServer(
 	grpcPort int,
 	logger *zap.Logger,
 ) (*http.Server, error) {
-
 	ctx := context.Background()
-
 	mux := runtime.NewServeMux()
-
 	err := filev1.RegisterFileServiceHandlerFromEndpoint(
 		ctx,
 		mux,
@@ -35,7 +28,6 @@ func RunGatewayServer(
 			),
 		},
 	)
-
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +36,6 @@ func RunGatewayServer(
 		Addr:    fmt.Sprintf(":%d", httpPort),
 		Handler: mux,
 	}
-
 	go func() {
 		logger.Info(
 			"http gateway started",
