@@ -23,8 +23,29 @@ func main() {
 	// storage
 	//
 
-	// TODO:
-	// initialize minio client
+	minioClient, err := minio.New(
+		cfg.S3.Endpoint,
+		&minio.Options{
+			Creds: credentials.NewStaticV4(
+				cfg.S3.AccessKey,
+				cfg.S3.SecretKey,
+				"",
+			),
+			Secure: cfg.S3.UseSSL,
+			Region: cfg.S3.Region,
+		},
+	)
+
+	if err != nil {
+		logger.Log.Fatal(
+			"failed initialize minio client",
+			zap.Error(err),
+		)
+	}
+
+	logger.Log.Info("minio client initialized")
+
+	storage := storage.New(minioClient, cfg.S3.Bucket)
 
 	//
 	// service
@@ -32,7 +53,7 @@ func main() {
 
 	fileService := service.NewFileService(
 		fileRepository,
-		nil,
+		storage,
 	)
 
 	//
