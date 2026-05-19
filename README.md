@@ -1,152 +1,181 @@
 # File Manager Service
 
-Production-ready file manager service built with Go, gRPC, gRPC-Gateway, and S3-compatible object storage.
+A production-oriented file management microservice built with Golang, gRPC, gRPC-Gateway, MySQL, and S3-compatible object storage such as MinIO or AWS S3.
 
-This project is designed to provide scalable and cloud-native file management capabilities with support for:
+This project supports:
 
-- Presigned upload/download URL
-- Multipart upload
-- Direct-to-storage upload architecture
-- Preview URL generation
-- gRPC + REST API
-- Kubernetes-friendly deployment
-- Virus scanning ready architecture
+* presigned upload URL generation
+* multipart upload flow
+* preview & download URL generation
+* resumable downloads
+* file metadata management
+* virus scanning preparation
+* scalable storage abstraction
 
 ---
 
 # Features
 
-## Simple Upload
+## Upload
 
-Generate presigned upload URLs for small file uploads.
-
-- Direct upload to S3/MinIO
-- Reduced API server bandwidth usage
-- Optimized for cloud-native environments
-
----
-
-## Multipart Upload
-
-Designed for large file uploads.
-
-- Multipart upload session
-- Chunk upload support
-- Parallel upload ready
-- Retry-per-chunk architecture
-- Large file upload support
-- Resumable-ready design
-
----
+* Simple upload using presigned URL
+* Multipart upload support
+* S3-compatible storage
+* Object key generation strategy
 
 ## File Access
 
-- Generate presigned download URL
-- Generate preview URL
-- Retrieve file metadata
-- Soft delete support
+* Generate preview URL
+* Generate download URL
+* Get file metadata
 
----
+## File Management
 
-## Infrastructure Ready
+* Delete file
+* File status tracking
+* Upload lifecycle tracking
 
-- Docker Compose local development
-- Kubernetes-ready architecture
-- Environment-based configuration
-- Structured logging support
-- External object storage support
+## Architecture
 
----
-
-# Architecture Overview
-
-```text
-Client
-   │
-   │ Request Upload URL
-   ▼
-File Manager Service
-   │
-   │ Generate Presigned URL
-   ▼
-S3 / MinIO
-   ▲
-   │ Direct Upload
-   │
-Client
-```
-
-### Why Presigned Upload?
-
-The API server only handles upload orchestration and metadata.
-
-Actual binary transfer happens directly between client and object storage.
-
-Benefits:
-
-- Lower API server bandwidth usage
-- Better horizontal scalability
-- Reduced infrastructure bottleneck
-- Optimized for Kubernetes environments
+* Clean Architecture-ish layering
+* Repository pattern
+* Storage abstraction
+* gRPC + HTTP Gateway
+* Migration-based database management
 
 ---
 
 # Tech Stack
 
-| Area | Technology |
-|---|---|
-| Language | Go |
-| API Protocol | gRPC |
-| REST Gateway | gRPC-Gateway |
-| Database | MySQL |
-| ORM | GORM |
-| Object Storage | MinIO / S3 Compatible |
-| Containerization | Docker |
-| Deployment | Kubernetes |
-| Configuration | envconfig |
-| Logging | Zap |
+## Backend
+
+* Golang
+* gRPC
+* gRPC-Gateway
+* GORM
+* MySQL
+
+## Storage
+
+* AWS SDK v2
+* MinIO
+* AWS S3 compatible storage
+
+## Infrastructure
+
+* Docker
+* Docker Compose
+
+## Planned
+
+* Kubernetes
+* CI/CD
+* Virus scanning (ClamAV)
+* Multipart resumable upload optimization
 
 ---
 
 # Project Structure
 
-```bash
+```text
 .
 ├── cmd/
 │   └── api/
+│       └── main.go
+│
+├── gen/
+│   ├── go/
+│   ├── grpc-gateway/
+│   └── openapiv2/
 │
 ├── internal/
 │   ├── config/
 │   ├── database/
 │   ├── handler/
+│   │   └── grpc/
 │   ├── logger/
-│   ├── middleware/
 │   ├── model/
 │   ├── repository/
 │   │   ├── entity/
-│   │   └── mapper/
+│   │   ├── mapper/
+│   │   └── mysql/
 │   ├── server/
 │   ├── service/
 │   └── storage/
-│
-├── proto/
-│   └── file/
-│       └── v1/
-│
-├── gen/
-│   ├── go/
-│   └── openapi/
+│       └── s3/
 │
 ├── migrations/
 │
-├── docker-compose.yaml
-├── buf.yaml
+├── proto/
+│
+├── scripts/
+│
+├── docker-compose.yml
+├── Makefile
 ├── buf.gen.yaml
-├── go.mod
-├── go.sum
-├── .env.example
+├── buf.yaml
 └── README.md
 ```
+
+---
+
+# Architecture
+
+```text
+Client
+   ↓
+HTTP / gRPC
+   ↓
+Handler Layer
+   ↓
+Service Layer
+   ↓
+Repository Layer
+   ↓
+MySQL
+
+Service Layer
+   ↓
+Storage Abstraction
+   ↓
+S3 Compatible Storage
+(MinIO / AWS S3)
+```
+
+---
+
+# API Overview
+
+## Simple Upload
+
+* `POST /v1/files/upload-url`
+
+Generate presigned upload URL for direct upload.
+
+---
+
+## Multipart Upload
+
+* `POST /v1/files/multipart`
+* `POST /v1/files/multipart/url`
+* `POST /v1/files/multipart/complete`
+* `POST /v1/files/multipart/abort`
+
+Multipart upload lifecycle.
+
+---
+
+## File Access
+
+* `GET /v1/files/{file_id}`
+* `POST /v1/files/{file_id}/download-url`
+* `POST /v1/files/{file_id}/preview-url`
+
+---
+
+## Delete
+
+* `DELETE /v1/files/{file_id}`
 
 ---
 
@@ -154,13 +183,15 @@ Benefits:
 
 ## Requirements
 
-- Go 1.24+
-- Docker
-- Docker Compose
+* Go 1.24+
+* Docker
+* Docker Compose
+* Make
+* golang-migrate
 
 ---
 
-## Start Infrastructure
+# Run Infrastructure
 
 ```bash
 docker compose up -d
@@ -168,42 +199,89 @@ docker compose up -d
 
 This will start:
 
-- MinIO
-- MySQL
-- ClamAV
+* MySQL
+* MinIO
 
 ---
 
-## Run Database Migration
+# Create Bucket
 
-This project intentionally uses raw SQL migration files instead of ORM auto-migration
-to provide better schema control and production safety.
+Open MinIO console:
 
-Migration files are located in:
-
-```bash
-migrations/
+```text
+http://localhost:9001
 ```
 
-### Install golang-migrate
+Default credentials:
 
-macOS:
-
-```bash
-brew install golang-migrate
+```text
+username: minioadmin
+password: minioadmin
 ```
 
-Linux:
+Create bucket:
 
-```bash
-curl -L https://github.com/golang-migrate/migrate/releases/latest/download/migrate.linux-amd64.tar.gz \
-| tar xvz
-sudo mv migrate /usr/local/bin/
+```text
+file-manager
 ```
 
 ---
 
-### Run Migration
+# Environment Variables
+
+Create `.env`
+
+```env
+# =====================================================
+# APP
+# =====================================================
+
+APP_NAME=file-manager
+APP_ENV=local
+
+APP_HTTP_PORT=8080
+APP_GRPC_PORT=9090
+
+# =====================================================
+# DATABASE
+# =====================================================
+
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=file_manager
+
+DB_USER=mysqladmin
+DB_PASSWORD=mysqladmin
+
+DB_MAX_OPEN_CONNECTION=10
+DB_MAX_IDLE_CONNECTION=5
+DB_MAX_LIFETIME_MINUTE=30
+
+# =====================================================
+# S3 / MINIO
+# =====================================================
+
+S3_ENDPOINT=http://localhost:9000
+S3_REGION=ap-southeast-1
+
+S3_ACCESS_KEY=minioadmin
+S3_SECRET_KEY=minioadmin
+
+S3_BUCKET=file-manager
+
+S3_USE_SSL=false
+
+# =====================================================
+# CLAMAV
+# =====================================================
+
+CLAMAV_HOST=localhost
+CLAMAV_PORT=3310
+```
+
+---
+
+# Run Database Migration
 
 ```bash
 migrate \
@@ -214,32 +292,15 @@ migrate \
 
 ---
 
-### Rollback Migration
-
-```bash
-migrate \
-  -path migrations \
-  -database "mysql://mysqladmin:mysqladmin@tcp(localhost:3306)/file_manager" \
-  down
-```
-
----
-
-## Generate Protobuf Files
+# Generate Protobuf
 
 ```bash
 buf generate
 ```
 
-This will generate:
-
-- gRPC code
-- gRPC-Gateway code
-- OpenAPI/Swagger specification
-
 ---
 
-## Run Application
+# Run Application
 
 ```bash
 go run cmd/api/main.go
@@ -247,112 +308,89 @@ go run cmd/api/main.go
 
 ---
 
-# Environment Variables
-
-Copy example environment:
+# Test Upload URL Endpoint
 
 ```bash
-cp .env.example .env
-```
-
-Then adjust values as needed.
-
----
-
-# API Documentation
-
-Swagger/OpenAPI documentation is generated from protobuf definitions.
-
-Example endpoints:
-
-```text
-POST   /v1/files/upload-url
-POST   /v1/files/multipart
-POST   /v1/files/multipart/url
-POST   /v1/files/multipart/complete
-POST   /v1/files/multipart/abort
-
-GET    /v1/files/{file_id}
-POST   /v1/files/{file_id}/download-url
-POST   /v1/files/{file_id}/preview-url
-
-DELETE /v1/files/{file_id}
+curl --location 'http://localhost:8080/v1/files/upload-url' \
+--header 'Content-Type: application/json' \
+--data '{
+  "file_name": "example.pdf",
+  "content_type": "application/pdf",
+  "size": 1048576
+}'
 ```
 
 ---
 
-# Upload Flow
+# Example Response
 
-## Simple Upload
-
-```text
-Client
-  └── Request upload URL
-        └── Upload directly to object storage
+```json
+{
+  "file_id": "uuid",
+  "upload_url": "https://...",
+  "object_key": "2026/05/19/uuid.pdf"
+}
 ```
 
 ---
 
-## Multipart Upload
+# Upload File Using Presigned URL
 
-```text
-Create multipart upload
-        ↓
-Generate upload URL per chunk
-        ↓
-Upload chunks directly to object storage
-        ↓
-Complete multipart upload
+```bash
+curl --request PUT \
+--upload-file ./example.pdf \
+--header "Content-Type: application/pdf" \
+'PRESIGNED_URL'
 ```
 
 ---
 
-# Docker Compose
+# Current Status
 
-Example local infrastructure:
+## Implemented
 
-```yaml
-services:
-  minio:
-    image: minio/minio:latest
+* Project structure
+* gRPC server
+* gRPC Gateway
+* S3 storage abstraction
+* Presigned upload URL generation
+* MySQL repository layer
+* Migration system
+* File metadata persistence
 
-  mysql:
-    image: mysql:8.4
+## In Progress
 
-  clamav:
-    image: mkodockx/docker-clamav:alpine
-```
+* Multipart upload implementation
+* Download URL generation
+* Preview URL generation
+* Delete flow
+
+## Planned
+
+* Virus scanning
+* Authentication middleware
+* Background workers
+* Event-driven processing
+* Metrics & observability
+* Kubernetes deployment
+* CI/CD pipeline
+* Unit testing
 
 ---
 
-# Future Roadmap
+# Design Goals
 
-- Resumable upload
-- Upload session recovery
-- Async virus scanning worker
-- Multi-tenant support
-- Upload rate limiting
-- Object lifecycle management
-- Background cleanup worker
-- File versioning
-- Storage abstraction improvements
+This project is designed to:
 
----
-
-# Deployment
-
-This service is designed to be deployed in cloud-native environments.
-
-Recommended production stack:
-
-- Kubernetes / GKE
-- Managed MySQL / Cloud SQL
-- S3-compatible object storage
-- External secret management
-- Horizontal scaling
+* be cloud-native ready
+* support large-scale file uploads
+* support resumable upload flows
+* work with any S3-compatible provider
+* be easy to deploy for companies
+* provide production-oriented architecture patterns
 
 ---
 
 # License
 
-MIT License.
+MIT License
