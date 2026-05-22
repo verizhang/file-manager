@@ -2,9 +2,15 @@ package s3
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	awss3 "github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 
+	"github.com/verizhang/file-manager/internal/errs"
 	"github.com/verizhang/file-manager/internal/storage"
 )
 
@@ -37,10 +43,38 @@ func (s *Storage) GeneratePresignedUploadURL(
 		},
 	)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w: %v", errs.ErrGeneratePresignedURL, err)
 	}
 
 	return &storage.GeneratePresignedUploadURLResult{
 		URL: request.URL,
 	}, nil
+}
+
+func (s *Storage) HeadObject(
+	ctx context.Context,
+	bucket string,
+	objectKey string,
+) error {
+
+	_, err := s.client.HeadObject(
+		ctx,
+		&s3.HeadObjectInput{
+			Bucket: aws.String(bucket),
+			Key:    aws.String(objectKey),
+		},
+	)
+
+	if err != nil {
+
+		var notFound *types.NotFound
+
+		if errors.As(err, &notFound) {
+			return errs.ErrFileNotUploaded
+		}
+
+		return err
+	}
+
+	return nil
 }

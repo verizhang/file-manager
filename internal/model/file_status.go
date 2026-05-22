@@ -1,11 +1,13 @@
 package model
 
+type FileStatus string
+
 const (
-	FileStatusPending     = "pending"
-	FileStatusUploading   = "uploading"
-	FileStatusPendingScan = "pending_scan"
-	FileStatusCompleted   = "completed"
-	FileStatusFailed      = "failed"
-	FileStatusDeleted     = "deleted"
-	FileStatusInfected    = "infected"
+	FileStatusPending     FileStatus = "pending"
+	FileStatusUploading   FileStatus = "uploading"
+	FileStatusPendingScan FileStatus = "pending_scan"
+	FileStatusCompleted   FileStatus = "completed"
+	FileStatusFailed      FileStatus = "failed"
+	FileStatusDeleted     FileStatus = "deleted"
+	FileStatusInfected    FileStatus = "infected"
 )

@@ -11,4 +11,14 @@ type FileRepository interface {
 		ctx context.Context,
 		file *model.File,
 	) error
+	GetByID(
+		ctx context.Context,
+		id string,
+	) (*model.File, error)
+
+	UpdateStatus(
+		ctx context.Context,
+		id string,
+		status model.FileStatus,
+	) error
 }

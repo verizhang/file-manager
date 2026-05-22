@@ -11,7 +11,7 @@ type File struct {
 	ContentType string
 	Size        int64
 	ETag        *string
-	Status      string
+	Status      FileStatus
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	DeletedAt   *time.Time

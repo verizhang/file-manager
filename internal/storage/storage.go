@@ -21,4 +21,9 @@ type Storage interface {
 		ctx context.Context,
 		opts GeneratePresignedUploadURLOptions,
 	) (*GeneratePresignedUploadURLResult, error)
+	HeadObject(
+		ctx context.Context,
+		bucket string,
+		objectKey string,
+	) error
 }

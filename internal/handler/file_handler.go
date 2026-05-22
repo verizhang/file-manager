@@ -4,6 +4,8 @@ import (
 	"context"
 
 	filev1 "github.com/verizhang/file-manager/gen/go/file/v1"
+	"github.com/verizhang/file-manager/internal/errs"
+	"github.com/verizhang/file-manager/internal/handler/mapper"
 	"github.com/verizhang/file-manager/internal/service"
 
 	"go.uber.org/zap"
@@ -51,14 +53,38 @@ func (h *FileHandler) CreateUploadUrl(
 		h.logger.Error("failed create upload url",
 			zap.Error(err),
 		)
-
-		return nil, status.Error(
-			codes.Internal,
-			"failed create upload url",
-		)
+		return nil, errs.ToGRPCError(err)
 	}
 
 	return response, nil
+}
+
+// =====================================================
+// COMPLETE UPLOAD
+// =====================================================
+
+func (h *FileHandler) CompleteUpload(
+	ctx context.Context,
+	req *filev1.CompleteUploadRequest,
+) (*filev1.CompleteUploadResponse, error) {
+
+	file, err := h.fileService.CompleteUpload(
+		ctx,
+		req.GetFileId(),
+	)
+	if err != nil {
+
+		h.logger.Error(
+			"failed complete upload",
+			zap.Error(err),
+		)
+
+		return nil, errs.ToGRPCError(err)
+	}
+
+	return &filev1.CompleteUploadResponse{
+		File: mapper.ToProtoFile(file),
+	}, nil
 }
 
 // =====================================================

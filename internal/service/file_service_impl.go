@@ -69,16 +69,11 @@ func (s *fileService) CreateUploadURL(
 		},
 	)
 	if err != nil {
-		s.logger.Error("failed generate presigned upload url",
-			zap.Error(err),
-		)
-
 		return nil, err
 	}
 
 	err = s.fileRepository.Create(ctx, file)
 	if err != nil {
-		s.logger.Error("failed write file metadata to database", zap.Error(err))
 		return nil, err
 	}
 
@@ -87,6 +82,46 @@ func (s *fileService) CreateUploadURL(
 		UploadUrl: result.URL,
 		ObjectKey: objectKey,
 	}, nil
+}
+
+func (s *fileService) CompleteUpload(
+	ctx context.Context,
+	fileID string,
+) (*model.File, error) {
+
+	file, err := s.fileRepository.GetByID(
+		ctx,
+		fileID,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	if file.Status == model.FileStatusCompleted {
+		return file, nil
+	}
+
+	err = s.storage.HeadObject(
+		ctx,
+		file.Bucket,
+		file.ObjectKey,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	err = s.fileRepository.UpdateStatus(
+		ctx,
+		file.ID,
+		model.FileStatusCompleted,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	file.Status = model.FileStatusCompleted
+
+	return file, nil
 }
 
 func generateObjectKey(
