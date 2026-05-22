@@ -22,6 +22,17 @@ service FileService {
   }
 
   // =====================================================
+  // CompleteUpload
+  // =====================================================
+  rpc CompleteUpload(CompleteUploadRequest)
+    returns (CompleteUploadResponse) {
+  option (google.api.http) = {
+    post: "/v1/files/{file_id}/complete"
+    body: "*"
+  };
+}
+
+  // =====================================================
   // MULTIPART UPLOAD
   // =====================================================
 
@@ -100,9 +111,11 @@ enum FileStatus {
   FILE_STATUS_UNSPECIFIED = 0;
   FILE_STATUS_PENDING = 1;
   FILE_STATUS_UPLOADING = 2;
-  FILE_STATUS_COMPLETED = 3;
-  FILE_STATUS_FAILED = 4;
-  FILE_STATUS_DELETED = 5;
+  FILE_STATUS_PENDING_SCAN = 3;
+  FILE_STATUS_COMPLETED = 4;
+  FILE_STATUS_FAILED = 5;
+  FILE_STATUS_INFECTED = 6;
+  FILE_STATUS_DELETED = 7;
 }
 
 message FileObject {
@@ -137,6 +150,14 @@ message CreateUploadUrlResponse {
   string object_key = 3;
 
   map<string, string> headers = 4;
+}
+
+message CompleteUploadRequest {
+  string file_id = 1;
+}
+
+message CompleteUploadResponse {
+  FileObject file = 1;
 }
 
 enum VirusScanStatus {

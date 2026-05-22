@@ -234,6 +234,45 @@
         ]
       }
     },
+    "/v1/files/{fileId}/complete": {
+      "post": {
+        "summary": "=====================================================\nCompleteUpload\n=====================================================",
+        "operationId": "FileService_CompleteUpload",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CompleteUploadResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FileServiceCompleteUploadBody"
+            }
+          }
+        ],
+        "tags": [
+          "FileService"
+        ]
+      }
+    },
     "/v1/files/{fileId}/download-url": {
       "post": {
         "operationId": "FileService_CreateDownloadUrl",
@@ -312,6 +351,9 @@
     }
   },
   "definitions": {
+    "FileServiceCompleteUploadBody": {
+      "type": "object"
+    },
     "FileServiceCreateDownloadUrlBody": {
       "type": "object"
     },
@@ -379,6 +421,14 @@
       }
     },
     "v1CompleteMultipartUploadResponse": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "$ref": "#/definitions/v1FileObject"
+        }
+      }
+    },
+    "v1CompleteUploadResponse": {
       "type": "object",
       "properties": {
         "file": {
@@ -568,8 +618,10 @@
         "FILE_STATUS_UNSPECIFIED",
         "FILE_STATUS_PENDING",
         "FILE_STATUS_UPLOADING",
+        "FILE_STATUS_PENDING_SCAN",
         "FILE_STATUS_COMPLETED",
         "FILE_STATUS_FAILED",
+        "FILE_STATUS_INFECTED",
         "FILE_STATUS_DELETED"
       ],
       "default": "FILE_STATUS_UNSPECIFIED"

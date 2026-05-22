@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	FileService_CreateUploadUrl_FullMethodName          = "/file.v1.FileService/CreateUploadUrl"
+	FileService_CompleteUpload_FullMethodName           = "/file.v1.FileService/CompleteUpload"
 	FileService_CreateMultipartUpload_FullMethodName    = "/file.v1.FileService/CreateMultipartUpload"
 	FileService_CreateMultipartUploadUrl_FullMethodName = "/file.v1.FileService/CreateMultipartUploadUrl"
 	FileService_CompleteMultipartUpload_FullMethodName  = "/file.v1.FileService/CompleteMultipartUpload"
@@ -35,6 +36,10 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FileServiceClient interface {
 	CreateUploadUrl(ctx context.Context, in *CreateUploadUrlRequest, opts ...grpc.CallOption) (*CreateUploadUrlResponse, error)
+	// =====================================================
+	// CompleteUpload
+	// =====================================================
+	CompleteUpload(ctx context.Context, in *CompleteUploadRequest, opts ...grpc.CallOption) (*CompleteUploadResponse, error)
 	CreateMultipartUpload(ctx context.Context, in *CreateMultipartUploadRequest, opts ...grpc.CallOption) (*CreateMultipartUploadResponse, error)
 	CreateMultipartUploadUrl(ctx context.Context, in *CreateMultipartUploadUrlRequest, opts ...grpc.CallOption) (*CreateMultipartUploadUrlResponse, error)
 	CompleteMultipartUpload(ctx context.Context, in *CompleteMultipartUploadRequest, opts ...grpc.CallOption) (*CompleteMultipartUploadResponse, error)
@@ -57,6 +62,16 @@ func (c *fileServiceClient) CreateUploadUrl(ctx context.Context, in *CreateUploa
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CreateUploadUrlResponse)
 	err := c.cc.Invoke(ctx, FileService_CreateUploadUrl_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fileServiceClient) CompleteUpload(ctx context.Context, in *CompleteUploadRequest, opts ...grpc.CallOption) (*CompleteUploadResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CompleteUploadResponse)
+	err := c.cc.Invoke(ctx, FileService_CompleteUpload_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -148,6 +163,10 @@ func (c *fileServiceClient) DeleteFile(ctx context.Context, in *DeleteFileReques
 // for forward compatibility.
 type FileServiceServer interface {
 	CreateUploadUrl(context.Context, *CreateUploadUrlRequest) (*CreateUploadUrlResponse, error)
+	// =====================================================
+	// CompleteUpload
+	// =====================================================
+	CompleteUpload(context.Context, *CompleteUploadRequest) (*CompleteUploadResponse, error)
 	CreateMultipartUpload(context.Context, *CreateMultipartUploadRequest) (*CreateMultipartUploadResponse, error)
 	CreateMultipartUploadUrl(context.Context, *CreateMultipartUploadUrlRequest) (*CreateMultipartUploadUrlResponse, error)
 	CompleteMultipartUpload(context.Context, *CompleteMultipartUploadRequest) (*CompleteMultipartUploadResponse, error)
@@ -168,6 +187,9 @@ type UnimplementedFileServiceServer struct{}
 
 func (UnimplementedFileServiceServer) CreateUploadUrl(context.Context, *CreateUploadUrlRequest) (*CreateUploadUrlResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateUploadUrl not implemented")
+}
+func (UnimplementedFileServiceServer) CompleteUpload(context.Context, *CompleteUploadRequest) (*CompleteUploadResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CompleteUpload not implemented")
 }
 func (UnimplementedFileServiceServer) CreateMultipartUpload(context.Context, *CreateMultipartUploadRequest) (*CreateMultipartUploadResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateMultipartUpload not implemented")
@@ -228,6 +250,24 @@ func _FileService_CreateUploadUrl_Handler(srv interface{}, ctx context.Context, 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(FileServiceServer).CreateUploadUrl(ctx, req.(*CreateUploadUrlRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FileService_CompleteUpload_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompleteUploadRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileServiceServer).CompleteUpload(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FileService_CompleteUpload_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileServiceServer).CompleteUpload(ctx, req.(*CompleteUploadRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -386,6 +426,10 @@ var FileService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateUploadUrl",
 			Handler:    _FileService_CreateUploadUrl_Handler,
+		},
+		{
+			MethodName: "CompleteUpload",
+			Handler:    _FileService_CompleteUpload_Handler,
 		},
 		{
 			MethodName: "CreateMultipartUpload",
