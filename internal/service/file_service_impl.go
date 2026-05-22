@@ -56,12 +56,7 @@ func (s *fileService) CreateUploadURL(
 		FileName:    req.GetFileName(),
 		ContentType: req.GetContentType(),
 		Size:        req.GetSize(),
-		Status:      "PENDING",
-	}
-
-	err := s.fileRepository.Create(ctx, file)
-	if err != nil {
-		return nil, err
+		Status:      model.FileStatusPending,
 	}
 
 	result, err := s.storage.GeneratePresignedUploadURL(
@@ -78,6 +73,11 @@ func (s *fileService) CreateUploadURL(
 			zap.Error(err),
 		)
 
+		return nil, err
+	}
+
+	err = s.fileRepository.Create(ctx, file)
+	if err != nil {
 		return nil, err
 	}
 
