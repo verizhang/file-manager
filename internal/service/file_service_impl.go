@@ -78,6 +78,7 @@ func (s *fileService) CreateUploadURL(
 
 	err = s.fileRepository.Create(ctx, file)
 	if err != nil {
+		s.logger.Error("failed write file metadata to database", zap.Error(err))
 		return nil, err
 	}
 
