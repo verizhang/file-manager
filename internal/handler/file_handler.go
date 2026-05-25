@@ -42,12 +42,6 @@ func (h *FileHandler) CreateUploadUrl(
 		return nil, err
 	}
 
-	h.logger.Info("create upload url request received",
-		zap.String("file_name", req.GetFileName()),
-		zap.String("content_type", req.GetContentType()),
-		zap.Int64("size", req.GetSize()),
-	)
-
 	response, err := h.fileService.CreateUploadURL(
 		ctx,
 		req,
@@ -102,12 +96,6 @@ func (h *FileHandler) CreateMultipartUpload(
 	req *filev1.CreateMultipartUploadRequest,
 ) (*filev1.CreateMultipartUploadResponse, error) {
 
-	h.logger.Info("create multipart upload request received",
-		zap.String("file_name", req.GetFileName()),
-		zap.String("content_type", req.GetContentType()),
-		zap.Int64("size", req.GetSize()),
-	)
-
 	// TODO(veri):
 	// 1. Validate request
 	// 2. Calculate total parts
@@ -124,12 +112,6 @@ func (h *FileHandler) CreateMultipartUploadUrl(
 	ctx context.Context,
 	req *filev1.CreateMultipartUploadUrlRequest,
 ) (*filev1.CreateMultipartUploadUrlResponse, error) {
-
-	h.logger.Info("create multipart upload url request received",
-		zap.String("file_id", req.GetFileId()),
-		zap.String("upload_id", req.GetUploadId()),
-		zap.Int32("part_number", req.GetPartNumber()),
-	)
 
 	// TODO(veri):
 	// 1. Validate upload session
@@ -168,11 +150,6 @@ func (h *FileHandler) AbortMultipartUpload(
 	req *filev1.AbortMultipartUploadRequest,
 ) (*filev1.AbortMultipartUploadResponse, error) {
 
-	h.logger.Info("abort multipart upload request received",
-		zap.String("upload_id", req.GetUploadId()),
-		zap.String("object_key", req.GetObjectKey()),
-	)
-
 	// TODO(veri):
 	// 1. Validate multipart session
 	// 2. Abort multipart upload in storage
@@ -191,10 +168,6 @@ func (h *FileHandler) GetFile(
 	req *filev1.GetFileRequest,
 ) (*filev1.GetFileResponse, error) {
 
-	h.logger.Info("get file request received",
-		zap.String("file_id", req.GetFileId()),
-	)
-
 	// TODO(veri):
 	// 1. Validate file ID
 	// 2. Retrieve file metadata
@@ -207,10 +180,6 @@ func (h *FileHandler) CreateDownloadUrl(
 	ctx context.Context,
 	req *filev1.CreateDownloadUrlRequest,
 ) (*filev1.CreateDownloadUrlResponse, error) {
-
-	h.logger.Info("create download url request received",
-		zap.String("file_id", req.GetFileId()),
-	)
 
 	// TODO(veri):
 	// 1. Validate file existence
@@ -226,10 +195,6 @@ func (h *FileHandler) CreatePreviewUrl(
 	ctx context.Context,
 	req *filev1.CreatePreviewUrlRequest,
 ) (*filev1.CreatePreviewUrlResponse, error) {
-
-	h.logger.Info("create preview url request received",
-		zap.String("file_id", req.GetFileId()),
-	)
 
 	// TODO(veri):
 	// 1. Validate file existence
@@ -250,10 +215,6 @@ func (h *FileHandler) DeleteFile(
 	ctx context.Context,
 	req *filev1.DeleteFileRequest,
 ) (*filev1.DeleteFileResponse, error) {
-
-	h.logger.Info("delete file request received",
-		zap.String("file_id", req.GetFileId()),
-	)
 
 	// TODO(veri):
 	// 1. Validate file existence
