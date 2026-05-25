@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
+
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	filev1 "github.com/verizhang/file-manager/gen/go/file/v1"
 	"go.uber.org/zap"
@@ -17,7 +19,17 @@ func RunGatewayServer(
 	logger *zap.Logger,
 ) (*http.Server, error) {
 	ctx := context.Background()
-	mux := runtime.NewServeMux()
+	mux := runtime.NewServeMux(
+		runtime.WithIncomingHeaderMatcher(func(key string) (string, bool) {
+			lowerKey := strings.ToLower(key)
+			switch lowerKey {
+			case "x-request-id", "request-id", "x-correlation-id":
+				return lowerKey, true
+			default:
+				return runtime.DefaultHeaderMatcher(key)
+			}
+		}),
+	)
 	err := filev1.RegisterFileServiceHandlerFromEndpoint(
 		ctx,
 		mux,

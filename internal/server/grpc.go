@@ -7,6 +7,7 @@ import (
 	filev1 "github.com/verizhang/file-manager/gen/go/file/v1"
 
 	grpcHandler "github.com/verizhang/file-manager/internal/handler"
+	"github.com/verizhang/file-manager/internal/server/interceptor"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -25,7 +26,9 @@ func RunGRPCServer(
 		return nil, err
 	}
 
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(
+		grpc.UnaryInterceptor(interceptor.UnaryRequestLogging(logger)),
+	)
 	filev1.RegisterFileServiceServer(
 		grpcServer,
 		fileHandler,
