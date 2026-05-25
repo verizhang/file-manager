@@ -38,6 +38,9 @@ func (h *FileHandler) CreateUploadUrl(
 	ctx context.Context,
 	req *filev1.CreateUploadUrlRequest,
 ) (*filev1.CreateUploadUrlResponse, error) {
+	if err := validateCreateUploadUrlRequest(req); err != nil {
+		return nil, err
+	}
 
 	h.logger.Info("create upload url request received",
 		zap.String("file_name", req.GetFileName()),
@@ -67,6 +70,9 @@ func (h *FileHandler) CompleteUpload(
 	ctx context.Context,
 	req *filev1.CompleteUploadRequest,
 ) (*filev1.CompleteUploadResponse, error) {
+	if err := validateCompleteUploadByFileIdRequest(req); err != nil {
+		return nil, err
+	}
 
 	file, err := h.fileService.CompleteUpload(
 		ctx,
