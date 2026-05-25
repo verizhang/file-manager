@@ -7,7 +7,7 @@ import (
 	filev1 "github.com/verizhang/file-manager/gen/go/file/v1"
 
 	grpcHandler "github.com/verizhang/file-manager/internal/handler"
-	"github.com/verizhang/file-manager/internal/server/interceptor"
+	"github.com/verizhang/file-manager/internal/interceptor"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
