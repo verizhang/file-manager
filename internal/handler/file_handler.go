@@ -42,9 +42,13 @@ func (h *FileHandler) CreateUploadUrl(
 		return nil, err
 	}
 
-	response, err := h.fileService.CreateUploadURL(
+	response, err := h.fileService.CreateUploadUrl(
 		ctx,
-		req,
+		&service.CreateUploadRequest{
+			FileName:    req.FileName,
+			ContentType: req.ContentType,
+			Size:        req.Size,
+		},
 	)
 	if err != nil {
 		h.logger.Error("failed create upload url",
@@ -53,7 +57,10 @@ func (h *FileHandler) CreateUploadUrl(
 		return nil, errs.ToGRPCError(err)
 	}
 
-	return response, nil
+	return &filev1.CreateUploadUrlResponse{
+		FileId:    response.File.ID,
+		UploadUrl: response.UploadURL,
+	}, nil
 }
 
 // =====================================================
@@ -68,9 +75,11 @@ func (h *FileHandler) CompleteUpload(
 		return nil, err
 	}
 
-	file, err := h.fileService.CompleteUpload(
+	response, err := h.fileService.CompleteUpload(
 		ctx,
-		req.GetFileId(),
+		&service.CompleteUploadRequest{
+			FileID: req.FileId,
+		},
 	)
 	if err != nil {
 
@@ -83,7 +92,7 @@ func (h *FileHandler) CompleteUpload(
 	}
 
 	return &filev1.CompleteUploadResponse{
-		File: mapper.ToProtoFile(file),
+		File: mapper.ToProtoFile(response.File),
 	}, nil
 }
 

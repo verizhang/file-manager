@@ -7,98 +7,101 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	filev1 "github.com/verizhang/file-manager/gen/go/file/v1"
+	"go.uber.org/zap"
+
 	"github.com/verizhang/file-manager/internal/config"
+	"github.com/verizhang/file-manager/internal/errs"
 	"github.com/verizhang/file-manager/internal/model"
 	"github.com/verizhang/file-manager/internal/repository"
 	"github.com/verizhang/file-manager/internal/storage"
-
-	"go.uber.org/zap"
 )
 
 type fileService struct {
-	config         *config.Config
+	cfg            *config.Config
 	logger         *zap.Logger
 	storage        storage.Storage
 	fileRepository repository.FileRepository
 }
 
 func NewFileService(
-	config *config.Config,
+	cfg *config.Config,
 	logger *zap.Logger,
 	storage storage.Storage,
 	fileRepository repository.FileRepository,
 ) FileService {
 	return &fileService{
-		storage:        storage,
+		cfg:            cfg,
 		logger:         logger,
-		config:         config,
+		storage:        storage,
 		fileRepository: fileRepository,
 	}
 }
 
-func (s *fileService) CreateUploadURL(
+func (s *fileService) CreateUploadUrl(
 	ctx context.Context,
-	req *filev1.CreateUploadUrlRequest,
-) (*filev1.CreateUploadUrlResponse, error) {
+	req *CreateUploadRequest,
+) (*CreateUploadResponse, error) {
 
 	fileID := uuid.NewString()
 
-	objectKey := generateObjectKey(
+	objectKey := GenerateObjectKey(
 		fileID,
-		req.GetFileName(),
+		req.FileName,
 	)
 
-	file := &model.File{
-		ID:          fileID,
-		Bucket:      s.config.S3.Bucket,
-		ObjectKey:   objectKey,
-		FileName:    req.GetFileName(),
-		ContentType: req.GetContentType(),
-		Size:        req.GetSize(),
-		Status:      model.FileStatusPending,
-	}
-
-	result, err := s.storage.GeneratePresignedUploadURL(
+	uploadURL, err := s.storage.GeneratePresignedUploadURL(
 		ctx,
 		storage.GeneratePresignedUploadURLOptions{
-			Bucket:      s.config.S3.Bucket,
+			Bucket:      s.cfg.S3.Bucket,
 			ObjectKey:   objectKey,
-			ContentType: req.GetContentType(),
-			Expiry:      15 * time.Minute,
+			ContentType: req.ContentType,
 		},
 	)
 	if err != nil {
-		return nil, err
+		return nil, errs.ErrGeneratePresignedURL
 	}
 
-	err = s.fileRepository.Create(ctx, file)
+	file := &model.File{
+		ID:          fileID,
+		ObjectKey:   objectKey,
+		Bucket:      s.cfg.S3.Bucket,
+		FileName:    req.FileName,
+		ContentType: req.ContentType,
+		Size:        req.Size,
+		Status:      model.FileStatusPending,
+	}
+
+	err = s.fileRepository.Create(
+		ctx,
+		file,
+	)
 	if err != nil {
-		return nil, err
+		return nil, errs.ErrFileNotFound
 	}
 
-	return &filev1.CreateUploadUrlResponse{
-		FileId:    fileID,
-		UploadUrl: result.URL,
-		ObjectKey: objectKey,
+	return &CreateUploadResponse{
+		File:      file,
+		UploadURL: uploadURL.URL,
 	}, nil
 }
 
 func (s *fileService) CompleteUpload(
 	ctx context.Context,
-	fileID string,
-) (*model.File, error) {
+	req *CompleteUploadRequest,
+) (*CompleteUploadResponse, error) {
 
 	file, err := s.fileRepository.GetByID(
 		ctx,
-		fileID,
+		req.FileID,
 	)
 	if err != nil {
 		return nil, err
 	}
 
 	if file.Status == model.FileStatusCompleted {
-		return file, nil
+		return &CompleteUploadResponse{
+			File: file,
+		}, nil
 	}
 
 	err = s.storage.HeadObject(
@@ -121,21 +124,25 @@ func (s *fileService) CompleteUpload(
 
 	file.Status = model.FileStatusCompleted
 
-	return file, nil
+	return &CompleteUploadResponse{
+		File: file,
+	}, nil
 }
 
-func generateObjectKey(
+func GenerateObjectKey(
 	fileID string,
 	fileName string,
 ) string {
 
+	now := time.Now().UTC()
+
 	ext := filepath.Ext(fileName)
 
-	date := time.Now().Format("2006/01/02")
-
 	return fmt.Sprintf(
-		"%s/%s%s",
-		date,
+		"%d/%02d/%02d/%s%s",
+		now.Year(),
+		now.Month(),
+		now.Day(),
 		fileID,
 		ext,
 	)
