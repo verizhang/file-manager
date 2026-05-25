@@ -18,7 +18,7 @@ const (
 	headerCorrelationID = "x-correlation-id"
 )
 
-func UnaryRequestLogging(logger *zap.Logger) grpc.UnaryServerInterceptor {
+func UnaryRequestLogger(logger *zap.Logger) grpc.UnaryServerInterceptor {
 	return func(
 		ctx context.Context,
 		req interface{},

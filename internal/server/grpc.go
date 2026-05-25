@@ -27,7 +27,7 @@ func RunGRPCServer(
 	}
 
 	grpcServer := grpc.NewServer(
-		grpc.UnaryInterceptor(interceptor.UnaryRequestLogging(logger)),
+		grpc.UnaryInterceptor(interceptor.UnaryRequestLogger(logger)),
 	)
 	filev1.RegisterFileServiceServer(
 		grpcServer,
