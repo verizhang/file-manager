@@ -59,7 +59,7 @@ func (s *fileService) CreateUploadUrl(
 		},
 	)
 	if err != nil {
-		return nil, errs.ErrGeneratePresignedURL
+		return nil, err
 	}
 
 	file := &model.File{
@@ -77,7 +77,7 @@ func (s *fileService) CreateUploadUrl(
 		file,
 	)
 	if err != nil {
-		return nil, errs.ErrFileNotFound
+		return nil, err
 	}
 
 	return &CreateUploadResponse{
@@ -163,7 +163,7 @@ func (s *fileService) CreateMultipartUpload(
 	)
 	if err != nil {
 		s.logger.Error("failed to create multipart upload", zap.Error(err))
-		return nil, errs.ErrCreateMultipartUpload
+		return nil, err
 	}
 
 	file := &model.File{
@@ -192,7 +192,7 @@ func (s *fileService) CreateMultipartUpload(
 		if abortErr != nil {
 			s.logger.Error("failed to abort multipart upload after metadata creation failed", zap.Error(abortErr))
 		}
-		return nil, errs.ErrCreateFileMetadata
+		return nil, err
 	}
 
 	return &CreateMultipartUploadResponse{
@@ -214,11 +214,11 @@ func (s *fileService) CreateMultipartUploadUrl(
 	}
 
 	if file.UploadID == nil || *file.UploadID != req.UploadID {
-		return nil, errs.ErrMultipartUploadNotFound
+		return nil, fmt.Errorf("%w: %s", errs.ErrMultipartUploadMismatch, "upload id missmatch")
 	}
 
 	if file.ObjectKey != req.ObjectKey {
-		return nil, errs.ErrMultipartUploadNotFound
+		return nil, fmt.Errorf("%w: %s", errs.ErrMultipartUploadMismatch, "object key missmatch")
 	}
 
 	presignedURLOutput, err := s.storage.GeneratePresignedMultipartUploadURL(
@@ -234,7 +234,7 @@ func (s *fileService) CreateMultipartUploadUrl(
 	)
 	if err != nil {
 		s.logger.Error("failed to generate presigned multipart upload URL", zap.Error(err))
-		return nil, errs.ErrGeneratePresignedURL
+		return nil, err
 	}
 
 	return &CreateMultipartUploadUrlResponse{
@@ -253,17 +253,13 @@ func (s *fileService) CompleteMultipartUpload(
 	}
 
 	if file.UploadID == nil || *file.UploadID != req.UploadID {
-		return nil, errs.ErrMultipartUploadNotFound
+		return nil, fmt.Errorf("%w: %s", errs.ErrMultipartUploadMismatch, "upload id missmatch")
 	}
 
 	if file.Status == model.FileStatusCompleted {
 		return &CompleteMultipartUploadResponse{
 			File: file,
 		}, nil
-	}
-
-	if len(req.Parts) == 0 {
-		return nil, errs.ErrInvalidMultipartUploadParts
 	}
 
 	storageParts := make([]storage.CompletedPart, len(req.Parts))
@@ -285,7 +281,7 @@ func (s *fileService) CompleteMultipartUpload(
 	)
 	if err != nil {
 		s.logger.Error("failed to complete multipart upload", zap.Error(err))
-		return nil, errs.ErrCompleteMultipartUpload
+		return nil, err
 	}
 
 	// Update file status and ETag
@@ -298,7 +294,7 @@ func (s *fileService) CompleteMultipartUpload(
 	)
 	if err != nil {
 		s.logger.Error("failed to update file status and ETag after multipart completion", zap.Error(err))
-		return nil, errs.ErrInternal // Or a more specific error
+		return nil, err
 	}
 
 	file.Status = model.FileStatusCompleted
@@ -313,13 +309,13 @@ func (s *fileService) AbortMultipartUpload(
 	ctx context.Context,
 	req *AbortMultipartUploadRequest,
 ) (*AbortMultipartUploadResponse, error) {
-	file, err := s.fileRepository.GetByObjectKey(ctx, req.ObjectKey) // Assuming GetByObjectKey exists or needs to be created
+	file, err := s.fileRepository.GetByObjectKey(ctx, req.ObjectKey)
 	if err != nil {
 		return nil, err
 	}
 
 	if file.UploadID == nil || *file.UploadID != req.UploadID {
-		return nil, errs.ErrMultipartUploadNotFound
+		return nil, fmt.Errorf("%w: %s", errs.ErrMultipartUploadMismatch, "upload id missmatch")
 	}
 
 	_, err = s.storage.AbortMultipartUpload(
@@ -332,7 +328,7 @@ func (s *fileService) AbortMultipartUpload(
 	)
 	if err != nil {
 		s.logger.Error("failed to abort multipart upload", zap.Error(err))
-		return nil, errs.ErrAbortMultipartUpload
+		return nil, err
 	}
 
 	// Update file status to aborted/failed and clean up upload ID
@@ -344,7 +340,7 @@ func (s *fileService) AbortMultipartUpload(
 	)
 	if err != nil {
 		s.logger.Error("failed to update file status after multipart abort", zap.Error(err))
-		return nil, errs.ErrInternal
+		return nil, err
 	}
 
 	return &AbortMultipartUploadResponse{}, nil

@@ -62,7 +62,7 @@ func (r *fileRepository) GetByID(
 			return nil, errs.ErrFileNotFound
 		}
 
-		return nil, err
+		return nil, errs.ErrGetFileByID
 	}
 
 	return mapper.ToFileModel(&fileEntity), nil
@@ -81,7 +81,7 @@ func (r *fileRepository) UpdateStatus(
 		Error
 
 	if err != nil {
-		return err
+		return errs.ErrUpdateFileStatus
 	}
 
 	return nil
@@ -102,7 +102,7 @@ func (r *fileRepository) GetByObjectKey(
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errs.ErrFileNotFound
 		}
-		return nil, err
+		return nil, errs.ErrGetFileByObjectKey
 	}
 
 	return mapper.ToFileModel(&fileEntity), nil
@@ -125,7 +125,7 @@ func (r *fileRepository) UpdateStatusAndETag(
 		Error
 
 	if err != nil {
-		return err
+		return errs.ErrUpdateFileStatusAndETag
 	}
 
 	return nil
@@ -147,7 +147,7 @@ func (r *fileRepository) UpdateStatusAndClearUploadID(
 		Error
 
 	if err != nil {
-		return err
+		return errs.UpdateFileStatusAndClearUploadID
 	}
 
 	return nil
