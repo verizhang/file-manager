@@ -11,6 +11,7 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 func RunGatewayServer(
@@ -29,6 +30,17 @@ func RunGatewayServer(
 				return runtime.DefaultHeaderMatcher(key)
 			}
 		}),
+		runtime.WithMarshalerOption(
+			runtime.MIMEWildcard,
+			&runtime.JSONPb{
+				MarshalOptions: protojson.MarshalOptions{
+					UseProtoNames: true,
+				},
+				UnmarshalOptions: protojson.UnmarshalOptions{
+					DiscardUnknown: true,
+				},
+			},
+		),
 	)
 	err := filev1.RegisterFileServiceHandlerFromEndpoint(
 		ctx,
