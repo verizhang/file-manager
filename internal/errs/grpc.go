@@ -10,19 +10,6 @@ import (
 func ToGRPCError(err error) error {
 
 	switch {
-
-	case errors.Is(err, ErrGeneratePresignedURL):
-		return status.Error(
-			codes.Internal,
-			ErrGeneratePresignedURL.Error(),
-		)
-
-	case errors.Is(err, ErrCreateFileMetadata):
-		return status.Error(
-			codes.Internal,
-			ErrCreateFileMetadata.Error(),
-		)
-
 	case errors.Is(err, ErrFileNotFound):
 		return status.Error(
 			codes.NotFound,
@@ -33,6 +20,12 @@ func ToGRPCError(err error) error {
 		return status.Error(
 			codes.NotFound,
 			ErrFileNotUploaded.Error(),
+		)
+
+	case errors.Is(err, ErrFileTypeNotAllowed):
+		return status.Error(
+			codes.InvalidArgument,
+			ErrFileTypeNotAllowed.Error(),
 		)
 
 	default:

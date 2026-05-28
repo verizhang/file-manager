@@ -42,6 +42,11 @@ func (s *fileService) CreateUploadUrl(
 	req *CreateUploadRequest,
 ) (*CreateUploadResponse, error) {
 
+	err := s.validateContentType(req.ContentType)
+	if err != nil {
+		return nil, err
+	}
+
 	fileID := uuid.NewString()
 
 	objectKey := GenerateObjectKey(
@@ -134,6 +139,11 @@ func (s *fileService) CreateMultipartUpload(
 	ctx context.Context,
 	req *CreateMultipartUploadRequest,
 ) (*CreateMultipartUploadResponse, error) {
+	err := s.validateContentType(req.ContentType)
+	if err != nil {
+		return nil, err
+	}
+
 	fileID := uuid.NewString()
 
 	objectKey := GenerateObjectKey(
@@ -290,7 +300,7 @@ func (s *fileService) CompleteMultipartUpload(
 		ctx,
 		file.ID,
 		model.FileStatusCompleted,
-		&etag,
+		etag,
 	)
 	if err != nil {
 		s.logger.Error("failed to update file status and ETag after multipart completion", zap.Error(err))
@@ -331,8 +341,7 @@ func (s *fileService) AbortMultipartUpload(
 		return nil, err
 	}
 
-	// Update file status to aborted/failed and clean up upload ID
-	abortedStatus := model.FileStatusFailed // Or a new FileStatusAborted
+	abortedStatus := model.FileStatusFailed
 	err = s.fileRepository.UpdateStatusAndClearUploadID(
 		ctx,
 		file.ID,
@@ -344,6 +353,19 @@ func (s *fileService) AbortMultipartUpload(
 	}
 
 	return &AbortMultipartUploadResponse{}, nil
+}
+
+func (s *fileService) validateContentType(
+	contentType string,
+) error {
+
+	for _, allowedType := range s.cfg.File.AllowedTypes {
+		if allowedType == contentType {
+			return nil
+		}
+	}
+
+	return fmt.Errorf("%w: %s", errs.ErrFileTypeNotAllowed, fmt.Sprintf("content type %s not allowed", contentType))
 }
 
 func GenerateObjectKey(
