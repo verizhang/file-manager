@@ -11,6 +11,7 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type FileHandler struct {
@@ -104,68 +105,116 @@ func (h *FileHandler) CreateMultipartUpload(
 	ctx context.Context,
 	req *filev1.CreateMultipartUploadRequest,
 ) (*filev1.CreateMultipartUploadResponse, error) {
+	if err := validateCreateMultipartUploadRequest(req); err != nil {
+		return nil, err
+	}
 
-	// TODO(veri):
-	// 1. Validate request
-	// 2. Calculate total parts
-	// 3. Calculate part size
-	// 4. Generate object key
-	// 5. Create multipart upload session in storage
-	// 6. Store upload session metadata
-	// 7. Return upload session response
+	response, err := h.fileService.CreateMultipartUpload(
+		ctx,
+		&service.CreateMultipartUploadRequest{
+			FileName:    req.FileName,
+			ContentType: req.ContentType,
+			Size:        req.Size,
+		},
+	)
+	if err != nil {
+		h.logger.Error("failed to create multipart upload", zap.Error(err))
+		return nil, errs.ToGRPCError(err)
+	}
 
-	return nil, status.Error(codes.Unimplemented, "CreateMultipartUpload not implemented")
+	return &filev1.CreateMultipartUploadResponse{
+		FileId:    response.FileID,
+		UploadId:  response.UploadID,
+		ObjectKey: response.ObjectKey,
+		PartSize:  response.PartSize,
+		TotalParts: response.TotalParts,
+		ExpiresAt: timestamppb.New(response.ExpiresAt),
+	}, nil
 }
 
 func (h *FileHandler) CreateMultipartUploadUrl(
 	ctx context.Context,
 	req *filev1.CreateMultipartUploadUrlRequest,
 ) (*filev1.CreateMultipartUploadUrlResponse, error) {
+	if err := validateCreateMultipartUploadUrlRequest(req); err != nil {
+		return nil, err
+	}
 
-	// TODO(veri):
-	// 1. Validate upload session
-	// 2. Validate part number
-	// 3. Validate upload status
-	// 4. Generate presigned multipart upload URL
-	// 5. Return upload URL response
+	response, err := h.fileService.CreateMultipartUploadUrl(
+		ctx,
+		&service.CreateMultipartUploadUrlRequest{
+			FileID:     req.FileId,
+			UploadID:   req.UploadId,
+			ObjectKey:  req.ObjectKey,
+			PartNumber: req.PartNumber,
+		},
+	)
+	if err != nil {
+		h.logger.Error("failed to create multipart upload URL", zap.Error(err))
+		return nil, errs.ToGRPCError(err)
+	}
 
-	return nil, status.Error(codes.Unimplemented, "CreateMultipartUploadUrl not implemented")
+	return &filev1.CreateMultipartUploadUrlResponse{
+		UploadUrl: response.UploadURL,
+		Headers:   response.Headers,
+	}, nil
 }
 
 func (h *FileHandler) CompleteMultipartUpload(
 	ctx context.Context,
 	req *filev1.CompleteMultipartUploadRequest,
 ) (*filev1.CompleteMultipartUploadResponse, error) {
+	if err := validateCompleteMultipartUploadRequest(req); err != nil {
+		return nil, err
+	}
 
-	h.logger.Info("complete multipart upload request received",
-		zap.String("upload_id", req.GetUploadId()),
-		zap.String("object_key", req.GetObjectKey()),
-		zap.Int("parts_count", len(req.GetParts())),
+	serviceParts := make([]service.MultipartPart, len(req.Parts))
+	for i, p := range req.Parts {
+		serviceParts[i] = service.MultipartPart{
+			PartNumber: p.PartNumber,
+			ETag:       p.Etag,
+		}
+	}
+
+	response, err := h.fileService.CompleteMultipartUpload(
+		ctx,
+		&service.CompleteMultipartUploadRequest{
+			UploadID:  req.UploadId,
+			ObjectKey: req.ObjectKey,
+			Parts:     serviceParts,
+		},
 	)
+	if err != nil {
+		h.logger.Error("failed to complete multipart upload", zap.Error(err))
+		return nil, errs.ToGRPCError(err)
+	}
 
-	// TODO(veri):
-	// 1. Validate multipart session
-	// 2. Validate uploaded parts
-	// 3. Complete multipart upload in storage
-	// 4. Update file status to completed
-	// 5. Trigger async virus scan worker
-	// 6. Return file object response
-
-	return nil, status.Error(codes.Unimplemented, "CompleteMultipartUpload not implemented")
+	return &filev1.CompleteMultipartUploadResponse{
+		File: mapper.ToProtoFile(response.File),
+	}, nil
 }
 
 func (h *FileHandler) AbortMultipartUpload(
 	ctx context.Context,
 	req *filev1.AbortMultipartUploadRequest,
 ) (*filev1.AbortMultipartUploadResponse, error) {
+	if err := validateAbortMultipartUploadRequest(req); err != nil {
+		return nil, err
+	}
 
-	// TODO(veri):
-	// 1. Validate multipart session
-	// 2. Abort multipart upload in storage
-	// 3. Update file status to failed/aborted
-	// 4. Cleanup metadata if necessary
+	_, err := h.fileService.AbortMultipartUpload(
+		ctx,
+		&service.AbortMultipartUploadRequest{
+			UploadID:  req.UploadId,
+			ObjectKey: req.ObjectKey,
+		},
+	)
+	if err != nil {
+		h.logger.Error("failed to abort multipart upload", zap.Error(err))
+		return nil, errs.ToGRPCError(err)
+	}
 
-	return nil, status.Error(codes.Unimplemented, "AbortMultipartUpload not implemented")
+	return &filev1.AbortMultipartUploadResponse{}, nil
 }
 
 // =====================================================

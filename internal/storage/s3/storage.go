@@ -78,3 +78,111 @@ func (s *Storage) HeadObject(
 
 	return nil
 }
+
+func (s *Storage) CreateMultipartUpload(
+	ctx context.Context,
+	opts storage.CreateMultipartUploadOptions,
+) (*storage.CreateMultipartUploadResult, error) {
+	output, err := s.client.CreateMultipartUpload(
+		ctx,
+		&awss3.CreateMultipartUploadInput{
+			Bucket:      &opts.Bucket,
+			Key:         &opts.ObjectKey,
+			ContentType: &opts.ContentType,
+		},
+	)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", errs.ErrCreateMultipartUpload, err)
+	}
+
+	return &storage.CreateMultipartUploadResult{
+		UploadID: *output.UploadId,
+	}, nil
+}
+
+func (s *Storage) GeneratePresignedMultipartUploadURL(
+	ctx context.Context,
+	opts storage.GeneratePresignedMultipartUploadURLOptions,
+) (*storage.GeneratePresignedMultipartUploadURLResult, error) {
+	request, err := s.presigner.PresignUploadPart(
+		ctx,
+		&awss3.UploadPartInput{
+			Bucket:     &opts.Bucket,
+			Key:        &opts.ObjectKey,
+			UploadId:   &opts.UploadID,
+			PartNumber: aws.Int32(opts.PartNumber),
+		},
+		func(po *awss3.PresignOptions) {
+			po.Expires = opts.Expiry
+		},
+	)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", errs.ErrGeneratePresignedURL, err)
+	}
+
+	return &storage.GeneratePresignedMultipartUploadURLResult{
+		URL:     request.URL,
+		Headers: convertHTTPHeaders(request.SignedHeader),
+	}, nil
+}
+
+func (s *Storage) CompleteMultipartUpload(
+	ctx context.Context,
+	opts storage.CompleteMultipartUploadOptions,
+) (*storage.CompleteMultipartUploadResult, error) {
+	completedParts := make([]types.CompletedPart, len(opts.Parts))
+	for i, part := range opts.Parts {
+		completedParts[i] = types.CompletedPart{
+			PartNumber: aws.Int32(part.PartNumber),
+			ETag:       aws.String(part.ETag),
+		}
+	}
+
+	output, err := s.client.CompleteMultipartUpload(
+		ctx,
+		&awss3.CompleteMultipartUploadInput{
+			Bucket:   &opts.Bucket,
+			Key:      &opts.ObjectKey,
+			UploadId: &opts.UploadID,
+			MultipartUpload: &types.CompletedMultipartUpload{
+				Parts: completedParts,
+			},
+		},
+	)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", errs.ErrCompleteMultipartUpload, err)
+	}
+
+	return &storage.CompleteMultipartUploadResult{
+		ETag: *output.ETag,
+	}, nil
+}
+
+func (s *Storage) AbortMultipartUpload(
+	ctx context.Context,
+	opts storage.AbortMultipartUploadOptions,
+) (*storage.AbortMultipartUploadResult, error) {
+	_, err := s.client.AbortMultipartUpload(
+		ctx,
+		&awss3.AbortMultipartUploadInput{
+			Bucket:   &opts.Bucket,
+			Key:      &opts.ObjectKey,
+			UploadId: &opts.UploadID,
+		},
+	)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", errs.ErrAbortMultipartUpload, err)
+	}
+
+	return &storage.AbortMultipartUploadResult{}, nil
+}
+
+func convertHTTPHeaders(httpHeaders map[string][]string) map[string]string {
+	headers := make(map[string]string)
+	for key, values := range httpHeaders {
+		if len(values) > 0 {
+			headers[key] = values[0]
+		}
+	}
+	return headers
+}

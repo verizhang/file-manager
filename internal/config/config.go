@@ -41,7 +41,8 @@ type S3Config struct {
 	SecretKey string `envconfig:"S3_SECRET_KEY" required:"true"`
 	Bucket    string `envconfig:"S3_BUCKET" required:"true"`
 	UseSSL    bool   `envconfig:"S3_USE_SSL" default:"false"`
-	Region    string `envconfig:"S3_REGION" default:"us-east-1"`
+	Region            string        `envconfig:"S3_REGION" default:"us-east-1"`
+	PresignedURLExpiry time.Duration `envconfig:"S3_PRESIGNED_URL_EXPIRY" default:"15m"` // Added this line
 }
 
 type PresignedConfig struct {
