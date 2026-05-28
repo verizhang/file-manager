@@ -478,10 +478,6 @@
         "totalParts": {
           "type": "integer",
           "format": "int32"
-        },
-        "expiresAt": {
-          "type": "string",
-          "format": "date-time"
         }
       }
     },

@@ -36,18 +36,18 @@ type DBConfig struct {
 }
 
 type S3Config struct {
-	Endpoint  string `envconfig:"S3_ENDPOINT" required:"true"`
-	AccessKey string `envconfig:"S3_ACCESS_KEY" required:"true"`
-	SecretKey string `envconfig:"S3_SECRET_KEY" required:"true"`
-	Bucket    string `envconfig:"S3_BUCKET" required:"true"`
-	UseSSL    bool   `envconfig:"S3_USE_SSL" default:"false"`
-	Region            string        `envconfig:"S3_REGION" default:"us-east-1"`
-	PresignedURLExpiry time.Duration `envconfig:"S3_PRESIGNED_URL_EXPIRY" default:"15m"` // Added this line
+	Endpoint        string `envconfig:"S3_ENDPOINT" required:"true"`
+	AccessKey       string `envconfig:"S3_ACCESS_KEY" required:"true"`
+	SecretKey       string `envconfig:"S3_SECRET_KEY" required:"true"`
+	Bucket          string `envconfig:"S3_BUCKET" required:"true"`
+	UseSSL          bool   `envconfig:"S3_USE_SSL" default:"false"`
+	Region          string `envconfig:"S3_REGION" default:"us-east-1"`
+	PresignedConfig PresignedConfig
 }
 
 type PresignedConfig struct {
-	UploadExpireMinutes   int `envconfig:"PRESIGNED_UPLOAD_EXPIRE_MINUTES" default:"15"`
-	DownloadExpireMinutes int `envconfig:"PRESIGNED_DOWNLOAD_EXPIRE_MINUTES" default:"30"`
+	UploadExpireMinutes   time.Duration `envconfig:"PRESIGNED_UPLOAD_EXPIRE_MINUTES" default:"15"`
+	DownloadExpireMinutes time.Duration `envconfig:"PRESIGNED_DOWNLOAD_EXPIRE_MINUTES" default:"30"`
 }
 
 type MultipartConfig struct {

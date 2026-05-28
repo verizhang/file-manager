@@ -568,7 +568,6 @@ type CreateMultipartUploadResponse struct {
 	ObjectKey     string                 `protobuf:"bytes,3,opt,name=object_key,json=objectKey,proto3" json:"object_key,omitempty"`
 	PartSize      int64                  `protobuf:"varint,4,opt,name=part_size,json=partSize,proto3" json:"part_size,omitempty"`
 	TotalParts    int32                  `protobuf:"varint,5,opt,name=total_parts,json=totalParts,proto3" json:"total_parts,omitempty"`
-	ExpiresAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=expires_at,json=expiresAt,proto3" json:"expires_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -636,13 +635,6 @@ func (x *CreateMultipartUploadResponse) GetTotalParts() int32 {
 		return x.TotalParts
 	}
 	return 0
-}
-
-func (x *CreateMultipartUploadResponse) GetExpiresAt() *timestamppb.Timestamp {
-	if x != nil {
-		return x.ExpiresAt
-	}
-	return nil
 }
 
 type CreateMultipartUploadUrlRequest struct {
@@ -1399,7 +1391,7 @@ const file_file_v1_file_proto_rawDesc = "" +
 	"\x1cCreateMultipartUploadRequest\x12\x1b\n" +
 	"\tfile_name\x18\x01 \x01(\tR\bfileName\x12!\n" +
 	"\fcontent_type\x18\x02 \x01(\tR\vcontentType\x12\x12\n" +
-	"\x04size\x18\x03 \x01(\x03R\x04size\"\xed\x01\n" +
+	"\x04size\x18\x03 \x01(\x03R\x04size\"\xb2\x01\n" +
 	"\x1dCreateMultipartUploadResponse\x12\x17\n" +
 	"\afile_id\x18\x01 \x01(\tR\x06fileId\x12\x1b\n" +
 	"\tupload_id\x18\x02 \x01(\tR\buploadId\x12\x1d\n" +
@@ -1407,9 +1399,7 @@ const file_file_v1_file_proto_rawDesc = "" +
 	"object_key\x18\x03 \x01(\tR\tobjectKey\x12\x1b\n" +
 	"\tpart_size\x18\x04 \x01(\x03R\bpartSize\x12\x1f\n" +
 	"\vtotal_parts\x18\x05 \x01(\x05R\n" +
-	"totalParts\x129\n" +
-	"\n" +
-	"expires_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\texpiresAt\"\x97\x01\n" +
+	"totalParts\"\x97\x01\n" +
 	"\x1fCreateMultipartUploadUrlRequest\x12\x17\n" +
 	"\afile_id\x18\x01 \x01(\tR\x06fileId\x12\x1b\n" +
 	"\tupload_id\x18\x02 \x01(\tR\buploadId\x12\x1d\n" +
@@ -1539,36 +1529,35 @@ var file_file_v1_file_proto_depIdxs = []int32{
 	26, // 5: file.v1.FileObject.deleted_at:type_name -> google.protobuf.Timestamp
 	24, // 6: file.v1.CreateUploadUrlResponse.headers:type_name -> file.v1.CreateUploadUrlResponse.HeadersEntry
 	2,  // 7: file.v1.CompleteUploadResponse.file:type_name -> file.v1.FileObject
-	26, // 8: file.v1.CreateMultipartUploadResponse.expires_at:type_name -> google.protobuf.Timestamp
-	25, // 9: file.v1.CreateMultipartUploadUrlResponse.headers:type_name -> file.v1.CreateMultipartUploadUrlResponse.HeadersEntry
-	11, // 10: file.v1.CompleteMultipartUploadRequest.parts:type_name -> file.v1.MultipartPart
-	2,  // 11: file.v1.CompleteMultipartUploadResponse.file:type_name -> file.v1.FileObject
-	2,  // 12: file.v1.GetFileResponse.file:type_name -> file.v1.FileObject
-	3,  // 13: file.v1.FileService.CreateUploadUrl:input_type -> file.v1.CreateUploadUrlRequest
-	5,  // 14: file.v1.FileService.CompleteUpload:input_type -> file.v1.CompleteUploadRequest
-	7,  // 15: file.v1.FileService.CreateMultipartUpload:input_type -> file.v1.CreateMultipartUploadRequest
-	9,  // 16: file.v1.FileService.CreateMultipartUploadUrl:input_type -> file.v1.CreateMultipartUploadUrlRequest
-	12, // 17: file.v1.FileService.CompleteMultipartUpload:input_type -> file.v1.CompleteMultipartUploadRequest
-	14, // 18: file.v1.FileService.AbortMultipartUpload:input_type -> file.v1.AbortMultipartUploadRequest
-	16, // 19: file.v1.FileService.GetFile:input_type -> file.v1.GetFileRequest
-	18, // 20: file.v1.FileService.CreateDownloadUrl:input_type -> file.v1.CreateDownloadUrlRequest
-	20, // 21: file.v1.FileService.CreatePreviewUrl:input_type -> file.v1.CreatePreviewUrlRequest
-	22, // 22: file.v1.FileService.DeleteFile:input_type -> file.v1.DeleteFileRequest
-	4,  // 23: file.v1.FileService.CreateUploadUrl:output_type -> file.v1.CreateUploadUrlResponse
-	6,  // 24: file.v1.FileService.CompleteUpload:output_type -> file.v1.CompleteUploadResponse
-	8,  // 25: file.v1.FileService.CreateMultipartUpload:output_type -> file.v1.CreateMultipartUploadResponse
-	10, // 26: file.v1.FileService.CreateMultipartUploadUrl:output_type -> file.v1.CreateMultipartUploadUrlResponse
-	13, // 27: file.v1.FileService.CompleteMultipartUpload:output_type -> file.v1.CompleteMultipartUploadResponse
-	15, // 28: file.v1.FileService.AbortMultipartUpload:output_type -> file.v1.AbortMultipartUploadResponse
-	17, // 29: file.v1.FileService.GetFile:output_type -> file.v1.GetFileResponse
-	19, // 30: file.v1.FileService.CreateDownloadUrl:output_type -> file.v1.CreateDownloadUrlResponse
-	21, // 31: file.v1.FileService.CreatePreviewUrl:output_type -> file.v1.CreatePreviewUrlResponse
-	23, // 32: file.v1.FileService.DeleteFile:output_type -> file.v1.DeleteFileResponse
-	23, // [23:33] is the sub-list for method output_type
-	13, // [13:23] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	25, // 8: file.v1.CreateMultipartUploadUrlResponse.headers:type_name -> file.v1.CreateMultipartUploadUrlResponse.HeadersEntry
+	11, // 9: file.v1.CompleteMultipartUploadRequest.parts:type_name -> file.v1.MultipartPart
+	2,  // 10: file.v1.CompleteMultipartUploadResponse.file:type_name -> file.v1.FileObject
+	2,  // 11: file.v1.GetFileResponse.file:type_name -> file.v1.FileObject
+	3,  // 12: file.v1.FileService.CreateUploadUrl:input_type -> file.v1.CreateUploadUrlRequest
+	5,  // 13: file.v1.FileService.CompleteUpload:input_type -> file.v1.CompleteUploadRequest
+	7,  // 14: file.v1.FileService.CreateMultipartUpload:input_type -> file.v1.CreateMultipartUploadRequest
+	9,  // 15: file.v1.FileService.CreateMultipartUploadUrl:input_type -> file.v1.CreateMultipartUploadUrlRequest
+	12, // 16: file.v1.FileService.CompleteMultipartUpload:input_type -> file.v1.CompleteMultipartUploadRequest
+	14, // 17: file.v1.FileService.AbortMultipartUpload:input_type -> file.v1.AbortMultipartUploadRequest
+	16, // 18: file.v1.FileService.GetFile:input_type -> file.v1.GetFileRequest
+	18, // 19: file.v1.FileService.CreateDownloadUrl:input_type -> file.v1.CreateDownloadUrlRequest
+	20, // 20: file.v1.FileService.CreatePreviewUrl:input_type -> file.v1.CreatePreviewUrlRequest
+	22, // 21: file.v1.FileService.DeleteFile:input_type -> file.v1.DeleteFileRequest
+	4,  // 22: file.v1.FileService.CreateUploadUrl:output_type -> file.v1.CreateUploadUrlResponse
+	6,  // 23: file.v1.FileService.CompleteUpload:output_type -> file.v1.CompleteUploadResponse
+	8,  // 24: file.v1.FileService.CreateMultipartUpload:output_type -> file.v1.CreateMultipartUploadResponse
+	10, // 25: file.v1.FileService.CreateMultipartUploadUrl:output_type -> file.v1.CreateMultipartUploadUrlResponse
+	13, // 26: file.v1.FileService.CompleteMultipartUpload:output_type -> file.v1.CompleteMultipartUploadResponse
+	15, // 27: file.v1.FileService.AbortMultipartUpload:output_type -> file.v1.AbortMultipartUploadResponse
+	17, // 28: file.v1.FileService.GetFile:output_type -> file.v1.GetFileResponse
+	19, // 29: file.v1.FileService.CreateDownloadUrl:output_type -> file.v1.CreateDownloadUrlResponse
+	21, // 30: file.v1.FileService.CreatePreviewUrl:output_type -> file.v1.CreatePreviewUrlResponse
+	23, // 31: file.v1.FileService.DeleteFile:output_type -> file.v1.DeleteFileResponse
+	22, // [22:32] is the sub-list for method output_type
+	12, // [12:22] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_file_v1_file_proto_init() }

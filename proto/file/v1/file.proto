@@ -185,7 +185,6 @@ message CreateMultipartUploadResponse {
   string object_key = 3;
   int64 part_size = 4;
   int32 total_parts = 5;
-  google.protobuf.Timestamp expires_at = 6;
 }
 
 message CreateMultipartUploadUrlRequest {

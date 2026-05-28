@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"time"
 
 	"github.com/verizhang/file-manager/internal/model"
 )
@@ -66,12 +65,11 @@ type CreateMultipartUploadRequest struct {
 }
 
 type CreateMultipartUploadResponse struct {
-	FileID    string
-	UploadID  string
-	ObjectKey string
-	PartSize  int64
+	FileID     string
+	UploadID   string
+	ObjectKey  string
+	PartSize   int64
 	TotalParts int32
-	ExpiresAt time.Time
 }
 
 type CreateMultipartUploadUrlRequest struct {

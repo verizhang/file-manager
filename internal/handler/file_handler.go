@@ -11,7 +11,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type FileHandler struct {
@@ -123,12 +122,11 @@ func (h *FileHandler) CreateMultipartUpload(
 	}
 
 	return &filev1.CreateMultipartUploadResponse{
-		FileId:    response.FileID,
-		UploadId:  response.UploadID,
-		ObjectKey: response.ObjectKey,
-		PartSize:  response.PartSize,
+		FileId:     response.FileID,
+		UploadId:   response.UploadID,
+		ObjectKey:  response.ObjectKey,
+		PartSize:   response.PartSize,
 		TotalParts: response.TotalParts,
-		ExpiresAt: timestamppb.New(response.ExpiresAt),
 	}, nil
 }
 

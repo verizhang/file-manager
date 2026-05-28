@@ -55,6 +55,7 @@ func (s *fileService) CreateUploadUrl(
 			Bucket:      s.cfg.S3.Bucket,
 			ObjectKey:   objectKey,
 			ContentType: req.ContentType,
+			Expiry:      s.cfg.S3.PresignedConfig.UploadExpireMinutes,
 		},
 	)
 	if err != nil {
@@ -140,12 +141,11 @@ func (s *fileService) CreateMultipartUpload(
 		req.FileName,
 	)
 
-	// Define a minimum part size (e.g., 5MB for S3)
-	const minPartSize int64 = 5 * 1024 * 1024 // 5MB
+	minPartSize := s.cfg.Multipart.PartSize
 
 	partSize := minPartSize
 	if req.Size > 0 && req.Size < minPartSize {
-		partSize = req.Size // If file is smaller than minPartSize, use file size as part size
+		partSize = req.Size
 	}
 
 	totalParts := int32(1)
@@ -196,12 +196,11 @@ func (s *fileService) CreateMultipartUpload(
 	}
 
 	return &CreateMultipartUploadResponse{
-		FileID:    fileID,
-		UploadID:  createMultipartOutput.UploadID,
-		ObjectKey: objectKey,
-		PartSize:  partSize,
+		FileID:     fileID,
+		UploadID:   createMultipartOutput.UploadID,
+		ObjectKey:  objectKey,
+		PartSize:   partSize,
 		TotalParts: totalParts,
-		ExpiresAt: time.Now().Add(s.cfg.S3.PresignedURLExpiry), // Use the same expiry as presigned URLs
 	}, nil
 }
 
@@ -229,8 +228,8 @@ func (s *fileService) CreateMultipartUploadUrl(
 			ObjectKey:   req.ObjectKey,
 			UploadID:    req.UploadID,
 			PartNumber:  req.PartNumber,
-			ContentType: file.ContentType, // Use the content type from the file metadata
-			Expiry:      s.cfg.S3.PresignedURLExpiry,
+			ContentType: file.ContentType,
+			Expiry:      s.cfg.S3.PresignedConfig.UploadExpireMinutes,
 		},
 	)
 	if err != nil {
