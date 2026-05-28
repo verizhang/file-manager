@@ -32,7 +32,7 @@ type DBConfig struct {
 	User     string `envconfig:"DB_USER" required:"true"`
 	Password string `envconfig:"DB_PASSWORD"`
 	Name     string `envconfig:"DB_NAME" required:"true"`
-	SSLMode  bool   `envconfig:"DB_SSLMODE" default:"false"`
+	TLS      string `envconfig:"DB_TLS" default:"skip-verify"`
 }
 
 type S3Config struct {

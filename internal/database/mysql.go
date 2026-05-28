@@ -13,12 +13,13 @@ func NewMySQLConnection(
 ) (*gorm.DB, error) {
 
 	dsn := fmt.Sprintf(
-		"%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		"%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local&tls=%s",
 		cfg.User,
 		cfg.Password,
 		cfg.Host,
 		cfg.Port,
 		cfg.Name,
+		cfg.TLS,
 	)
 
 	db, err := gorm.Open(
