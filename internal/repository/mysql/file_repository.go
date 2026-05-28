@@ -112,7 +112,7 @@ func (r *fileRepository) UpdateStatusAndETag(
 	ctx context.Context,
 	id string,
 	status model.FileStatus,
-	etag *string,
+	etag string,
 ) error {
 	err := r.db.WithContext(ctx).
 		Model(&entity.File{}).

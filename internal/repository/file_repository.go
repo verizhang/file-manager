@@ -29,7 +29,7 @@ type FileRepository interface {
 		ctx context.Context,
 		id string,
 		status model.FileStatus,
-		etag *string,
+		etag string,
 	) error
 	UpdateStatusAndClearUploadID(
 		ctx context.Context,
