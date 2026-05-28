@@ -24,7 +24,7 @@ func (s *fileService) validateFileSize(
 ) error {
 
 	if size > s.cfg.File.MaxFileSize {
-		return fmt.Errorf("%w: %s", errs.ErrFileTooLarge, fmt.Errorf("size %s too large"))
+		return fmt.Errorf("%w: %s", errs.ErrFileTooLarge, fmt.Errorf("size %d too large", size))
 	}
 
 	return nil
