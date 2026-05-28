@@ -28,6 +28,12 @@ func ToGRPCError(err error) error {
 			ErrFileTypeNotAllowed.Error(),
 		)
 
+	case errors.Is(err, ErrFileTooLarge):
+		return status.Error(
+			codes.InvalidArgument,
+			ErrFileTooLarge.Error(),
+		)
+
 	default:
 		return status.Error(
 			codes.Internal,

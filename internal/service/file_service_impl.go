@@ -47,6 +47,11 @@ func (s *fileService) CreateUploadUrl(
 		return nil, err
 	}
 
+	err = s.validateFileSize(req.Size)
+	if err != nil {
+		return nil, err
+	}
+
 	fileID := uuid.NewString()
 
 	objectKey := GenerateObjectKey(
@@ -140,6 +145,11 @@ func (s *fileService) CreateMultipartUpload(
 	req *CreateMultipartUploadRequest,
 ) (*CreateMultipartUploadResponse, error) {
 	err := s.validateContentType(req.ContentType)
+	if err != nil {
+		return nil, err
+	}
+
+	err = s.validateFileSize(req.Size)
 	if err != nil {
 		return nil, err
 	}
@@ -353,19 +363,6 @@ func (s *fileService) AbortMultipartUpload(
 	}
 
 	return &AbortMultipartUploadResponse{}, nil
-}
-
-func (s *fileService) validateContentType(
-	contentType string,
-) error {
-
-	for _, allowedType := range s.cfg.File.AllowedTypes {
-		if allowedType == contentType {
-			return nil
-		}
-	}
-
-	return fmt.Errorf("%w: %s", errs.ErrFileTypeNotAllowed, fmt.Sprintf("content type %s not allowed", contentType))
 }
 
 func GenerateObjectKey(

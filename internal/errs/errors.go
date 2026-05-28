@@ -16,6 +16,7 @@ var (
 	// Service
 	ErrMultipartUploadMismatch = errors.New("error multipart upload missmatch")
 	ErrFileTypeNotAllowed      = errors.New("file type not allowed")
+	ErrFileTooLarge            = errors.New("file too large")
 
 	// Database
 	ErrCreateFileMetadata            = errors.New("failed to create file metadata")
