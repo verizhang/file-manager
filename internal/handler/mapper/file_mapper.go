@@ -3,6 +3,7 @@ package mapper
 import (
 	filev1 "github.com/verizhang/file-manager/gen/go/file/v1"
 	"github.com/verizhang/file-manager/internal/model"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func ToProtoFile(
@@ -25,6 +26,7 @@ func ToProtoFile(
 		Etag:            etag,
 		Status:          toProtoFileStatus(file.Status),
 		VirusScanStatus: toProtoVirusScanStatus(file.VirusScanStatus),
+		CreatedAt:       timestamppb.New(file.CreatedAt),
 	}
 }
 

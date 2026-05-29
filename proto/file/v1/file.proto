@@ -126,9 +126,6 @@ message FileObject {
   FileStatus status = 8;
   VirusScanStatus virus_scan_status = 9;
   google.protobuf.Timestamp created_at = 10;
-  google.protobuf.Timestamp updated_at = 11;
-  google.protobuf.Timestamp completed_at = 12;
-  google.protobuf.Timestamp deleted_at = 13;
 }
 
 //

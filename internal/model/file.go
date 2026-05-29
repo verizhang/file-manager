@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 type File struct {
 	ID              string
 	UploadID        *string
@@ -11,4 +13,5 @@ type File struct {
 	ETag            *string
 	Status          FileStatus
 	VirusScanStatus VirusScanStatus
+	CreatedAt       time.Time
 }

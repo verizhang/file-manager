@@ -19,6 +19,7 @@ func ToFileModel(
 		ETag:            fileEntity.ETag,
 		Status:          fileEntity.Status,
 		VirusScanStatus: fileEntity.VirusScanStatus,
+		CreatedAt:       fileEntity.CreatedAt,
 	}
 }
 
@@ -37,6 +38,7 @@ func ToFileEntity(
 		ETag:            fileModel.ETag,
 		Status:          fileModel.Status,
 		VirusScanStatus: fileModel.VirusScanStatus,
+		CreatedAt:       fileModel.CreatedAt,
 	}
 	return fileEntity
 }
