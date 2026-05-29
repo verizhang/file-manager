@@ -1,298 +1,327 @@
 # File Manager Service
 
-A production-oriented file management microservice built with Golang, gRPC, gRPC-Gateway, MySQL, and S3-compatible object storage such as MinIO or AWS S3.
+Production-oriented file management microservice built with Go, gRPC, MySQL, and S3-compatible object storage.
 
-This project supports:
-
-* presigned upload URL generation
-* multipart upload flow
-* preview & download URL generation
-* resumable downloads
-* file metadata management
-* virus scanning preparation
-* scalable storage abstraction
+This project demonstrates how modern backend services handle file uploads at scale using pre-signed URLs, multipart uploads, metadata persistence, and object storage abstraction.
 
 ---
 
-# Features
+## Overview
 
-## Upload
+Instead of uploading files through the application server, clients upload files directly to object storage using pre-signed URLs.
 
-* Simple upload using presigned URL
+The service is responsible for:
+
+* File metadata management
+* Upload lifecycle management
+* Pre-signed upload URL generation
+* Multipart upload orchestration
+* Download URL generation
+* Preview URL generation
+* Object storage abstraction
+* Upload status tracking
+
+This architecture reduces application server load and scales significantly better for large files.
+
+---
+
+## Features
+
+### Upload Management
+
+* Direct upload using S3 pre-signed URLs
 * Multipart upload support
-* S3-compatible storage
-* Object key generation strategy
+* Upload completion workflow
+* Upload abort workflow
+* File lifecycle tracking
 
-## File Access
+### File Access
 
-* Generate preview URL
-* Generate download URL
-* Get file metadata
+* Generate temporary download URLs
+* Generate temporary preview URLs
+* Retrieve file metadata
 
-## File Management
+### Storage
 
-* Delete file
+* S3-compatible storage abstraction
+* MinIO support
+* AWS S3 support
+
+### Metadata
+
 * File status tracking
-* Upload lifecycle tracking
+* Virus scan status tracking
+* Upload timestamps
+* Soft deletion support
+
+---
 
 ## Architecture
 
-* Clean Architecture-ish layering
-* Repository pattern
-* Storage abstraction
-* gRPC + HTTP Gateway
-* Migration-based database management
+```text
+                 ┌──────────────┐
+                 │    Client    │
+                 └──────┬───────┘
+                        │
+                        ▼
+               HTTP / gRPC API
+                        │
+                        ▼
+                 Handler Layer
+                        │
+                        ▼
+                 Service Layer
+                  Business Logic
+                        │
+            ┌───────────┴───────────┐
+            ▼                       ▼
+     Repository Layer       Storage Layer
+            │                       │
+            ▼                       ▼
+         MySQL              S3 / MinIO
+```
+
+### Layer Responsibilities
+
+#### Handler
+
+Responsible for:
+
+* Request validation
+* gRPC implementation
+* Response mapping
+* Error translation
+
+#### Service
+
+Responsible for:
+
+* Business rules
+* Upload workflows
+* Metadata processing
+* File lifecycle management
+
+#### Repository
+
+Responsible for:
+
+* Database access
+* Persistence logic
+* Query abstraction
+
+#### Storage
+
+Responsible for:
+
+* S3 operations
+* Pre-signed URLs
+* Multipart uploads
+* Object management
 
 ---
 
-# Tech Stack
+## Technology Stack
 
-## Backend
+### Backend
 
-* Golang
+* Go
 * gRPC
 * gRPC-Gateway
+* Protocol Buffers
 * GORM
+
+### Database
+
 * MySQL
 
-## Storage
+### Object Storage
 
 * AWS SDK v2
+* Amazon S3
 * MinIO
-* AWS S3 compatible storage
 
-## Infrastructure
+### Infrastructure
 
 * Docker
 * Docker Compose
+* Buf
 
-## Planned
+### Logging
 
-* Kubernetes
-* CI/CD
-* Virus scanning (ClamAV)
-* Multipart resumable upload optimization
+* Zap Logger
 
 ---
 
-# Project Structure
+## API Endpoints
 
-```text
-.
-├── cmd/
-│   └── api/
-│       └── main.go
-│
-├── gen/
-│   ├── go/
-│   ├── grpc-gateway/
-│   └── openapiv2/
-│
-├── internal/
-│   ├── config/
-│   ├── database/
-│   ├── handler/
-│   │   └── grpc/
-│   ├── logger/
-│   ├── model/
-│   ├── repository/
-│   │   ├── entity/
-│   │   ├── mapper/
-│   │   └── mysql/
-│   ├── server/
-│   ├── service/
-│   └── storage/
-│       └── s3/
-│
-├── migrations/
-│
-├── proto/
-│
-├── scripts/
-│
-├── docker-compose.yml
-├── Makefile
-├── buf.gen.yaml
-├── buf.yaml
-└── README.md
+### Simple Upload
+
+```http
+POST /v1/files/upload-url
+```
+
+Generate a pre-signed URL for direct upload.
+
+---
+
+### Complete Upload
+
+```http
+POST /v1/files/{file_id}/complete
+```
+
+Mark upload as completed and update metadata.
+
+---
+
+### Multipart Upload
+
+Create upload session:
+
+```http
+POST /v1/files/multipart
+```
+
+Generate part upload URL:
+
+```http
+POST /v1/files/multipart/url
+```
+
+Complete multipart upload:
+
+```http
+POST /v1/files/multipart/complete
+```
+
+Abort multipart upload:
+
+```http
+POST /v1/files/multipart/abort
 ```
 
 ---
 
-# Architecture
+### File Access
 
-```text
-Client
-   ↓
-HTTP / gRPC
-   ↓
-Handler Layer
-   ↓
-Service Layer
-   ↓
-Repository Layer
-   ↓
-MySQL
+Get file metadata:
 
-Service Layer
-   ↓
-Storage Abstraction
-   ↓
-S3 Compatible Storage
-(MinIO / AWS S3)
+```http
+GET /v1/files/{file_id}
+```
+
+Generate download URL:
+
+```http
+POST /v1/files/{file_id}/download-url
+```
+
+Generate preview URL:
+
+```http
+POST /v1/files/{file_id}/preview-url
 ```
 
 ---
 
-# API Overview
+### Delete File
 
-## Simple Upload
-
-* `POST /v1/files/upload-url`
-
-Generate presigned upload URL for direct upload.
+```http
+DELETE /v1/files/{file_id}
+```
 
 ---
 
-## Multipart Upload
+## Project Structure
 
-* `POST /v1/files/multipart`
-* `POST /v1/files/multipart/url`
-* `POST /v1/files/multipart/complete`
-* `POST /v1/files/multipart/abort`
+```text
+cmd/
+└── api/
+    └── main.go
 
-Multipart upload lifecycle.
+internal/
+├── config/
+├── database/
+├── errs/
+├── handler/
+├── interceptor/
+├── logger/
+├── model/
+├── repository/
+├── server/
+├── service/
+└── storage/
+
+proto/
+└── file/v1/
+
+gen/
+├── go/
+└── openapi/
+
+migrations/
+```
 
 ---
 
-## File Access
+## Local Development
 
-* `GET /v1/files/{file_id}`
-* `POST /v1/files/{file_id}/download-url`
-* `POST /v1/files/{file_id}/preview-url`
+### Requirements
 
----
-
-## Delete
-
-* `DELETE /v1/files/{file_id}`
-
----
-
-# Local Development
-
-## Requirements
-
-* Go 1.24+
+* Go 1.25+
 * Docker
 * Docker Compose
-* Make
-* golang-migrate
+* MySQL
+* MinIO
 
 ---
 
-# Run Infrastructure
+### Start Infrastructure
 
 ```bash
 docker compose up -d
 ```
 
-This will start:
+Services:
 
 * MySQL
 * MinIO
 
 ---
 
-# Create Bucket
+### Configure Environment
 
-Open MinIO console:
-
-```text
-http://localhost:9001
-```
-
-Default credentials:
-
-```text
-username: minioadmin
-password: minioadmin
-```
-
-Create bucket:
-
-```text
-file-manager
-```
-
----
-
-# Environment Variables
-
-Create `.env`
+Create a `.env` file:
 
 ```env
-# =====================================================
-# APP
-# =====================================================
-
-APP_NAME=file-manager
-APP_ENV=local
-
 APP_HTTP_PORT=8080
 APP_GRPC_PORT=9090
-
-# =====================================================
-# DATABASE
-# =====================================================
 
 DB_HOST=localhost
 DB_PORT=3306
 DB_NAME=file_manager
-
 DB_USER=mysqladmin
 DB_PASSWORD=mysqladmin
 
-DB_MAX_OPEN_CONNECTION=10
-DB_MAX_IDLE_CONNECTION=5
-DB_MAX_LIFETIME_MINUTE=30
-
-# =====================================================
-# S3 / MINIO
-# =====================================================
-
 S3_ENDPOINT=http://localhost:9000
 S3_REGION=ap-southeast-1
-
 S3_ACCESS_KEY=minioadmin
 S3_SECRET_KEY=minioadmin
-
 S3_BUCKET=file-manager
-
 S3_USE_SSL=false
-
-# =====================================================
-# CLAMAV
-# =====================================================
-
-CLAMAV_HOST=localhost
-CLAMAV_PORT=3310
 ```
 
 ---
 
-# Run Database Migration
+### Run Migration
 
 ```bash
-migrate \
-  -path migrations \
-  -database "mysql://mysqladmin:mysqladmin@tcp(localhost:3306)/file_manager" \
-  up
+migrate up
 ```
 
 ---
 
-# Generate Protobuf
+### Generate Protobuf
 
 ```bash
 buf generate
@@ -300,7 +329,7 @@ buf generate
 
 ---
 
-# Run Application
+### Run Service
 
 ```bash
 go run cmd/api/main.go
@@ -308,89 +337,75 @@ go run cmd/api/main.go
 
 ---
 
-# Test Upload URL Endpoint
+## Example Upload Flow
 
-```bash
-curl --location 'http://localhost:8080/v1/files/upload-url' \
---header 'Content-Type: application/json' \
---data '{
-  "file_name": "example.pdf",
-  "content_type": "application/pdf",
-  "size": 1048576
-}'
+### 1. Request Upload URL
+
+```http
+POST /v1/files/upload-url
 ```
 
----
-
-# Example Response
+Response:
 
 ```json
 {
-  "file_id": "uuid",
+  "file_id": "c1c57d4d-9b93-4c62-bf92-fd56a7f89f21",
   "upload_url": "https://...",
-  "object_key": "2026/05/19/uuid.pdf"
+  "object_key": "uploads/2026/05/example.pdf"
 }
 ```
 
----
-
-# Upload File Using Presigned URL
+### 2. Upload Directly to Storage
 
 ```bash
-curl --request PUT \
---upload-file ./example.pdf \
---header "Content-Type: application/pdf" \
-'PRESIGNED_URL'
+curl -X PUT \
+  --upload-file example.pdf \
+  "PRESIGNED_URL"
+```
+
+### 3. Complete Upload
+
+```http
+POST /v1/files/{file_id}/complete
+```
+
+### 4. Retrieve Metadata
+
+```http
+GET /v1/files/{file_id}
 ```
 
 ---
 
-# Current Status
+## Future Improvements
 
-## Implemented
-
-* Project structure
-* gRPC server
-* gRPC Gateway
-* S3 storage abstraction
-* Presigned upload URL generation
-* MySQL repository layer
-* Migration system
-* File metadata persistence
-
-## In Progress
-
-* Multipart upload implementation
-* Download URL generation
-* Preview URL generation
-* Delete flow
-
-## Planned
-
-* Virus scanning
-* Authentication middleware
-* Background workers
-* Event-driven processing
-* Metrics & observability
-* Kubernetes deployment
-* CI/CD pipeline
-* Unit testing
+* Authentication & Authorization
+* ClamAV Integration
+* Background Processing
+* Event-Driven Architecture
+* OpenTelemetry Tracing
+* Prometheus Metrics
+* Kubernetes Deployment
+* CI/CD Pipeline
+* Object Lifecycle Policies
 
 ---
 
-# Design Goals
+## Learning Goals
 
-This project is designed to:
+This project was built to explore:
 
-* be cloud-native ready
-* support large-scale file uploads
-* support resumable upload flows
-* work with any S3-compatible provider
-* be easy to deploy for companies
-* provide production-oriented architecture patterns
+* gRPC service development
+* gRPC-Gateway integration
+* Clean architecture principles
+* Repository pattern
+* S3 object storage workflows
+* Multipart upload design
+* Production-oriented backend development
+* Service abstraction and dependency injection
 
 ---
 
-# License
+## License
 
-MIT License
+MIT
