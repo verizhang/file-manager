@@ -36,6 +36,11 @@ type FileService interface {
 		ctx context.Context,
 		req *AbortMultipartUploadRequest,
 	) (*AbortMultipartUploadResponse, error)
+
+	GetFile(
+		ctx context.Context,
+		req *GetFileRequest,
+	) (*GetFileResponse, error)
 }
 
 type CreateUploadRequest struct {
@@ -54,6 +59,14 @@ type CompleteUploadRequest struct {
 }
 
 type CompleteUploadResponse struct {
+	File *model.File
+}
+
+type GetFileRequest struct {
+	FileID string
+}
+
+type GetFileResponse struct {
 	File *model.File
 }
 

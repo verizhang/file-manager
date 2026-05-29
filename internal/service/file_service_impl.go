@@ -183,7 +183,6 @@ func (s *fileService) CreateMultipartUpload(
 		},
 	)
 	if err != nil {
-		s.logger.Error("failed to create multipart upload", zap.Error(err))
 		return nil, err
 	}
 
@@ -204,7 +203,6 @@ func (s *fileService) CreateMultipartUpload(
 		file,
 	)
 	if err != nil {
-		s.logger.Error("failed to create file metadata for multipart upload", zap.Error(err))
 		// Attempt to abort the multipart upload if metadata creation fails
 		_, abortErr := s.storage.AbortMultipartUpload(ctx, storage.AbortMultipartUploadOptions{
 			Bucket:    s.cfg.S3.Bucket,
@@ -255,7 +253,6 @@ func (s *fileService) CreateMultipartUploadUrl(
 		},
 	)
 	if err != nil {
-		s.logger.Error("failed to generate presigned multipart upload URL", zap.Error(err))
 		return nil, err
 	}
 
@@ -313,7 +310,6 @@ func (s *fileService) CompleteMultipartUpload(
 		},
 	)
 	if err != nil {
-		s.logger.Error("failed to complete multipart upload", zap.Error(err))
 		return nil, err
 	}
 
@@ -326,7 +322,6 @@ func (s *fileService) CompleteMultipartUpload(
 		etag,
 	)
 	if err != nil {
-		s.logger.Error("failed to update file status and ETag after multipart completion", zap.Error(err))
 		return nil, err
 	}
 
@@ -376,6 +371,23 @@ func (s *fileService) AbortMultipartUpload(
 	}
 
 	return &AbortMultipartUploadResponse{}, nil
+}
+
+func (s *fileService) GetFile(
+	ctx context.Context,
+	req *GetFileRequest,
+) (*GetFileResponse, error) {
+	file, err := s.fileRepository.GetByID(
+		ctx,
+		req.FileID,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &GetFileResponse{
+		File: file,
+	}, nil
 }
 
 func GenerateObjectKey(

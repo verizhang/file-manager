@@ -223,13 +223,26 @@ func (h *FileHandler) GetFile(
 	ctx context.Context,
 	req *filev1.GetFileRequest,
 ) (*filev1.GetFileResponse, error) {
+	if err := validateGetFileRequest(req); err != nil {
+		return nil, err
+	}
 
-	// TODO(veri):
-	// 1. Validate file ID
-	// 2. Retrieve file metadata
-	// 3. Return file response
+	response, err := h.fileService.GetFile(
+		ctx,
+		&service.GetFileRequest{
+			FileID: req.GetFileId(),
+		},
+	)
+	if err != nil {
+		h.logger.Error("failed to get file",
+			zap.Error(err),
+		)
+		return nil, errs.ToGRPCError(err)
+	}
 
-	return nil, status.Error(codes.Unimplemented, "GetFile not implemented")
+	return &filev1.GetFileResponse{
+		File: mapper.ToProtoFile(response.File),
+	}, nil
 }
 
 func (h *FileHandler) CreateDownloadUrl(

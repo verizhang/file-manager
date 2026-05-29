@@ -225,3 +225,25 @@ func validateAbortMultipartUploadRequest(
 		violations,
 	)
 }
+
+func validateGetFileRequest(
+	req *filev1.GetFileRequest,
+) error {
+	violations := []errs.FieldViolation{}
+
+	if strings.TrimSpace(req.GetFileId()) == "" {
+		violations = append(violations, errs.FieldViolation{
+			Field:       "file_id",
+			Description: "file_id is required",
+		})
+	}
+
+	if len(violations) == 0 {
+		return nil
+	}
+
+	return errs.NewInvalidArgumentError(
+		"validation failed",
+		violations,
+	)
+}
