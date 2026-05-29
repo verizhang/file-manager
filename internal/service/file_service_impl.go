@@ -73,13 +73,14 @@ func (s *fileService) CreateUploadUrl(
 	}
 
 	file := &model.File{
-		ID:          fileID,
-		ObjectKey:   objectKey,
-		Bucket:      s.cfg.S3.Bucket,
-		FileName:    req.FileName,
-		ContentType: req.ContentType,
-		Size:        req.Size,
-		Status:      model.FileStatusPending,
+		ID:              fileID,
+		ObjectKey:       objectKey,
+		Bucket:          s.cfg.S3.Bucket,
+		FileName:        req.FileName,
+		ContentType:     req.ContentType,
+		Size:            req.Size,
+		Status:          model.FileStatusPending,
+		VirusScanStatus: model.VirusScanStatusPending,
 	}
 
 	err = s.fileRepository.Create(
@@ -187,14 +188,15 @@ func (s *fileService) CreateMultipartUpload(
 	}
 
 	file := &model.File{
-		ID:          fileID,
-		UploadID:    &createMultipartOutput.UploadID,
-		ObjectKey:   objectKey,
-		Bucket:      s.cfg.S3.Bucket,
-		FileName:    req.FileName,
-		ContentType: req.ContentType,
-		Size:        req.Size,
-		Status:      model.FileStatusPending,
+		ID:              fileID,
+		UploadID:        &createMultipartOutput.UploadID,
+		ObjectKey:       objectKey,
+		Bucket:          s.cfg.S3.Bucket,
+		FileName:        req.FileName,
+		ContentType:     req.ContentType,
+		Size:            req.Size,
+		Status:          model.FileStatusPending,
+		VirusScanStatus: model.VirusScanStatusPending,
 	}
 
 	err = s.fileRepository.Create(
@@ -255,6 +257,17 @@ func (s *fileService) CreateMultipartUploadUrl(
 	if err != nil {
 		s.logger.Error("failed to generate presigned multipart upload URL", zap.Error(err))
 		return nil, err
+	}
+
+	if file.Status != model.FileStatusUploading {
+		err := s.fileRepository.UpdateStatus(
+			ctx,
+			file.ID,
+			model.FileStatusCompleted,
+		)
+		if err != nil {
+			s.logger.Error("failed to update status", zap.Error(err))
+		}
 	}
 
 	return &CreateMultipartUploadUrlResponse{
@@ -351,7 +364,7 @@ func (s *fileService) AbortMultipartUpload(
 		return nil, err
 	}
 
-	abortedStatus := model.FileStatusFailed
+	abortedStatus := model.FileStatusAborted
 	err = s.fileRepository.UpdateStatusAndClearUploadID(
 		ctx,
 		file.ID,

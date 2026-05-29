@@ -26,14 +26,11 @@ const (
 type FileStatus int32
 
 const (
-	FileStatus_FILE_STATUS_UNSPECIFIED  FileStatus = 0
-	FileStatus_FILE_STATUS_PENDING      FileStatus = 1
-	FileStatus_FILE_STATUS_UPLOADING    FileStatus = 2
-	FileStatus_FILE_STATUS_PENDING_SCAN FileStatus = 3
-	FileStatus_FILE_STATUS_COMPLETED    FileStatus = 4
-	FileStatus_FILE_STATUS_FAILED       FileStatus = 5
-	FileStatus_FILE_STATUS_INFECTED     FileStatus = 6
-	FileStatus_FILE_STATUS_DELETED      FileStatus = 7
+	FileStatus_FILE_STATUS_UNSPECIFIED FileStatus = 0
+	FileStatus_FILE_STATUS_PENDING     FileStatus = 1
+	FileStatus_FILE_STATUS_UPLOADING   FileStatus = 2
+	FileStatus_FILE_STATUS_COMPLETED   FileStatus = 3
+	FileStatus_FILE_STATUS_ABORTED     FileStatus = 4
 )
 
 // Enum value maps for FileStatus.
@@ -42,21 +39,15 @@ var (
 		0: "FILE_STATUS_UNSPECIFIED",
 		1: "FILE_STATUS_PENDING",
 		2: "FILE_STATUS_UPLOADING",
-		3: "FILE_STATUS_PENDING_SCAN",
-		4: "FILE_STATUS_COMPLETED",
-		5: "FILE_STATUS_FAILED",
-		6: "FILE_STATUS_INFECTED",
-		7: "FILE_STATUS_DELETED",
+		3: "FILE_STATUS_COMPLETED",
+		4: "FILE_STATUS_ABORTED",
 	}
 	FileStatus_value = map[string]int32{
-		"FILE_STATUS_UNSPECIFIED":  0,
-		"FILE_STATUS_PENDING":      1,
-		"FILE_STATUS_UPLOADING":    2,
-		"FILE_STATUS_PENDING_SCAN": 3,
-		"FILE_STATUS_COMPLETED":    4,
-		"FILE_STATUS_FAILED":       5,
-		"FILE_STATUS_INFECTED":     6,
-		"FILE_STATUS_DELETED":      7,
+		"FILE_STATUS_UNSPECIFIED": 0,
+		"FILE_STATUS_PENDING":     1,
+		"FILE_STATUS_UPLOADING":   2,
+		"FILE_STATUS_COMPLETED":   3,
+		"FILE_STATUS_ABORTED":     4,
 	}
 )
 
@@ -1445,17 +1436,14 @@ const file_file_v1_file_proto_rawDesc = "" +
 	"previewUrl\",\n" +
 	"\x11DeleteFileRequest\x12\x17\n" +
 	"\afile_id\x18\x01 \x01(\tR\x06fileId\"\x14\n" +
-	"\x12DeleteFileResponse*\xe1\x01\n" +
+	"\x12DeleteFileResponse*\x91\x01\n" +
 	"\n" +
 	"FileStatus\x12\x1b\n" +
 	"\x17FILE_STATUS_UNSPECIFIED\x10\x00\x12\x17\n" +
 	"\x13FILE_STATUS_PENDING\x10\x01\x12\x19\n" +
-	"\x15FILE_STATUS_UPLOADING\x10\x02\x12\x1c\n" +
-	"\x18FILE_STATUS_PENDING_SCAN\x10\x03\x12\x19\n" +
-	"\x15FILE_STATUS_COMPLETED\x10\x04\x12\x16\n" +
-	"\x12FILE_STATUS_FAILED\x10\x05\x12\x18\n" +
-	"\x14FILE_STATUS_INFECTED\x10\x06\x12\x17\n" +
-	"\x13FILE_STATUS_DELETED\x10\a*\xce\x01\n" +
+	"\x15FILE_STATUS_UPLOADING\x10\x02\x12\x19\n" +
+	"\x15FILE_STATUS_COMPLETED\x10\x03\x12\x17\n" +
+	"\x13FILE_STATUS_ABORTED\x10\x04*\xce\x01\n" +
 	"\x0fVirusScanStatus\x12!\n" +
 	"\x1dVIRUS_SCAN_STATUS_UNSPECIFIED\x10\x00\x12\x1d\n" +
 	"\x19VIRUS_SCAN_STATUS_PENDING\x10\x01\x12\x1e\n" +
