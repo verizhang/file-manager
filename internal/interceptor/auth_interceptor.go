@@ -39,12 +39,3 @@ func AuthInterceptor() grpc.UnaryServerInterceptor {
 		return handler(newCtx, req)
 	}
 }
-
-// GetUserIDFromContext extracts the user ID from the context.
-func GetUserIDFromContext(ctx context.Context) (string, error) {
-	userID, ok := ctx.Value(UserIDContextKey).(string)
-	if !ok || userID == "" {
-		return "", status.Errorf(codes.Unauthenticated, "user ID not found in context")
-	}
-	return userID, nil
-}
