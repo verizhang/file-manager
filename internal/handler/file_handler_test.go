@@ -932,9 +932,7 @@ func TestFileHandler_DeleteFile(t *testing.T) {
 
 	t.Run("success - valid request", func(t *testing.T) {
 		req := &filev1.DeleteFileRequest{FileId: fileID}
-		expectedServiceResponse := &service.DeleteFileResponse{
-			Message: "File deleted successfully",
-		}
+		expectedServiceResponse := &service.DeleteFileResponse{}
 
 		mockFileService.EXPECT().DeleteFile(
 			ctx,
@@ -945,7 +943,7 @@ func TestFileHandler_DeleteFile(t *testing.T) {
 
 		assert.NoError(t, err)
 		assert.NotNil(t, resp)
-		assert.Equal(t, expectedServiceResponse.Message, resp.Message)
+		assert.Equal(t, &filev1.DeleteFileResponse{}, resp)
 	})
 
 	t.Run("failure - validation error (empty file id)", func(t *testing.T) {

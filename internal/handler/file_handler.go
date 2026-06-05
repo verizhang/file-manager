@@ -283,7 +283,7 @@ func (h *FileHandler) DeleteFile(
 		return nil, err
 	}
 
-	response, err := h.fileService.DeleteFile(
+	_, err := h.fileService.DeleteFile(
 		ctx,
 		&service.DeleteFileRequest{
 			FileID: req.GetFileId(),
@@ -296,7 +296,5 @@ func (h *FileHandler) DeleteFile(
 		return nil, errs.ToGRPCError(err)
 	}
 
-	return &filev1.DeleteFileResponse{
-		Message: response.Message,
-	}, nil
+	return &filev1.DeleteFileResponse{}, nil
 }

@@ -241,6 +241,4 @@ message DeleteFileRequest {
   string file_id = 1;
 }
 
-message DeleteFileResponse {
-  string message = 1;
-}
+message DeleteFileResponse {}

@@ -448,9 +448,7 @@ func (s *fileService) DeleteFile(
 		return nil, err
 	}
 
-	return &DeleteFileResponse{
-		Message: "File deleted successfully",
-	}, nil
+	return &DeleteFileResponse{}, nil
 }
 
 func GenerateObjectKey(

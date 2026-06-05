@@ -1190,7 +1190,6 @@ func (x *DeleteFileRequest) GetFileId() string {
 
 type DeleteFileResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1223,13 +1222,6 @@ func (x *DeleteFileResponse) ProtoReflect() protoreflect.Message {
 // Deprecated: Use DeleteFileResponse.ProtoReflect.Descriptor instead.
 func (*DeleteFileResponse) Descriptor() ([]byte, []int) {
 	return file_file_v1_file_proto_rawDescGZIP(), []int{19}
-}
-
-func (x *DeleteFileResponse) GetMessage() string {
-	if x != nil {
-		return x.Message
-	}
-	return ""
 }
 
 var File_file_v1_file_proto protoreflect.FileDescriptor
@@ -1321,9 +1313,8 @@ const file_file_v1_file_proto_rawDesc = "" +
 	"\x19CreateDownloadUrlResponse\x12!\n" +
 	"\fdownload_url\x18\x01 \x01(\tR\vdownloadUrl\",\n" +
 	"\x11DeleteFileRequest\x12\x17\n" +
-	"\afile_id\x18\x01 \x01(\tR\x06fileId\".\n" +
-	"\x12DeleteFileResponse\x12\x18\n" +
-	"\amessage\x18\x01 \x01(\tR\amessage*\x91\x01\n" +
+	"\afile_id\x18\x01 \x01(\tR\x06fileId\"\x14\n" +
+	"\x12DeleteFileResponse*\x91\x01\n" +
 	"\n" +
 	"FileStatus\x12\x1b\n" +
 	"\x17FILE_STATUS_UNSPECIFIED\x10\x00\x12\x17\n" +

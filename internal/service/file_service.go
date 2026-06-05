@@ -93,7 +93,7 @@ type DeleteFileRequest struct {
 }
 
 type DeleteFileResponse struct {
-	Message string
+	// No specific fields needed for now
 }
 
 // Multipart Upload

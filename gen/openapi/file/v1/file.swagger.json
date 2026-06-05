@@ -508,12 +508,7 @@
       }
     },
     "v1DeleteFileResponse": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string"
-        }
-      }
+      "type": "object"
     },
     "v1FileObject": {
       "type": "object",
