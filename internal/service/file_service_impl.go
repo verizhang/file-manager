@@ -462,11 +462,8 @@ func GenerateObjectKey(
 	ext := filepath.Ext(fileName)
 
 	return fmt.Sprintf(
-		"%s/%d/%02d/%02d/%s%s",
+		"%s/%s%s",
 		userID,
-		now.Year(),
-		now.Month(),
-		now.Day(),
 		fileID,
 		ext,
 	)
