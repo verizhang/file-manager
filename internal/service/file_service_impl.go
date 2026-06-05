@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"path/filepath"
-	"time"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -456,9 +455,6 @@ func GenerateObjectKey(
 	fileID string,
 	fileName string,
 ) string {
-
-	now := time.Now().UTC()
-
 	ext := filepath.Ext(fileName)
 
 	return fmt.Sprintf(
