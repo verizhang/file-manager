@@ -36,4 +36,8 @@ type FileRepository interface {
 		id string,
 		status model.FileStatus,
 	) error
+	Delete(
+		ctx context.Context,
+		id string,
+	) error
 }

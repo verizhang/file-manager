@@ -247,3 +247,47 @@ func validateGetFileRequest(
 		violations,
 	)
 }
+
+func validateCreateDownloadUrlRequest(
+	req *filev1.CreateDownloadUrlRequest,
+) error {
+	violations := []errs.FieldViolation{}
+
+	if strings.TrimSpace(req.GetFileId()) == "" {
+		violations = append(violations, errs.FieldViolation{
+			Field:       "file_id",
+			Description: "file_id is required",
+		})
+	}
+
+	if len(violations) == 0 {
+		return nil
+	}
+
+	return errs.NewInvalidArgumentError(
+		"validation failed",
+		violations,
+	)
+}
+
+func validateDeleteFileRequest(
+	req *filev1.DeleteFileRequest,
+) error {
+	violations := []errs.FieldViolation{}
+
+	if strings.TrimSpace(req.GetFileId()) == "" {
+		violations = append(violations, errs.FieldViolation{
+			Field:       "file_id",
+			Description: "file_id is required",
+		})
+	}
+
+	if len(violations) == 0 {
+		return nil
+	}
+
+	return errs.NewInvalidArgumentError(
+		"validation failed",
+		violations,
+	)
+}

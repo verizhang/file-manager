@@ -9,8 +9,6 @@ import (
 	"github.com/verizhang/file-manager/internal/service"
 
 	"go.uber.org/zap"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type FileHandler struct {
@@ -249,32 +247,29 @@ func (h *FileHandler) CreateDownloadUrl(
 	ctx context.Context,
 	req *filev1.CreateDownloadUrlRequest,
 ) (*filev1.CreateDownloadUrlResponse, error) {
+	if err := validateCreateDownloadUrlRequest(req); err != nil {
+		return nil, err
+	}
 
-	// TODO(veri):
-	// 1. Validate file existence
-	// 2. Validate file status
-	// 3. Validate virus scan status
-	// 4. Generate presigned download URL
-	// 5. Return download URL
+	response, err := h.fileService.CreateDownloadURL(
+		ctx,
+		&service.CreateDownloadURLRequest{
+			FileID: req.GetFileId(),
+		},
+	)
+	if err != nil {
+		h.logger.Error("failed to create download URL",
+			zap.Error(err),
+		)
+		return nil, errs.ToGRPCError(err)
+	}
 
-	return nil, status.Error(codes.Unimplemented, "CreateDownloadUrl not implemented")
+	return &filev1.CreateDownloadUrlResponse{
+		DownloadUrl: response.DownloadURL,
+	}, nil
 }
 
-func (h *FileHandler) CreatePreviewUrl(
-	ctx context.Context,
-	req *filev1.CreatePreviewUrlRequest,
-) (*filev1.CreatePreviewUrlResponse, error) {
 
-	// TODO(veri):
-	// 1. Validate file existence
-	// 2. Validate file status
-	// 3. Validate previewable content type
-	// 4. Validate virus scan status
-	// 5. Generate presigned preview URL
-	// 6. Return preview URL
-
-	return nil, status.Error(codes.Unimplemented, "CreatePreviewUrl not implemented")
-}
 
 // =====================================================
 // DELETE
@@ -284,12 +279,24 @@ func (h *FileHandler) DeleteFile(
 	ctx context.Context,
 	req *filev1.DeleteFileRequest,
 ) (*filev1.DeleteFileResponse, error) {
+	if err := validateDeleteFileRequest(req); err != nil {
+		return nil, err
+	}
 
-	// TODO(veri):
-	// 1. Validate file existence
-	// 2. Delete object from storage
-	// 3. Soft delete metadata
-	// 4. Return delete response
+	response, err := h.fileService.DeleteFile(
+		ctx,
+		&service.DeleteFileRequest{
+			FileID: req.GetFileId(),
+		},
+	)
+	if err != nil {
+		h.logger.Error("failed to delete file",
+			zap.Error(err),
+		)
+		return nil, errs.ToGRPCError(err)
+	}
 
-	return nil, status.Error(codes.Unimplemented, "DeleteFile not implemented")
+	return &filev1.DeleteFileResponse{
+		Message: response.Message,
+	}, nil
 }

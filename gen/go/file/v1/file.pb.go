@@ -1144,94 +1144,6 @@ func (x *CreateDownloadUrlResponse) GetDownloadUrl() string {
 	return ""
 }
 
-type CreatePreviewUrlRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	FileId        string                 `protobuf:"bytes,1,opt,name=file_id,json=fileId,proto3" json:"file_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CreatePreviewUrlRequest) Reset() {
-	*x = CreatePreviewUrlRequest{}
-	mi := &file_file_v1_file_proto_msgTypes[18]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreatePreviewUrlRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreatePreviewUrlRequest) ProtoMessage() {}
-
-func (x *CreatePreviewUrlRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_file_v1_file_proto_msgTypes[18]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreatePreviewUrlRequest.ProtoReflect.Descriptor instead.
-func (*CreatePreviewUrlRequest) Descriptor() ([]byte, []int) {
-	return file_file_v1_file_proto_rawDescGZIP(), []int{18}
-}
-
-func (x *CreatePreviewUrlRequest) GetFileId() string {
-	if x != nil {
-		return x.FileId
-	}
-	return ""
-}
-
-type CreatePreviewUrlResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	PreviewUrl    string                 `protobuf:"bytes,1,opt,name=preview_url,json=previewUrl,proto3" json:"preview_url,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CreatePreviewUrlResponse) Reset() {
-	*x = CreatePreviewUrlResponse{}
-	mi := &file_file_v1_file_proto_msgTypes[19]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreatePreviewUrlResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreatePreviewUrlResponse) ProtoMessage() {}
-
-func (x *CreatePreviewUrlResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_file_v1_file_proto_msgTypes[19]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreatePreviewUrlResponse.ProtoReflect.Descriptor instead.
-func (*CreatePreviewUrlResponse) Descriptor() ([]byte, []int) {
-	return file_file_v1_file_proto_rawDescGZIP(), []int{19}
-}
-
-func (x *CreatePreviewUrlResponse) GetPreviewUrl() string {
-	if x != nil {
-		return x.PreviewUrl
-	}
-	return ""
-}
-
 type DeleteFileRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	FileId        string                 `protobuf:"bytes,1,opt,name=file_id,json=fileId,proto3" json:"file_id,omitempty"`
@@ -1241,7 +1153,7 @@ type DeleteFileRequest struct {
 
 func (x *DeleteFileRequest) Reset() {
 	*x = DeleteFileRequest{}
-	mi := &file_file_v1_file_proto_msgTypes[20]
+	mi := &file_file_v1_file_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1253,7 +1165,7 @@ func (x *DeleteFileRequest) String() string {
 func (*DeleteFileRequest) ProtoMessage() {}
 
 func (x *DeleteFileRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_file_v1_file_proto_msgTypes[20]
+	mi := &file_file_v1_file_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1266,7 +1178,7 @@ func (x *DeleteFileRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteFileRequest.ProtoReflect.Descriptor instead.
 func (*DeleteFileRequest) Descriptor() ([]byte, []int) {
-	return file_file_v1_file_proto_rawDescGZIP(), []int{20}
+	return file_file_v1_file_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *DeleteFileRequest) GetFileId() string {
@@ -1278,13 +1190,14 @@ func (x *DeleteFileRequest) GetFileId() string {
 
 type DeleteFileResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *DeleteFileResponse) Reset() {
 	*x = DeleteFileResponse{}
-	mi := &file_file_v1_file_proto_msgTypes[21]
+	mi := &file_file_v1_file_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1296,7 +1209,7 @@ func (x *DeleteFileResponse) String() string {
 func (*DeleteFileResponse) ProtoMessage() {}
 
 func (x *DeleteFileResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_file_v1_file_proto_msgTypes[21]
+	mi := &file_file_v1_file_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1309,7 +1222,14 @@ func (x *DeleteFileResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteFileResponse.ProtoReflect.Descriptor instead.
 func (*DeleteFileResponse) Descriptor() ([]byte, []int) {
-	return file_file_v1_file_proto_rawDescGZIP(), []int{21}
+	return file_file_v1_file_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *DeleteFileResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
 }
 
 var File_file_v1_file_proto protoreflect.FileDescriptor
@@ -1399,15 +1319,11 @@ const file_file_v1_file_proto_rawDesc = "" +
 	"\x18CreateDownloadUrlRequest\x12\x17\n" +
 	"\afile_id\x18\x01 \x01(\tR\x06fileId\">\n" +
 	"\x19CreateDownloadUrlResponse\x12!\n" +
-	"\fdownload_url\x18\x01 \x01(\tR\vdownloadUrl\"2\n" +
-	"\x17CreatePreviewUrlRequest\x12\x17\n" +
-	"\afile_id\x18\x01 \x01(\tR\x06fileId\";\n" +
-	"\x18CreatePreviewUrlResponse\x12\x1f\n" +
-	"\vpreview_url\x18\x01 \x01(\tR\n" +
-	"previewUrl\",\n" +
+	"\fdownload_url\x18\x01 \x01(\tR\vdownloadUrl\",\n" +
 	"\x11DeleteFileRequest\x12\x17\n" +
-	"\afile_id\x18\x01 \x01(\tR\x06fileId\"\x14\n" +
-	"\x12DeleteFileResponse*\x91\x01\n" +
+	"\afile_id\x18\x01 \x01(\tR\x06fileId\".\n" +
+	"\x12DeleteFileResponse\x12\x18\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage*\x91\x01\n" +
 	"\n" +
 	"FileStatus\x12\x1b\n" +
 	"\x17FILE_STATUS_UNSPECIFIED\x10\x00\x12\x17\n" +
@@ -1421,8 +1337,7 @@ const file_file_v1_file_proto_rawDesc = "" +
 	"\x1aVIRUS_SCAN_STATUS_SCANNING\x10\x02\x12\x1b\n" +
 	"\x17VIRUS_SCAN_STATUS_CLEAN\x10\x03\x12\x1e\n" +
 	"\x1aVIRUS_SCAN_STATUS_INFECTED\x10\x04\x12\x1c\n" +
-	"\x18VIRUS_SCAN_STATUS_FAILED\x10\x052\x92\n" +
-	"\n" +
+	"\x18VIRUS_SCAN_STATUS_FAILED\x10\x052\x8c\t\n" +
 	"\vFileService\x12u\n" +
 	"\x0fCreateUploadUrl\x12\x1f.file.v1.CreateUploadUrlRequest\x1a .file.v1.CreateUploadUrlResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/v1/files/upload-url\x12z\n" +
 	"\x0eCompleteUpload\x12\x1e.file.v1.CompleteUploadRequest\x1a\x1f.file.v1.CompleteUploadResponse\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/v1/files/{file_id}/complete\x12\x86\x01\n" +
@@ -1431,8 +1346,7 @@ const file_file_v1_file_proto_rawDesc = "" +
 	"\x17CompleteMultipartUpload\x12'.file.v1.CompleteMultipartUploadRequest\x1a(.file.v1.CompleteMultipartUploadResponse\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/v1/files/multipart/complete\x12\x89\x01\n" +
 	"\x14AbortMultipartUpload\x12$.file.v1.AbortMultipartUploadRequest\x1a%.file.v1.AbortMultipartUploadResponse\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/v1/files/multipart/abort\x12Y\n" +
 	"\aGetFile\x12\x17.file.v1.GetFileRequest\x1a\x18.file.v1.GetFileResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/v1/files/{file_id}\x12\x87\x01\n" +
-	"\x11CreateDownloadUrl\x12!.file.v1.CreateDownloadUrlRequest\x1a\".file.v1.CreateDownloadUrlResponse\"+\x82\xd3\xe4\x93\x02%:\x01*\" /v1/files/{file_id}/download-url\x12\x83\x01\n" +
-	"\x10CreatePreviewUrl\x12 .file.v1.CreatePreviewUrlRequest\x1a!.file.v1.CreatePreviewUrlResponse\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/v1/files/{file_id}/preview-url\x12b\n" +
+	"\x11CreateDownloadUrl\x12!.file.v1.CreateDownloadUrlRequest\x1a\".file.v1.CreateDownloadUrlResponse\"+\x82\xd3\xe4\x93\x02%:\x01*\" /v1/files/{file_id}/download-url\x12b\n" +
 	"\n" +
 	"DeleteFile\x12\x1a.file.v1.DeleteFileRequest\x1a\x1b.file.v1.DeleteFileResponse\"\x1b\x82\xd3\xe4\x93\x02\x15*\x13/v1/files/{file_id}B8Z6github.com/verizhang/files-manager/gen/files/v1;filev1b\x06proto3"
 
@@ -1449,7 +1363,7 @@ func file_file_v1_file_proto_rawDescGZIP() []byte {
 }
 
 var file_file_v1_file_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_file_v1_file_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
+var file_file_v1_file_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_file_v1_file_proto_goTypes = []any{
 	(FileStatus)(0),                          // 0: file.v1.FileStatus
 	(VirusScanStatus)(0),                     // 1: file.v1.VirusScanStatus
@@ -1471,21 +1385,19 @@ var file_file_v1_file_proto_goTypes = []any{
 	(*GetFileResponse)(nil),                  // 17: file.v1.GetFileResponse
 	(*CreateDownloadUrlRequest)(nil),         // 18: file.v1.CreateDownloadUrlRequest
 	(*CreateDownloadUrlResponse)(nil),        // 19: file.v1.CreateDownloadUrlResponse
-	(*CreatePreviewUrlRequest)(nil),          // 20: file.v1.CreatePreviewUrlRequest
-	(*CreatePreviewUrlResponse)(nil),         // 21: file.v1.CreatePreviewUrlResponse
-	(*DeleteFileRequest)(nil),                // 22: file.v1.DeleteFileRequest
-	(*DeleteFileResponse)(nil),               // 23: file.v1.DeleteFileResponse
-	nil,                                      // 24: file.v1.CreateUploadUrlResponse.HeadersEntry
-	nil,                                      // 25: file.v1.CreateMultipartUploadUrlResponse.HeadersEntry
-	(*timestamppb.Timestamp)(nil),            // 26: google.protobuf.Timestamp
+	(*DeleteFileRequest)(nil),                // 20: file.v1.DeleteFileRequest
+	(*DeleteFileResponse)(nil),               // 21: file.v1.DeleteFileResponse
+	nil,                                      // 22: file.v1.CreateUploadUrlResponse.HeadersEntry
+	nil,                                      // 23: file.v1.CreateMultipartUploadUrlResponse.HeadersEntry
+	(*timestamppb.Timestamp)(nil),            // 24: google.protobuf.Timestamp
 }
 var file_file_v1_file_proto_depIdxs = []int32{
 	0,  // 0: file.v1.FileObject.status:type_name -> file.v1.FileStatus
 	1,  // 1: file.v1.FileObject.virus_scan_status:type_name -> file.v1.VirusScanStatus
-	26, // 2: file.v1.FileObject.created_at:type_name -> google.protobuf.Timestamp
-	24, // 3: file.v1.CreateUploadUrlResponse.headers:type_name -> file.v1.CreateUploadUrlResponse.HeadersEntry
+	24, // 2: file.v1.FileObject.created_at:type_name -> google.protobuf.Timestamp
+	22, // 3: file.v1.CreateUploadUrlResponse.headers:type_name -> file.v1.CreateUploadUrlResponse.HeadersEntry
 	2,  // 4: file.v1.CompleteUploadResponse.file:type_name -> file.v1.FileObject
-	25, // 5: file.v1.CreateMultipartUploadUrlResponse.headers:type_name -> file.v1.CreateMultipartUploadUrlResponse.HeadersEntry
+	23, // 5: file.v1.CreateMultipartUploadUrlResponse.headers:type_name -> file.v1.CreateMultipartUploadUrlResponse.HeadersEntry
 	11, // 6: file.v1.CompleteMultipartUploadRequest.parts:type_name -> file.v1.MultipartPart
 	2,  // 7: file.v1.CompleteMultipartUploadResponse.file:type_name -> file.v1.FileObject
 	2,  // 8: file.v1.GetFileResponse.file:type_name -> file.v1.FileObject
@@ -1497,20 +1409,18 @@ var file_file_v1_file_proto_depIdxs = []int32{
 	14, // 14: file.v1.FileService.AbortMultipartUpload:input_type -> file.v1.AbortMultipartUploadRequest
 	16, // 15: file.v1.FileService.GetFile:input_type -> file.v1.GetFileRequest
 	18, // 16: file.v1.FileService.CreateDownloadUrl:input_type -> file.v1.CreateDownloadUrlRequest
-	20, // 17: file.v1.FileService.CreatePreviewUrl:input_type -> file.v1.CreatePreviewUrlRequest
-	22, // 18: file.v1.FileService.DeleteFile:input_type -> file.v1.DeleteFileRequest
-	4,  // 19: file.v1.FileService.CreateUploadUrl:output_type -> file.v1.CreateUploadUrlResponse
-	6,  // 20: file.v1.FileService.CompleteUpload:output_type -> file.v1.CompleteUploadResponse
-	8,  // 21: file.v1.FileService.CreateMultipartUpload:output_type -> file.v1.CreateMultipartUploadResponse
-	10, // 22: file.v1.FileService.CreateMultipartUploadUrl:output_type -> file.v1.CreateMultipartUploadUrlResponse
-	13, // 23: file.v1.FileService.CompleteMultipartUpload:output_type -> file.v1.CompleteMultipartUploadResponse
-	15, // 24: file.v1.FileService.AbortMultipartUpload:output_type -> file.v1.AbortMultipartUploadResponse
-	17, // 25: file.v1.FileService.GetFile:output_type -> file.v1.GetFileResponse
-	19, // 26: file.v1.FileService.CreateDownloadUrl:output_type -> file.v1.CreateDownloadUrlResponse
-	21, // 27: file.v1.FileService.CreatePreviewUrl:output_type -> file.v1.CreatePreviewUrlResponse
-	23, // 28: file.v1.FileService.DeleteFile:output_type -> file.v1.DeleteFileResponse
-	19, // [19:29] is the sub-list for method output_type
-	9,  // [9:19] is the sub-list for method input_type
+	20, // 17: file.v1.FileService.DeleteFile:input_type -> file.v1.DeleteFileRequest
+	4,  // 18: file.v1.FileService.CreateUploadUrl:output_type -> file.v1.CreateUploadUrlResponse
+	6,  // 19: file.v1.FileService.CompleteUpload:output_type -> file.v1.CompleteUploadResponse
+	8,  // 20: file.v1.FileService.CreateMultipartUpload:output_type -> file.v1.CreateMultipartUploadResponse
+	10, // 21: file.v1.FileService.CreateMultipartUploadUrl:output_type -> file.v1.CreateMultipartUploadUrlResponse
+	13, // 22: file.v1.FileService.CompleteMultipartUpload:output_type -> file.v1.CompleteMultipartUploadResponse
+	15, // 23: file.v1.FileService.AbortMultipartUpload:output_type -> file.v1.AbortMultipartUploadResponse
+	17, // 24: file.v1.FileService.GetFile:output_type -> file.v1.GetFileResponse
+	19, // 25: file.v1.FileService.CreateDownloadUrl:output_type -> file.v1.CreateDownloadUrlResponse
+	21, // 26: file.v1.FileService.DeleteFile:output_type -> file.v1.DeleteFileResponse
+	18, // [18:27] is the sub-list for method output_type
+	9,  // [9:18] is the sub-list for method input_type
 	9,  // [9:9] is the sub-list for extension type_name
 	9,  // [9:9] is the sub-list for extension extendee
 	0,  // [0:9] is the sub-list for field type_name
@@ -1527,7 +1437,7 @@ func file_file_v1_file_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_file_v1_file_proto_rawDesc), len(file_file_v1_file_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   24,
+			NumMessages:   22,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

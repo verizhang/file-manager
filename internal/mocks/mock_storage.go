@@ -80,6 +80,36 @@ func (mr *MockStorageMockRecorder) CreateMultipartUpload(ctx, opts interface{}) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateMultipartUpload", reflect.TypeOf((*MockStorage)(nil).CreateMultipartUpload), ctx, opts)
 }
 
+// DeleteObject mocks base method.
+func (m *MockStorage) DeleteObject(ctx context.Context, bucket, objectKey string) (*storage.DeleteObjectResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteObject", ctx, bucket, objectKey)
+	ret0, _ := ret[0].(*storage.DeleteObjectResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteObject indicates an expected call of DeleteObject.
+func (mr *MockStorageMockRecorder) DeleteObject(ctx, bucket, objectKey interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteObject", reflect.TypeOf((*MockStorage)(nil).DeleteObject), ctx, bucket, objectKey)
+}
+
+// GeneratePresignedDownloadURL mocks base method.
+func (m *MockStorage) GeneratePresignedDownloadURL(ctx context.Context, opts storage.GeneratePresignedDownloadURLOptions) (*storage.GeneratePresignedDownloadURLResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GeneratePresignedDownloadURL", ctx, opts)
+	ret0, _ := ret[0].(*storage.GeneratePresignedDownloadURLResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GeneratePresignedDownloadURL indicates an expected call of GeneratePresignedDownloadURL.
+func (mr *MockStorageMockRecorder) GeneratePresignedDownloadURL(ctx, opts interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GeneratePresignedDownloadURL", reflect.TypeOf((*MockStorage)(nil).GeneratePresignedDownloadURL), ctx, opts)
+}
+
 // GeneratePresignedMultipartUploadURL mocks base method.
 func (m *MockStorage) GeneratePresignedMultipartUploadURL(ctx context.Context, opts storage.GeneratePresignedMultipartUploadURLOptions) (*storage.GeneratePresignedMultipartUploadURLResult, error) {
 	m.ctrl.T.Helper()

@@ -79,6 +79,48 @@ func (s *Storage) HeadObject(
 	return nil
 }
 
+func (s *Storage) GeneratePresignedDownloadURL(
+	ctx context.Context,
+	opts storage.GeneratePresignedDownloadURLOptions,
+) (*storage.GeneratePresignedDownloadURLResult, error) {
+	request, err := s.presigner.PresignGetObject(
+		ctx,
+		&awss3.GetObjectInput{
+			Bucket: &opts.Bucket,
+			Key:    &opts.ObjectKey,
+		},
+		func(po *awss3.PresignOptions) {
+			po.Expires = opts.Expiry
+		},
+	)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", errs.ErrGeneratePresignedURL, err)
+	}
+
+	return &storage.GeneratePresignedDownloadURLResult{
+		URL: request.URL,
+	}, nil
+}
+
+func (s *Storage) DeleteObject(
+	ctx context.Context,
+	bucket string,
+	objectKey string,
+) (*storage.DeleteObjectResult, error) {
+	_, err := s.client.DeleteObject(
+		ctx,
+		&awss3.DeleteObjectInput{
+			Bucket: aws.String(bucket),
+			Key:    aws.String(objectKey),
+		},
+	)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", errs.ErrDeleteFile, err)
+	}
+
+	return &storage.DeleteObjectResult{}, nil
+}
+
 func (s *Storage) CreateMultipartUpload(
 	ctx context.Context,
 	opts storage.CreateMultipartUploadOptions,

@@ -27,7 +27,6 @@ const (
 	FileService_AbortMultipartUpload_FullMethodName     = "/file.v1.FileService/AbortMultipartUpload"
 	FileService_GetFile_FullMethodName                  = "/file.v1.FileService/GetFile"
 	FileService_CreateDownloadUrl_FullMethodName        = "/file.v1.FileService/CreateDownloadUrl"
-	FileService_CreatePreviewUrl_FullMethodName         = "/file.v1.FileService/CreatePreviewUrl"
 	FileService_DeleteFile_FullMethodName               = "/file.v1.FileService/DeleteFile"
 )
 
@@ -46,7 +45,6 @@ type FileServiceClient interface {
 	AbortMultipartUpload(ctx context.Context, in *AbortMultipartUploadRequest, opts ...grpc.CallOption) (*AbortMultipartUploadResponse, error)
 	GetFile(ctx context.Context, in *GetFileRequest, opts ...grpc.CallOption) (*GetFileResponse, error)
 	CreateDownloadUrl(ctx context.Context, in *CreateDownloadUrlRequest, opts ...grpc.CallOption) (*CreateDownloadUrlResponse, error)
-	CreatePreviewUrl(ctx context.Context, in *CreatePreviewUrlRequest, opts ...grpc.CallOption) (*CreatePreviewUrlResponse, error)
 	DeleteFile(ctx context.Context, in *DeleteFileRequest, opts ...grpc.CallOption) (*DeleteFileResponse, error)
 }
 
@@ -138,16 +136,6 @@ func (c *fileServiceClient) CreateDownloadUrl(ctx context.Context, in *CreateDow
 	return out, nil
 }
 
-func (c *fileServiceClient) CreatePreviewUrl(ctx context.Context, in *CreatePreviewUrlRequest, opts ...grpc.CallOption) (*CreatePreviewUrlResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreatePreviewUrlResponse)
-	err := c.cc.Invoke(ctx, FileService_CreatePreviewUrl_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *fileServiceClient) DeleteFile(ctx context.Context, in *DeleteFileRequest, opts ...grpc.CallOption) (*DeleteFileResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DeleteFileResponse)
@@ -173,7 +161,6 @@ type FileServiceServer interface {
 	AbortMultipartUpload(context.Context, *AbortMultipartUploadRequest) (*AbortMultipartUploadResponse, error)
 	GetFile(context.Context, *GetFileRequest) (*GetFileResponse, error)
 	CreateDownloadUrl(context.Context, *CreateDownloadUrlRequest) (*CreateDownloadUrlResponse, error)
-	CreatePreviewUrl(context.Context, *CreatePreviewUrlRequest) (*CreatePreviewUrlResponse, error)
 	DeleteFile(context.Context, *DeleteFileRequest) (*DeleteFileResponse, error)
 	mustEmbedUnimplementedFileServiceServer()
 }
@@ -208,9 +195,6 @@ func (UnimplementedFileServiceServer) GetFile(context.Context, *GetFileRequest) 
 }
 func (UnimplementedFileServiceServer) CreateDownloadUrl(context.Context, *CreateDownloadUrlRequest) (*CreateDownloadUrlResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateDownloadUrl not implemented")
-}
-func (UnimplementedFileServiceServer) CreatePreviewUrl(context.Context, *CreatePreviewUrlRequest) (*CreatePreviewUrlResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method CreatePreviewUrl not implemented")
 }
 func (UnimplementedFileServiceServer) DeleteFile(context.Context, *DeleteFileRequest) (*DeleteFileResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteFile not implemented")
@@ -380,24 +364,6 @@ func _FileService_CreateDownloadUrl_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FileService_CreatePreviewUrl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreatePreviewUrlRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(FileServiceServer).CreatePreviewUrl(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: FileService_CreatePreviewUrl_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FileServiceServer).CreatePreviewUrl(ctx, req.(*CreatePreviewUrlRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _FileService_DeleteFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteFileRequest)
 	if err := dec(in); err != nil {
@@ -454,10 +420,6 @@ var FileService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateDownloadUrl",
 			Handler:    _FileService_CreateDownloadUrl_Handler,
-		},
-		{
-			MethodName: "CreatePreviewUrl",
-			Handler:    _FileService_CreatePreviewUrl_Handler,
 		},
 		{
 			MethodName: "DeleteFile",

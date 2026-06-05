@@ -49,6 +49,20 @@ func (mr *MockFileRepositoryMockRecorder) Create(ctx, file interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockFileRepository)(nil).Create), ctx, file)
 }
 
+// Delete mocks base method.
+func (m *MockFileRepository) Delete(ctx context.Context, id string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", ctx, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Delete indicates an expected call of Delete.
+func (mr *MockFileRepositoryMockRecorder) Delete(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockFileRepository)(nil).Delete), ctx, id)
+}
+
 // GetByID mocks base method.
 func (m *MockFileRepository) GetByID(ctx context.Context, id string) (*model.File, error) {
 	m.ctrl.T.Helper()

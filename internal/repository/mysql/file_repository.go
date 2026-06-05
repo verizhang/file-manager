@@ -152,3 +152,19 @@ func (r *fileRepository) UpdateStatusAndClearUploadID(
 
 	return nil
 }
+
+func (r *fileRepository) Delete(
+	ctx context.Context,
+	id string,
+) error {
+	err := r.db.WithContext(ctx).
+		Where("id = ?", id).
+		Delete(&entity.File{}).
+		Error
+
+	if err != nil {
+		return errs.ErrDeleteFile
+	}
+
+	return nil
+}

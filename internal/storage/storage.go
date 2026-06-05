@@ -16,6 +16,25 @@ type GeneratePresignedUploadURLResult struct {
 	URL string
 }
 
+type GeneratePresignedDownloadURLOptions struct {
+	Bucket    string
+	ObjectKey string
+	Expiry    time.Duration
+}
+
+type GeneratePresignedDownloadURLResult struct {
+	URL string
+}
+
+type DeleteObjectOptions struct {
+	Bucket    string
+	ObjectKey string
+}
+
+type DeleteObjectResult struct {
+	// No specific fields needed for now
+}
+
 // Multipart upload options and results
 type CreateMultipartUploadOptions struct {
 	Bucket      string
@@ -77,6 +96,17 @@ type Storage interface {
 		bucket string,
 		objectKey string,
 	) error
+
+	GeneratePresignedDownloadURL(
+		ctx context.Context,
+		opts GeneratePresignedDownloadURLOptions,
+	) (*GeneratePresignedDownloadURLResult, error)
+
+	DeleteObject(
+		ctx context.Context,
+		bucket string,
+		objectKey string,
+	) (*DeleteObjectResult, error)
 
 	// Multipart Upload methods
 	CreateMultipartUpload(

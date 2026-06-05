@@ -390,6 +390,69 @@ func (s *fileService) GetFile(
 	}, nil
 }
 
+func (s *fileService) CreateDownloadURL(
+	ctx context.Context,
+	req *CreateDownloadURLRequest,
+) (*CreateDownloadURLResponse, error) {
+	file, err := s.fileRepository.GetByID(
+		ctx,
+		req.FileID,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	downloadURL, err := s.storage.GeneratePresignedDownloadURL(
+		ctx,
+		storage.GeneratePresignedDownloadURLOptions{
+			Bucket:    file.Bucket,
+			ObjectKey: file.ObjectKey,
+			Expiry:    s.cfg.S3.PresignedConfig.DownloadExpireMinutes,
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &CreateDownloadURLResponse{
+		DownloadURL: downloadURL.URL,
+	}, nil
+}
+
+func (s *fileService) DeleteFile(
+	ctx context.Context,
+	req *DeleteFileRequest,
+) (*DeleteFileResponse, error) {
+	file, err := s.fileRepository.GetByID(
+		ctx,
+		req.FileID,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = s.storage.DeleteObject(
+		ctx,
+		file.Bucket,
+		file.ObjectKey,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	err = s.fileRepository.Delete(
+		ctx,
+		file.ID,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &DeleteFileResponse{
+		Message: "File deleted successfully",
+	}, nil
+}
+
 func GenerateObjectKey(
 	fileID string,
 	fileName string,

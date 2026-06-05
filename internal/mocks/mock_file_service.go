@@ -80,6 +80,21 @@ func (mr *MockFileServiceMockRecorder) CompleteUpload(ctx, req interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CompleteUpload", reflect.TypeOf((*MockFileService)(nil).CompleteUpload), ctx, req)
 }
 
+// CreateDownloadURL mocks base method.
+func (m *MockFileService) CreateDownloadURL(ctx context.Context, req *service.CreateDownloadURLRequest) (*service.CreateDownloadURLResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateDownloadURL", ctx, req)
+	ret0, _ := ret[0].(*service.CreateDownloadURLResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateDownloadURL indicates an expected call of CreateDownloadURL.
+func (mr *MockFileServiceMockRecorder) CreateDownloadURL(ctx, req interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateDownloadURL", reflect.TypeOf((*MockFileService)(nil).CreateDownloadURL), ctx, req)
+}
+
 // CreateMultipartUpload mocks base method.
 func (m *MockFileService) CreateMultipartUpload(ctx context.Context, req *service.CreateMultipartUploadRequest) (*service.CreateMultipartUploadResponse, error) {
 	m.ctrl.T.Helper()
@@ -123,6 +138,21 @@ func (m *MockFileService) CreateUploadUrl(ctx context.Context, req *service.Crea
 func (mr *MockFileServiceMockRecorder) CreateUploadUrl(ctx, req interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUploadUrl", reflect.TypeOf((*MockFileService)(nil).CreateUploadUrl), ctx, req)
+}
+
+// DeleteFile mocks base method.
+func (m *MockFileService) DeleteFile(ctx context.Context, req *service.DeleteFileRequest) (*service.DeleteFileResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteFile", ctx, req)
+	ret0, _ := ret[0].(*service.DeleteFileResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteFile indicates an expected call of DeleteFile.
+func (mr *MockFileServiceMockRecorder) DeleteFile(ctx, req interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteFile", reflect.TypeOf((*MockFileService)(nil).DeleteFile), ctx, req)
 }
 
 // GetFile mocks base method.

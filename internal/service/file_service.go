@@ -41,6 +41,16 @@ type FileService interface {
 		ctx context.Context,
 		req *GetFileRequest,
 	) (*GetFileResponse, error)
+
+	CreateDownloadURL(
+		ctx context.Context,
+		req *CreateDownloadURLRequest,
+	) (*CreateDownloadURLResponse, error)
+
+	DeleteFile(
+		ctx context.Context,
+		req *DeleteFileRequest,
+	) (*DeleteFileResponse, error)
 }
 
 type CreateUploadRequest struct {
@@ -68,6 +78,22 @@ type GetFileRequest struct {
 
 type GetFileResponse struct {
 	File *model.File
+}
+
+type CreateDownloadURLRequest struct {
+	FileID string
+}
+
+type CreateDownloadURLResponse struct {
+	DownloadURL string
+}
+
+type DeleteFileRequest struct {
+	FileID string
+}
+
+type DeleteFileResponse struct {
+	Message string
 }
 
 // Multipart Upload

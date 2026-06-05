@@ -835,3 +835,167 @@ func TestFileHandler_GetFile(t *testing.T) {
 		assert.Nil(t, resp)
 	})
 }
+
+func TestFileHandler_CreateDownloadURL(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockFileService := mocks.NewMockFileService(ctrl)
+	logger := zap.NewNop()
+
+	fileHandler := handler.NewFileHandler(logger, mockFileService)
+
+	ctx := context.Background()
+	fileID := "test-file-id"
+
+	t.Run("success - valid request", func(t *testing.T) {
+		req := &filev1.CreateDownloadUrlRequest{FileId: fileID}
+		expectedServiceResponse := &service.CreateDownloadURLResponse{
+			DownloadURL: "http://presigned.url/download",
+		}
+
+		mockFileService.EXPECT().CreateDownloadURL(
+			ctx,
+			&service.CreateDownloadURLRequest{FileID: fileID},
+		).Return(expectedServiceResponse, nil)
+
+		resp, err := fileHandler.CreateDownloadUrl(ctx, req)
+
+		assert.NoError(t, err)
+		assert.NotNil(t, resp)
+		assert.Equal(t, expectedServiceResponse.DownloadURL, resp.DownloadUrl)
+	})
+
+	t.Run("failure - validation error (empty file id)", func(t *testing.T) {
+		req := &filev1.CreateDownloadUrlRequest{FileId: ""} // Invalid
+
+		resp, err := fileHandler.CreateDownloadUrl(ctx, req)
+
+		assert.Error(t, err)
+		st, ok := status.FromError(err)
+		assert.True(t, ok)
+		assert.Equal(t, codes.InvalidArgument, st.Code())
+		assert.Equal(t, "validation failed", st.Message())
+		assert.Nil(t, resp)
+		mockFileService.EXPECT().CreateDownloadURL(gomock.Any(), gomock.Any()).Times(0)
+	})
+
+	t.Run("failure - service returns error", func(t *testing.T) {
+		req := &filev1.CreateDownloadUrlRequest{FileId: fileID}
+		serviceErr := errors.New("service create download url error")
+
+		mockFileService.EXPECT().CreateDownloadURL(
+			ctx,
+			&service.CreateDownloadURLRequest{FileID: fileID},
+		).Return(nil, serviceErr)
+
+		resp, err := fileHandler.CreateDownloadUrl(ctx, req)
+
+		assert.Error(t, err)
+		st, ok := status.FromError(err)
+		assert.True(t, ok)
+		assert.Equal(t, codes.Internal, st.Code())
+		assert.Equal(t, "internal server error", st.Message())
+		assert.Nil(t, resp)
+	})
+
+	t.Run("failure - service returns specific errs.ErrFileNotFound", func(t *testing.T) {
+		req := &filev1.CreateDownloadUrlRequest{FileId: fileID}
+
+		mockFileService.EXPECT().CreateDownloadURL(
+			ctx,
+			&service.CreateDownloadURLRequest{FileID: fileID},
+		).Return(nil, errs.ErrFileNotFound)
+
+		resp, err := fileHandler.CreateDownloadUrl(ctx, req)
+
+		assert.Error(t, err)
+		st, ok := status.FromError(err)
+		assert.True(t, ok)
+		assert.Equal(t, codes.NotFound, st.Code())
+		assert.Contains(t, st.Message(), errs.ErrFileNotFound.Error())
+		assert.Nil(t, resp)
+	})
+}
+
+func TestFileHandler_DeleteFile(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockFileService := mocks.NewMockFileService(ctrl)
+	logger := zap.NewNop()
+
+	fileHandler := handler.NewFileHandler(logger, mockFileService)
+
+	ctx := context.Background()
+	fileID := "test-file-id"
+
+	t.Run("success - valid request", func(t *testing.T) {
+		req := &filev1.DeleteFileRequest{FileId: fileID}
+		expectedServiceResponse := &service.DeleteFileResponse{
+			Message: "File deleted successfully",
+		}
+
+		mockFileService.EXPECT().DeleteFile(
+			ctx,
+			&service.DeleteFileRequest{FileID: fileID},
+		).Return(expectedServiceResponse, nil)
+
+		resp, err := fileHandler.DeleteFile(ctx, req)
+
+		assert.NoError(t, err)
+		assert.NotNil(t, resp)
+		assert.Equal(t, expectedServiceResponse.Message, resp.Message)
+	})
+
+	t.Run("failure - validation error (empty file id)", func(t *testing.T) {
+		req := &filev1.DeleteFileRequest{FileId: ""} // Invalid
+
+		resp, err := fileHandler.DeleteFile(ctx, req)
+
+		assert.Error(t, err)
+		st, ok := status.FromError(err)
+		assert.True(t, ok)
+		assert.Equal(t, codes.InvalidArgument, st.Code())
+		assert.Equal(t, "validation failed", st.Message())
+		assert.Nil(t, resp)
+		mockFileService.EXPECT().DeleteFile(gomock.Any(), gomock.Any()).Times(0)
+	})
+
+	t.Run("failure - service returns error", func(t *testing.T) {
+		req := &filev1.DeleteFileRequest{FileId: fileID}
+		serviceErr := errors.New("service delete file error")
+
+		mockFileService.EXPECT().DeleteFile(
+			ctx,
+			&service.DeleteFileRequest{FileID: fileID},
+		).Return(nil, serviceErr)
+
+		resp, err := fileHandler.DeleteFile(ctx, req)
+
+		assert.Error(t, err)
+		st, ok := status.FromError(err)
+		assert.True(t, ok)
+		assert.Equal(t, codes.Internal, st.Code())
+		assert.Equal(t, "internal server error", st.Message())
+		assert.Nil(t, resp)
+	})
+
+	t.Run("failure - service returns specific errs.ErrFileNotFound", func(t *testing.T) {
+		req := &filev1.DeleteFileRequest{FileId: fileID}
+
+		mockFileService.EXPECT().DeleteFile(
+			ctx,
+			&service.DeleteFileRequest{FileID: fileID},
+		).Return(nil, errs.ErrFileNotFound)
+
+		resp, err := fileHandler.DeleteFile(ctx, req)
+
+		assert.Error(t, err)
+		st, ok := status.FromError(err)
+		assert.True(t, ok)
+		assert.Equal(t, codes.NotFound, st.Code())
+		assert.Contains(t, st.Message(), errs.ErrFileNotFound.Error())
+		assert.Nil(t, resp)
+	})
+}

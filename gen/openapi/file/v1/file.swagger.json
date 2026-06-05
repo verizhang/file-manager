@@ -310,44 +310,6 @@
           "FileService"
         ]
       }
-    },
-    "/v1/files/{fileId}/preview-url": {
-      "post": {
-        "operationId": "FileService_CreatePreviewUrl",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1CreatePreviewUrlResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "fileId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/FileServiceCreatePreviewUrlBody"
-            }
-          }
-        ],
-        "tags": [
-          "FileService"
-        ]
-      }
     }
   },
   "definitions": {
@@ -355,9 +317,6 @@
       "type": "object"
     },
     "FileServiceCreateDownloadUrlBody": {
-      "type": "object"
-    },
-    "FileServiceCreatePreviewUrlBody": {
       "type": "object"
     },
     "protobufAny": {
@@ -513,14 +472,6 @@
         }
       }
     },
-    "v1CreatePreviewUrlResponse": {
-      "type": "object",
-      "properties": {
-        "previewUrl": {
-          "type": "string"
-        }
-      }
-    },
     "v1CreateUploadUrlRequest": {
       "type": "object",
       "properties": {
@@ -557,7 +508,12 @@
       }
     },
     "v1DeleteFileResponse": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
     },
     "v1FileObject": {
       "type": "object",

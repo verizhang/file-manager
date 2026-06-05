@@ -87,13 +87,7 @@ service FileService {
     };
   }
 
-  rpc CreatePreviewUrl(CreatePreviewUrlRequest)
-      returns (CreatePreviewUrlResponse) {
-    option (google.api.http) = {
-      post: "/v1/files/{file_id}/preview-url"
-      body: "*"
-    };
-  }
+  
 
   // =====================================================
   // DELETE
@@ -237,13 +231,7 @@ message CreateDownloadUrlResponse {
   string download_url = 1;
 }
 
-message CreatePreviewUrlRequest {
-  string file_id = 1;
-}
 
-message CreatePreviewUrlResponse {
-  string preview_url = 1;
-}
 
 //
 // DELETE
@@ -253,4 +241,6 @@ message DeleteFileRequest {
   string file_id = 1;
 }
 
-message DeleteFileResponse {}
+message DeleteFileResponse {
+  string message = 1;
+}

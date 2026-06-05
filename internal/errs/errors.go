@@ -26,4 +26,5 @@ var (
 	ErrGetFileByObjectKey            = errors.New("failed to update file by object key")
 	ErrUpdateFileStatusAndETag       = errors.New("failed to update file status and ETag")
 	UpdateFileStatusAndClearUploadID = errors.New("failed to update file status and clear upload id")
+	ErrDeleteFile                    = errors.New("failed to delete file")
 )
