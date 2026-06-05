@@ -34,6 +34,12 @@ func ToGRPCError(err error) error {
 			ErrFileTooLarge.Error(),
 		)
 
+	case errors.Is(err, ErrMultipartUploadMismatch):
+		return status.Error(
+			codes.FailedPrecondition,
+			ErrMultipartUploadMismatch.Error(),
+		)
+
 	default:
 		return status.Error(
 			codes.Internal,
