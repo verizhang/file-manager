@@ -24,7 +24,7 @@ func RunGatewayServer(
 		runtime.WithIncomingHeaderMatcher(func(key string) (string, bool) {
 			lowerKey := strings.ToLower(key)
 			switch lowerKey {
-			case "x-request-id", "request-id", "x-correlation-id":
+			case "x-request-id", "request-id", "x-correlation-id", "x-user-id":
 				return lowerKey, true
 			default:
 				return runtime.DefaultHeaderMatcher(key)
