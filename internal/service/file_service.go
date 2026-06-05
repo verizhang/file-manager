@@ -54,6 +54,7 @@ type FileService interface {
 }
 
 type CreateUploadRequest struct {
+	UserID      string
 	FileName    string
 	ContentType string
 	Size        int64
@@ -98,6 +99,7 @@ type DeleteFileResponse struct {
 
 // Multipart Upload
 type CreateMultipartUploadRequest struct {
+	UserID      string
 	FileName    string
 	ContentType string
 	Size        int64

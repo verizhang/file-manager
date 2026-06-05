@@ -55,6 +55,7 @@ func (s *fileService) CreateUploadUrl(
 	fileID := uuid.NewString()
 
 	objectKey := GenerateObjectKey(
+		req.UserID,
 		fileID,
 		req.FileName,
 	)
@@ -158,6 +159,7 @@ func (s *fileService) CreateMultipartUpload(
 	fileID := uuid.NewString()
 
 	objectKey := GenerateObjectKey(
+		req.UserID,
 		fileID,
 		req.FileName,
 	)
@@ -450,6 +452,7 @@ func (s *fileService) DeleteFile(
 }
 
 func GenerateObjectKey(
+	userID string,
 	fileID string,
 	fileName string,
 ) string {
@@ -459,7 +462,8 @@ func GenerateObjectKey(
 	ext := filepath.Ext(fileName)
 
 	return fmt.Sprintf(
-		"%d/%02d/%02d/%s%s",
+		"%s/%d/%02d/%02d/%s%s",
+		userID,
 		now.Year(),
 		now.Month(),
 		now.Day(),

@@ -6,6 +6,7 @@ import (
 	filev1 "github.com/verizhang/file-manager/gen/go/file/v1"
 	"github.com/verizhang/file-manager/internal/errs"
 	"github.com/verizhang/file-manager/internal/handler/mapper"
+	"github.com/verizhang/file-manager/internal/interceptor"
 	"github.com/verizhang/file-manager/internal/service"
 
 	"go.uber.org/zap"
@@ -40,9 +41,12 @@ func (h *FileHandler) CreateUploadUrl(
 		return nil, err
 	}
 
+	userID := ctx.Value(interceptor.UserIDContextKey).(string)
+
 	response, err := h.fileService.CreateUploadUrl(
 		ctx,
 		&service.CreateUploadRequest{
+			UserID:      userID,
 			FileName:    req.FileName,
 			ContentType: req.ContentType,
 			Size:        req.Size,
@@ -106,9 +110,12 @@ func (h *FileHandler) CreateMultipartUpload(
 		return nil, err
 	}
 
+	userID := ctx.Value(interceptor.UserIDContextKey).(string)
+
 	response, err := h.fileService.CreateMultipartUpload(
 		ctx,
 		&service.CreateMultipartUploadRequest{
+			UserID:      userID,
 			FileName:    req.FileName,
 			ContentType: req.ContentType,
 			Size:        req.Size,
