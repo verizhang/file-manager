@@ -355,7 +355,6 @@ func (s *fileService) AbortMultipartUpload(
 		},
 	)
 	if err != nil {
-		s.logger.Error("failed to abort multipart upload", zap.Error(err))
 		return nil, err
 	}
 
@@ -366,7 +365,6 @@ func (s *fileService) AbortMultipartUpload(
 		abortedStatus,
 	)
 	if err != nil {
-		s.logger.Error("failed to update file status after multipart abort", zap.Error(err))
 		return nil, err
 	}
 
