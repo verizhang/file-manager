@@ -16,7 +16,7 @@ service FileService {
   rpc CreateUploadUrl(CreateUploadUrlRequest)
       returns (CreateUploadUrlResponse) {
     option (google.api.http) = {
-      post: "/v1/files/upload-url"
+      post: "/v1/file/upload-url"
       body: "*"
     };
   }
@@ -27,7 +27,7 @@ service FileService {
   rpc CompleteUpload(CompleteUploadRequest)
     returns (CompleteUploadResponse) {
   option (google.api.http) = {
-    post: "/v1/files/{file_id}/complete"
+    post: "/v1/file/{file_id}/complete"
     body: "*"
   };
 }
@@ -39,7 +39,7 @@ service FileService {
   rpc CreateMultipartUpload(CreateMultipartUploadRequest)
       returns (CreateMultipartUploadResponse) {
     option (google.api.http) = {
-      post: "/v1/files/multipart"
+      post: "/v1/file/multipart"
       body: "*"
     };
   }
@@ -47,7 +47,7 @@ service FileService {
   rpc CreateMultipartUploadUrl(CreateMultipartUploadUrlRequest)
       returns (CreateMultipartUploadUrlResponse) {
     option (google.api.http) = {
-      post: "/v1/files/multipart/url"
+      post: "/v1/file/multipart/url"
       body: "*"
     };
   }
@@ -55,7 +55,7 @@ service FileService {
   rpc CompleteMultipartUpload(CompleteMultipartUploadRequest)
       returns (CompleteMultipartUploadResponse) {
     option (google.api.http) = {
-      post: "/v1/files/multipart/complete"
+      post: "/v1/file/multipart/complete"
       body: "*"
     };
   }
@@ -63,7 +63,7 @@ service FileService {
   rpc AbortMultipartUpload(AbortMultipartUploadRequest)
       returns (AbortMultipartUploadResponse) {
     option (google.api.http) = {
-      post: "/v1/files/multipart/abort"
+      post: "/v1/file/multipart/abort"
       body: "*"
     };
   }
@@ -75,14 +75,14 @@ service FileService {
   rpc GetFile(GetFileRequest)
       returns (GetFileResponse) {
     option (google.api.http) = {
-      get: "/v1/files/{file_id}"
+      get: "/v1/file/{file_id}"
     };
   }
 
   rpc CreateDownloadUrl(CreateDownloadUrlRequest)
       returns (CreateDownloadUrlResponse) {
     option (google.api.http) = {
-      post: "/v1/files/{file_id}/download-url"
+      post: "/v1/file/{file_id}/download-url"
       body: "*"
     };
   }
@@ -96,7 +96,7 @@ service FileService {
   rpc DeleteFile(DeleteFileRequest)
       returns (DeleteFileResponse) {
     option (google.api.http) = {
-      delete: "/v1/files/{file_id}"
+      delete: "/v1/file/{file_id}"
     };
   }
 }

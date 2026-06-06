@@ -16,7 +16,7 @@
     "application/json"
   ],
   "paths": {
-    "/v1/files/multipart": {
+    "/v1/file/multipart": {
       "post": {
         "operationId": "FileService_CreateMultipartUpload",
         "responses": {
@@ -48,7 +48,7 @@
         ]
       }
     },
-    "/v1/files/multipart/abort": {
+    "/v1/file/multipart/abort": {
       "post": {
         "operationId": "FileService_AbortMultipartUpload",
         "responses": {
@@ -80,7 +80,7 @@
         ]
       }
     },
-    "/v1/files/multipart/complete": {
+    "/v1/file/multipart/complete": {
       "post": {
         "operationId": "FileService_CompleteMultipartUpload",
         "responses": {
@@ -112,7 +112,7 @@
         ]
       }
     },
-    "/v1/files/multipart/url": {
+    "/v1/file/multipart/url": {
       "post": {
         "operationId": "FileService_CreateMultipartUploadUrl",
         "responses": {
@@ -144,7 +144,7 @@
         ]
       }
     },
-    "/v1/files/upload-url": {
+    "/v1/file/upload-url": {
       "post": {
         "operationId": "FileService_CreateUploadUrl",
         "responses": {
@@ -176,7 +176,7 @@
         ]
       }
     },
-    "/v1/files/{fileId}": {
+    "/v1/file/{fileId}": {
       "get": {
         "operationId": "FileService_GetFile",
         "responses": {
@@ -234,7 +234,7 @@
         ]
       }
     },
-    "/v1/files/{fileId}/complete": {
+    "/v1/file/{fileId}/complete": {
       "post": {
         "summary": "=====================================================\nCompleteUpload\n=====================================================",
         "operationId": "FileService_CompleteUpload",
@@ -273,7 +273,7 @@
         ]
       }
     },
-    "/v1/files/{fileId}/download-url": {
+    "/v1/file/{fileId}/download-url": {
       "post": {
         "operationId": "FileService_CreateDownloadUrl",
         "responses": {

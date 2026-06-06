@@ -1328,18 +1328,18 @@ const file_file_v1_file_proto_rawDesc = "" +
 	"\x1aVIRUS_SCAN_STATUS_SCANNING\x10\x02\x12\x1b\n" +
 	"\x17VIRUS_SCAN_STATUS_CLEAN\x10\x03\x12\x1e\n" +
 	"\x1aVIRUS_SCAN_STATUS_INFECTED\x10\x04\x12\x1c\n" +
-	"\x18VIRUS_SCAN_STATUS_FAILED\x10\x052\x8c\t\n" +
-	"\vFileService\x12u\n" +
-	"\x0fCreateUploadUrl\x12\x1f.file.v1.CreateUploadUrlRequest\x1a .file.v1.CreateUploadUrlResponse\"\x1f\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/v1/files/upload-url\x12z\n" +
-	"\x0eCompleteUpload\x12\x1e.file.v1.CompleteUploadRequest\x1a\x1f.file.v1.CompleteUploadResponse\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/v1/files/{file_id}/complete\x12\x86\x01\n" +
-	"\x15CreateMultipartUpload\x12%.file.v1.CreateMultipartUploadRequest\x1a&.file.v1.CreateMultipartUploadResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/v1/files/multipart\x12\x93\x01\n" +
-	"\x18CreateMultipartUploadUrl\x12(.file.v1.CreateMultipartUploadUrlRequest\x1a).file.v1.CreateMultipartUploadUrlResponse\"\"\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/v1/files/multipart/url\x12\x95\x01\n" +
-	"\x17CompleteMultipartUpload\x12'.file.v1.CompleteMultipartUploadRequest\x1a(.file.v1.CompleteMultipartUploadResponse\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/v1/files/multipart/complete\x12\x89\x01\n" +
-	"\x14AbortMultipartUpload\x12$.file.v1.AbortMultipartUploadRequest\x1a%.file.v1.AbortMultipartUploadResponse\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/v1/files/multipart/abort\x12Y\n" +
-	"\aGetFile\x12\x17.file.v1.GetFileRequest\x1a\x18.file.v1.GetFileResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/v1/files/{file_id}\x12\x87\x01\n" +
-	"\x11CreateDownloadUrl\x12!.file.v1.CreateDownloadUrlRequest\x1a\".file.v1.CreateDownloadUrlResponse\"+\x82\xd3\xe4\x93\x02%:\x01*\" /v1/files/{file_id}/download-url\x12b\n" +
+	"\x18VIRUS_SCAN_STATUS_FAILED\x10\x052\x83\t\n" +
+	"\vFileService\x12t\n" +
+	"\x0fCreateUploadUrl\x12\x1f.file.v1.CreateUploadUrlRequest\x1a .file.v1.CreateUploadUrlResponse\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/v1/file/upload-url\x12y\n" +
+	"\x0eCompleteUpload\x12\x1e.file.v1.CompleteUploadRequest\x1a\x1f.file.v1.CompleteUploadResponse\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/v1/file/{file_id}/complete\x12\x85\x01\n" +
+	"\x15CreateMultipartUpload\x12%.file.v1.CreateMultipartUploadRequest\x1a&.file.v1.CreateMultipartUploadResponse\"\x1d\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/v1/file/multipart\x12\x92\x01\n" +
+	"\x18CreateMultipartUploadUrl\x12(.file.v1.CreateMultipartUploadUrlRequest\x1a).file.v1.CreateMultipartUploadUrlResponse\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/v1/file/multipart/url\x12\x94\x01\n" +
+	"\x17CompleteMultipartUpload\x12'.file.v1.CompleteMultipartUploadRequest\x1a(.file.v1.CompleteMultipartUploadResponse\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/v1/file/multipart/complete\x12\x88\x01\n" +
+	"\x14AbortMultipartUpload\x12$.file.v1.AbortMultipartUploadRequest\x1a%.file.v1.AbortMultipartUploadResponse\"#\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/v1/file/multipart/abort\x12X\n" +
+	"\aGetFile\x12\x17.file.v1.GetFileRequest\x1a\x18.file.v1.GetFileResponse\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/v1/file/{file_id}\x12\x86\x01\n" +
+	"\x11CreateDownloadUrl\x12!.file.v1.CreateDownloadUrlRequest\x1a\".file.v1.CreateDownloadUrlResponse\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/v1/file/{file_id}/download-url\x12a\n" +
 	"\n" +
-	"DeleteFile\x12\x1a.file.v1.DeleteFileRequest\x1a\x1b.file.v1.DeleteFileResponse\"\x1b\x82\xd3\xe4\x93\x02\x15*\x13/v1/files/{file_id}B8Z6github.com/verizhang/files-manager/gen/files/v1;filev1b\x06proto3"
+	"DeleteFile\x12\x1a.file.v1.DeleteFileRequest\x1a\x1b.file.v1.DeleteFileResponse\"\x1a\x82\xd3\xe4\x93\x02\x14*\x12/v1/file/{file_id}B8Z6github.com/verizhang/files-manager/gen/files/v1;filev1b\x06proto3"
 
 var (
 	file_file_v1_file_proto_rawDescOnce sync.Once
