@@ -51,6 +51,11 @@ type FileService interface {
 		ctx context.Context,
 		req *DeleteFileRequest,
 	) (*DeleteFileResponse, error)
+
+	ScanFile(
+		ctx context.Context,
+		file model.File,
+	) error
 }
 
 type CreateUploadRequest struct {

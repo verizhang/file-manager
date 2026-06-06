@@ -27,4 +27,6 @@ var (
 	ErrUpdateFileStatusAndETag       = errors.New("failed to update file status and ETag")
 	UpdateFileStatusAndClearUploadID = errors.New("failed to update file status and clear upload id")
 	ErrDeleteFile                    = errors.New("failed to delete file")
+	ErrUpdateVirusScanStatus         = errors.New("failed to update virus scan status")
+	ErrVirusScan                     = errors.New("failed to scan file with virus scanner")
 )

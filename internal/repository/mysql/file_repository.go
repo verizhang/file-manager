@@ -168,3 +168,25 @@ func (r *fileRepository) Delete(
 
 	return nil
 }
+
+func (r *fileRepository) UpdateVirusScanStatus(
+	ctx context.Context,
+	id string,
+	status model.VirusScanStatus,
+) error {
+
+	err := r.db.WithContext(ctx).
+		Model(&entity.File{}).
+		Where("id = ?", id).
+		Updates(map[string]interface{}{
+			"virus_scan_status": status,
+			"updated_at":        time.Now().UTC(),
+		}).
+		Error
+
+	if err != nil {
+		return fmt.Errorf("%w: %v", errs.ErrUpdateVirusScanStatus, err)
+	}
+
+	return nil
+}

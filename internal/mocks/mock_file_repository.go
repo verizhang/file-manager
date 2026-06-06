@@ -107,6 +107,20 @@ func (mr *MockFileRepositoryMockRecorder) UpdateStatus(ctx, id, status interface
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateStatus", reflect.TypeOf((*MockFileRepository)(nil).UpdateStatus), ctx, id, status)
 }
 
+// UpdateVirusScanStatus mocks base method.
+func (m *MockFileRepository) UpdateVirusScanStatus(ctx context.Context, id string, status model.VirusScanStatus) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateVirusScanStatus", ctx, id, status)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateVirusScanStatus indicates an expected call of UpdateVirusScanStatus.
+func (mr *MockFileRepositoryMockRecorder) UpdateVirusScanStatus(ctx, id, status interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateVirusScanStatus", reflect.TypeOf((*MockFileRepository)(nil).UpdateVirusScanStatus), ctx, id, status)
+}
+
 // UpdateStatusAndClearUploadID mocks base method.
 func (m *MockFileRepository) UpdateStatusAndClearUploadID(ctx context.Context, id string, status model.FileStatus) error {
 	m.ctrl.T.Helper()

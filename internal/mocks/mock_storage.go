@@ -95,6 +95,21 @@ func (mr *MockStorageMockRecorder) DeleteObject(ctx, bucket, objectKey interface
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteObject", reflect.TypeOf((*MockStorage)(nil).DeleteObject), ctx, bucket, objectKey)
 }
 
+// GetObject mocks base method.
+func (m *MockStorage) GetObject(ctx context.Context, opts storage.GetObjectOptions) (*storage.GetObjectResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetObject", ctx, opts)
+	ret0, _ := ret[0].(*storage.GetObjectResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetObject indicates an expected call of GetObject.
+func (mr *MockStorageMockRecorder) GetObject(ctx, opts interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetObject", reflect.TypeOf((*MockStorage)(nil).GetObject), ctx, opts)
+}
+
 // GeneratePresignedDownloadURL mocks base method.
 func (m *MockStorage) GeneratePresignedDownloadURL(ctx context.Context, opts storage.GeneratePresignedDownloadURLOptions) (*storage.GeneratePresignedDownloadURLResult, error) {
 	m.ctrl.T.Helper()

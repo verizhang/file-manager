@@ -9,6 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	model "github.com/verizhang/file-manager/internal/model"
 	service "github.com/verizhang/file-manager/internal/service"
 )
 
@@ -168,4 +169,18 @@ func (m *MockFileService) GetFile(ctx context.Context, req *service.GetFileReque
 func (mr *MockFileServiceMockRecorder) GetFile(ctx, req interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFile", reflect.TypeOf((*MockFileService)(nil).GetFile), ctx, req)
+}
+
+// ScanFile mocks base method.
+func (m *MockFileService) ScanFile(ctx context.Context, file model.File) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ScanFile", ctx, file)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ScanFile indicates an expected call of ScanFile.
+func (mr *MockFileServiceMockRecorder) ScanFile(ctx, file interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ScanFile", reflect.TypeOf((*MockFileService)(nil).ScanFile), ctx, file)
 }

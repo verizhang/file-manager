@@ -7,6 +7,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.32.17
 	github.com/aws/aws-sdk-go-v2/credentials v1.19.16
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.101.0
+	github.com/dutchcoders/go-clamd v0.0.0-20170520113014-b970184f4d9e
 	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.29.0

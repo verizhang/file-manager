@@ -15,6 +15,7 @@ import (
 	"github.com/verizhang/file-manager/internal/model"
 	"github.com/verizhang/file-manager/internal/repository"
 	"github.com/verizhang/file-manager/internal/storage"
+	virusscanner "github.com/verizhang/file-manager/internal/virus-scanner"
 )
 
 const (
@@ -27,6 +28,7 @@ type fileService struct {
 	storage        storage.Storage
 	fileRepository repository.FileRepository
 	messaging      messaging.Messaging
+	virusScanner   virusscanner.Scanner
 }
 
 func NewFileService(
@@ -34,14 +36,27 @@ func NewFileService(
 	logger *zap.Logger,
 	storage storage.Storage,
 	fileRepository repository.FileRepository,
-	messaging messaging.Messaging,
+	deps ...interface{},
 ) FileService {
+	var messagingClient messaging.Messaging
+	var virusScanner virusscanner.Scanner
+
+	for _, dep := range deps {
+		switch d := dep.(type) {
+		case messaging.Messaging:
+			messagingClient = d
+		case virusscanner.Scanner:
+			virusScanner = d
+		}
+	}
+
 	return &fileService{
 		cfg:            cfg,
 		logger:         logger,
 		storage:        storage,
 		fileRepository: fileRepository,
-		messaging:      messaging,
+		messaging:      messagingClient,
+		virusScanner:   virusScanner,
 	}
 }
 
@@ -150,9 +165,11 @@ func (s *fileService) CompleteUpload(
 		return nil, fmt.Errorf("%w: %v", errs.ErrInternal, err)
 	}
 
-	err = s.messaging.Publish(ctx, COMPLETE_UPLOAD_TOPIC, message)
-	if err != nil {
-		s.logger.Error("failed to publish complete upload file", zap.Error(err))
+	if s.messaging != nil {
+		err = s.messaging.Publish(ctx, COMPLETE_UPLOAD_TOPIC, message)
+		if err != nil {
+			s.logger.Error("failed to publish complete upload file", zap.Error(err))
+		}
 	}
 
 	return &CompleteUploadResponse{
@@ -354,9 +371,11 @@ func (s *fileService) CompleteMultipartUpload(
 		return nil, fmt.Errorf("%w: %v", errs.ErrInternal, err)
 	}
 
-	err = s.messaging.Publish(ctx, COMPLETE_UPLOAD_TOPIC, message)
-	if err != nil {
-		s.logger.Error("failed to publish complete upload file", zap.Error(err))
+	if s.messaging != nil {
+		err = s.messaging.Publish(ctx, COMPLETE_UPLOAD_TOPIC, message)
+		if err != nil {
+			s.logger.Error("failed to publish complete upload file", zap.Error(err))
+		}
 	}
 
 	return &CompleteMultipartUploadResponse{
@@ -478,6 +497,60 @@ func (s *fileService) DeleteFile(
 	}
 
 	return &DeleteFileResponse{}, nil
+}
+
+func (s *fileService) ScanFile(
+	ctx context.Context,
+	file model.File,
+) error {
+	if err := s.fileRepository.UpdateVirusScanStatus(
+		ctx,
+		file.ID,
+		model.VirusScanStatusScaning,
+	); err != nil {
+		return err
+	}
+
+	object, err := s.storage.GetObject(ctx, storage.GetObjectOptions{
+		Bucket:    file.Bucket,
+		ObjectKey: file.ObjectKey,
+	})
+	if err != nil {
+		_ = s.fileRepository.UpdateVirusScanStatus(ctx, file.ID, model.VirusScanStatusFailed)
+		return err
+	}
+	defer object.Body.Close()
+
+	result, err := s.virusScanner.Scan(ctx, virusscanner.ScanOptions{
+		FileName: file.FileName,
+		Reader:   object.Body,
+	})
+	if err != nil {
+		_ = s.fileRepository.UpdateVirusScanStatus(ctx, file.ID, model.VirusScanStatusFailed)
+		return err
+	}
+
+	status := model.VirusScanStatusClean
+	if result.Status == virusscanner.StatusInfected {
+		status = model.VirusScanStatusInfected
+	}
+
+	if err := s.fileRepository.UpdateVirusScanStatus(
+		ctx,
+		file.ID,
+		status,
+	); err != nil {
+		return err
+	}
+
+	s.logger.Info(
+		"file virus scan completed",
+		zap.String("file_id", file.ID),
+		zap.String("status", string(status)),
+		zap.String("threat", result.Threat),
+	)
+
+	return nil
 }
 
 func GenerateObjectKey(

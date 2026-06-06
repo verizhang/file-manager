@@ -3,11 +3,12 @@ package rabbitmq
 import (
 	"context"
 	"fmt"
-	"net/url"
 
 	amqp "github.com/rabbitmq/amqp091-go"
+	"go.uber.org/zap"
 
 	"github.com/verizhang/file-manager/internal/config"
+	"github.com/verizhang/file-manager/internal/logger"
 	"github.com/verizhang/file-manager/internal/messaging"
 )
 
@@ -17,16 +18,24 @@ type Client struct {
 }
 
 func NewMessaging(cfg config.RabbitMQConfig) (*Client, error) {
-	url := fmt.Sprintf(
-		"amqp://%s:%s@%s:%d/%s",
-		cfg.User,
-		cfg.Password,
+	amqpURL := fmt.Sprintf(
+		"amqp://%s:%d/",
 		cfg.Host,
 		cfg.Port,
-		url.PathEscape(cfg.VHost),
 	)
 
-	conn, err := amqp.Dial(url)
+	conn, err := amqp.DialConfig(
+		amqpURL,
+		amqp.Config{
+			SASL: []amqp.Authentication{
+				&amqp.PlainAuth{
+					Username: cfg.User,
+					Password: cfg.Password,
+				},
+			},
+			Vhost: cfg.VHost,
+		},
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +126,12 @@ func (c *Client) Subscribe(
 				}
 
 				if err := handler(ctx, msg.Body); err != nil {
-					_ = msg.Nack(false, true)
+					logger.Log.Error(
+						"failed to process message",
+						zap.String("topic", topic),
+						zap.Error(err),
+					)
+					_ = msg.Ack(false)
 					continue
 				}
 

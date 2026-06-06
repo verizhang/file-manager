@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"io"
 	"time"
 )
 
@@ -33,6 +34,15 @@ type DeleteObjectOptions struct {
 
 type DeleteObjectResult struct {
 	// No specific fields needed for now
+}
+
+type GetObjectOptions struct {
+	Bucket    string
+	ObjectKey string
+}
+
+type GetObjectResult struct {
+	Body io.ReadCloser
 }
 
 // Multipart upload options and results
@@ -107,6 +117,11 @@ type Storage interface {
 		bucket string,
 		objectKey string,
 	) (*DeleteObjectResult, error)
+
+	GetObject(
+		ctx context.Context,
+		opts GetObjectOptions,
+	) (*GetObjectResult, error)
 
 	// Multipart Upload methods
 	CreateMultipartUpload(

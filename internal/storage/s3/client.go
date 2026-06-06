@@ -42,6 +42,7 @@ func NewClient(
 			),
 		),
 		config.WithEndpointResolverWithOptions(customResolver),
+		config.WithResponseChecksumValidation(aws.ResponseChecksumValidationWhenRequired),
 	)
 	if err != nil {
 		return nil, err

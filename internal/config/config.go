@@ -61,9 +61,12 @@ type FileConfig struct {
 }
 
 type ClamAVConfig struct {
-	Enabled bool   `envconfig:"CLAMAV_ENABLED" default:"false"`
-	Host    string `envconfig:"CLAMAV_HOST" default:"localhost"`
-	Port    int    `envconfig:"CLAMAV_PORT" default:"3310"`
+	Enabled   bool          `envconfig:"CLAMAV_ENABLED" default:"false"`
+	Host      string        `envconfig:"CLAMAV_HOST" default:"localhost"`
+	Port      int           `envconfig:"CLAMAV_PORT" default:"3310"`
+	Network   string        `envconfig:"CLAMAV_NETWORK" default:"tcp"`
+	ChunkSize int           `envconfig:"CLAMAV_CHUNK_SIZE" default:"1048576"`
+	Timeout   time.Duration `envconfig:"CLAMAV_TIMEOUT" default:"5m"`
 }
 
 type RateLimitConfig struct {

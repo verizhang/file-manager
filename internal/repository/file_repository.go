@@ -11,6 +11,7 @@ type FileRepository interface {
 		ctx context.Context,
 		file *model.File,
 	) error
+
 	GetByID(
 		ctx context.Context,
 		id string,
@@ -21,23 +22,33 @@ type FileRepository interface {
 		id string,
 		status model.FileStatus,
 	) error
+
 	GetByObjectKey(
 		ctx context.Context,
 		objectKey string,
 	) (*model.File, error)
+
 	UpdateStatusAndETag(
 		ctx context.Context,
 		id string,
 		status model.FileStatus,
 		etag string,
 	) error
+
 	UpdateStatusAndClearUploadID(
 		ctx context.Context,
 		id string,
 		status model.FileStatus,
 	) error
+
 	Delete(
 		ctx context.Context,
 		id string,
+	) error
+
+	UpdateVirusScanStatus(
+		ctx context.Context,
+		id string,
+		status model.VirusScanStatus,
 	) error
 }

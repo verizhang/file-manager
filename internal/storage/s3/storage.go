@@ -121,6 +121,26 @@ func (s *Storage) DeleteObject(
 	return &storage.DeleteObjectResult{}, nil
 }
 
+func (s *Storage) GetObject(
+	ctx context.Context,
+	opts storage.GetObjectOptions,
+) (*storage.GetObjectResult, error) {
+	output, err := s.client.GetObject(
+		ctx,
+		&awss3.GetObjectInput{
+			Bucket: aws.String(opts.Bucket),
+			Key:    aws.String(opts.ObjectKey),
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &storage.GetObjectResult{
+		Body: output.Body,
+	}, nil
+}
+
 func (s *Storage) CreateMultipartUpload(
 	ctx context.Context,
 	opts storage.CreateMultipartUploadOptions,
