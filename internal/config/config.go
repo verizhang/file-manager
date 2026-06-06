@@ -16,6 +16,7 @@ type Config struct {
 	File      FileConfig
 	ClamAV    ClamAVConfig
 	RateLimit RateLimitConfig
+	RabbitMQ  RabbitMQConfig
 }
 
 type AppConfig struct {
@@ -70,6 +71,14 @@ type RateLimitConfig struct {
 	Duration time.Duration `envconfig:"RATE_LIMIT_DURATION" default:"1m"`
 }
 
+type RabbitMQConfig struct {
+	Host     string `envconfig:"RABBITMQ_HOST" required:"true"`
+	Port     int    `envconfig:"RABBITMQ_PORT" required:"true"`
+	User     string `envconfig:"RABBITMQ_USER" required:"true"`
+	Password string `envconfig:"RABBITMQ_PASSWORD" required:"true"`
+	VHost    string `envconfig:"RABBITMQ_VHOST" required:"true"`
+}
+
 func Load() *Config {
 	cfg := &Config{}
 
@@ -111,6 +120,11 @@ func Load() *Config {
 	err = envconfig.Process("", &cfg.RateLimit)
 	if err != nil {
 		log.Fatalf("failed load rate limit config: %v", err)
+	}
+
+	err = envconfig.Process("", &cfg.RabbitMQ)
+	if err != nil {
+		log.Fatalf("failed load RabbitMQ config: %v", err)
 	}
 
 	return cfg

@@ -13,6 +13,7 @@ import (
 	"github.com/verizhang/file-manager/internal/database"
 	grpcHandler "github.com/verizhang/file-manager/internal/handler"
 	"github.com/verizhang/file-manager/internal/logger"
+	"github.com/verizhang/file-manager/internal/messaging/rabbitmq"
 	"github.com/verizhang/file-manager/internal/repository/mysql"
 	"github.com/verizhang/file-manager/internal/server"
 	"github.com/verizhang/file-manager/internal/service"
@@ -104,6 +105,17 @@ func main() {
 
 	//
 	// =====================================================
+	// Messaging
+	// =====================================================
+	//
+
+	messaging, err := rabbitmq.NewMessaging(cfg.RabbitMQ)
+	if err != nil {
+		logger.Log.Fatal("failed init rabbitmq client", zap.Error(err))
+	}
+
+	//
+	// =====================================================
 	// SERVICE
 	// =====================================================
 	//
@@ -113,6 +125,7 @@ func main() {
 		logger.Log,
 		storageClient,
 		fileRepository,
+		messaging,
 	)
 
 	//

@@ -38,7 +38,21 @@ services:
     volumes:
       - clamav_data:/var/lib/clamav
 
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: file-manager-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbitmq
+      RABBITMQ_DEFAULT_PASS: rabbitmq
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
 volumes:
   mysql_data:
   minio_data:
   clamav_data:
+  rabbitmq_data:

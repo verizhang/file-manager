@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"path/filepath"
 
@@ -10,9 +11,14 @@ import (
 
 	"github.com/verizhang/file-manager/internal/config"
 	"github.com/verizhang/file-manager/internal/errs"
+	"github.com/verizhang/file-manager/internal/messaging"
 	"github.com/verizhang/file-manager/internal/model"
 	"github.com/verizhang/file-manager/internal/repository"
 	"github.com/verizhang/file-manager/internal/storage"
+)
+
+const (
+	COMPLETE_UPLOAD_TOPIC = "complete_upload"
 )
 
 type fileService struct {
@@ -20,6 +26,7 @@ type fileService struct {
 	logger         *zap.Logger
 	storage        storage.Storage
 	fileRepository repository.FileRepository
+	messaging      messaging.Messaging
 }
 
 func NewFileService(
@@ -27,12 +34,14 @@ func NewFileService(
 	logger *zap.Logger,
 	storage storage.Storage,
 	fileRepository repository.FileRepository,
+	messaging messaging.Messaging,
 ) FileService {
 	return &fileService{
 		cfg:            cfg,
 		logger:         logger,
 		storage:        storage,
 		fileRepository: fileRepository,
+		messaging:      messaging,
 	}
 }
 
@@ -133,8 +142,18 @@ func (s *fileService) CompleteUpload(
 	if err != nil {
 		return nil, err
 	}
-
 	file.Status = model.FileStatusCompleted
+
+	// Publish complete upload file
+	message, err := json.Marshal(file)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", errs.ErrInternal, err)
+	}
+
+	err = s.messaging.Publish(ctx, COMPLETE_UPLOAD_TOPIC, message)
+	if err != nil {
+		s.logger.Error("failed to publish complete upload file", zap.Error(err))
+	}
 
 	return &CompleteUploadResponse{
 		File: file,
@@ -328,6 +347,17 @@ func (s *fileService) CompleteMultipartUpload(
 
 	file.Status = model.FileStatusCompleted
 	file.ETag = &etag
+
+	// Publish complete upload file
+	message, err := json.Marshal(file)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", errs.ErrInternal, err)
+	}
+
+	err = s.messaging.Publish(ctx, COMPLETE_UPLOAD_TOPIC, message)
+	if err != nil {
+		s.logger.Error("failed to publish complete upload file", zap.Error(err))
+	}
 
 	return &CompleteMultipartUploadResponse{
 		File: file,
