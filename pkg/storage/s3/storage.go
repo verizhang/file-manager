@@ -10,8 +10,8 @@ import (
 	awss3 "github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 
-	"github.com/verizhang/file-manager/internal/errs"
-	"github.com/verizhang/file-manager/internal/storage"
+	"github.com/verizhang/file-manager/pkg/errs"
+	"github.com/verizhang/file-manager/pkg/storage"
 )
 
 type Storage struct {

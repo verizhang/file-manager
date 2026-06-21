@@ -1,15 +1,23 @@
-package database
+package mysql
 
 import (
 	"fmt"
 
-	"github.com/verizhang/file-manager/internal/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
+type MySQLConfig struct {
+	Host     string `envconfig:"DB_HOST" required:"true"`
+	Port     int    `envconfig:"DB_PORT" default:"3306"`
+	User     string `envconfig:"DB_USER" required:"true"`
+	Password string `envconfig:"DB_PASSWORD"`
+	Name     string `envconfig:"DB_NAME" required:"true"`
+	TLS      string `envconfig:"DB_TLS" default:"skip-verify"`
+}
+
 func NewMySQLConnection(
-	cfg config.DBConfig,
+	cfg MySQLConfig,
 ) (*gorm.DB, error) {
 
 	dsn := fmt.Sprintf(

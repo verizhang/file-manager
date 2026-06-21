@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	filev1 "github.com/verizhang/file-manager/gen/go/file/v1"
-	"github.com/verizhang/file-manager/internal/errs"
+	"github.com/verizhang/file-manager/pkg/errs"
 )
 
 func validateCreateUploadUrlRequest(

@@ -10,14 +10,14 @@ import (
 
 	"github.com/joho/godotenv"
 	configs "github.com/verizhang/file-manager/internal/config"
-	"github.com/verizhang/file-manager/internal/database"
 	grpcHandler "github.com/verizhang/file-manager/internal/handler"
-	"github.com/verizhang/file-manager/internal/logger"
-	"github.com/verizhang/file-manager/internal/messaging/rabbitmq"
-	"github.com/verizhang/file-manager/internal/repository/mysql"
+	mysqlRepository "github.com/verizhang/file-manager/internal/repository/mysql"
 	"github.com/verizhang/file-manager/internal/server"
 	"github.com/verizhang/file-manager/internal/service"
-	"github.com/verizhang/file-manager/internal/storage/s3"
+	"github.com/verizhang/file-manager/pkg/database/mysql"
+	"github.com/verizhang/file-manager/pkg/logger"
+	"github.com/verizhang/file-manager/pkg/messaging/rabbitmq"
+	"github.com/verizhang/file-manager/pkg/storage/s3"
 	"go.uber.org/zap"
 )
 
@@ -59,7 +59,7 @@ func main() {
 	// =====================================================
 	//
 
-	db, err := database.NewMySQLConnection(
+	db, err := mysql.NewMySQLConnection(
 		cfg.DB,
 	)
 
@@ -79,13 +79,7 @@ func main() {
 	//
 	s3Client, err := s3.NewClient(
 		ctx,
-		s3.Config{
-			Endpoint:  cfg.S3.Endpoint,
-			Region:    cfg.S3.Region,
-			AccessKey: cfg.S3.AccessKey,
-			SecretKey: cfg.S3.SecretKey,
-			UseSSL:    cfg.S3.UseSSL,
-		},
+		cfg.S3,
 	)
 	if err != nil {
 		logger.Log.Fatal("failed init s3 client", zap.Error(err))
@@ -99,7 +93,7 @@ func main() {
 	// =====================================================
 	//
 
-	fileRepository := mysql.NewFileRepository(
+	fileRepository := mysqlRepository.NewFileRepository(
 		db,
 	)
 

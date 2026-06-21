@@ -9,7 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	storage "github.com/verizhang/file-manager/internal/storage"
+	storage "github.com/verizhang/file-manager/pkg/storage"
 )
 
 // MockStorage is a mock of Storage interface.

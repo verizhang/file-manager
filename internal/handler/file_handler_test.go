@@ -13,10 +13,10 @@ import (
 
 	filev1 "github.com/verizhang/file-manager/gen/go/file/v1"
 	handler "github.com/verizhang/file-manager/internal/handler" // Alias to avoid conflict with package name
-	"github.com/verizhang/file-manager/internal/errs"
 	"github.com/verizhang/file-manager/internal/mocks"
 	"github.com/verizhang/file-manager/internal/model"
 	"github.com/verizhang/file-manager/internal/service"
+	"github.com/verizhang/file-manager/pkg/errs"
 )
 
 func TestFileHandler_CreateUploadUrl(t *testing.T) {

@@ -10,11 +10,12 @@ import (
 )
 
 type Config struct {
-	Endpoint  string
-	Region    string
-	AccessKey string
-	SecretKey string
-	UseSSL    bool
+	Endpoint  string `envconfig:"S3_ENDPOINT" required:"true"`
+	AccessKey string `envconfig:"S3_ACCESS_KEY" required:"true"`
+	SecretKey string `envconfig:"S3_SECRET_KEY" required:"true"`
+	Bucket    string `envconfig:"S3_BUCKET" required:"true"`
+	UseSSL    bool   `envconfig:"S3_USE_SSL" default:"false"`
+	Region    string `envconfig:"S3_REGION" default:"us-east-1"`
 }
 
 func NewClient(

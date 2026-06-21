@@ -3,7 +3,7 @@ package service
 import (
 	"fmt"
 
-	"github.com/verizhang/file-manager/internal/errs"
+	"github.com/verizhang/file-manager/pkg/errs"
 )
 
 func (s *fileService) validateContentType(

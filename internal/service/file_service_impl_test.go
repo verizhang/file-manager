@@ -10,11 +10,12 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/verizhang/file-manager/internal/config"
-	"github.com/verizhang/file-manager/internal/errs"
 	"github.com/verizhang/file-manager/internal/mocks"
 	"github.com/verizhang/file-manager/internal/model"
 	"github.com/verizhang/file-manager/internal/service"
-	"github.com/verizhang/file-manager/internal/storage"
+	"github.com/verizhang/file-manager/pkg/errs"
+	"github.com/verizhang/file-manager/pkg/storage"
+	"github.com/verizhang/file-manager/pkg/storage/s3"
 )
 
 func TestFileService_CreateUploadUrl(t *testing.T) {
@@ -26,15 +27,15 @@ func TestFileService_CreateUploadUrl(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
 
 	cfg := &config.Config{
-		S3: config.S3Config{
+		S3: s3.Config{
 			Bucket: "test-bucket",
-			PresignedConfig: config.PresignedConfig{
-				UploadExpireMinutes: 5,
-			},
 		},
 		File: config.FileConfig{
 			AllowedTypes: []string{"image/jpeg", "image/png"},
 			MaxFileSize:  10 * 1024 * 1024, // 10MB
+		},
+		PresignedConfig: config.PresignedConfig{
+			UploadExpireMinutes: 5,
 		},
 	}
 
@@ -157,7 +158,7 @@ func TestFileService_CompleteUpload(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
 
 	cfg := &config.Config{
-		S3: config.S3Config{
+		S3: s3.Config{
 			Bucket: "test-bucket",
 		},
 	}
@@ -277,7 +278,7 @@ func TestFileService_CreateMultipartUpload(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
 
 	cfg := &config.Config{
-		S3: config.S3Config{
+		S3: s3.Config{
 			Bucket: "test-bucket",
 		},
 		File: config.FileConfig{
@@ -447,11 +448,11 @@ func TestFileService_CreateMultipartUploadUrl(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
 
 	cfg := &config.Config{
-		S3: config.S3Config{
+		S3: s3.Config{
 			Bucket: "test-bucket",
-			PresignedConfig: config.PresignedConfig{
-				UploadExpireMinutes: 5,
-			},
+		},
+		PresignedConfig: config.PresignedConfig{
+			UploadExpireMinutes: 5,
 		},
 	}
 
@@ -663,7 +664,7 @@ func TestFileService_CompleteMultipartUpload(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
 
 	cfg := &config.Config{
-		S3: config.S3Config{
+		S3: s3.Config{
 			Bucket: "test-bucket",
 		},
 	}
@@ -844,7 +845,7 @@ func TestFileService_AbortMultipartUpload(t *testing.T) {
 	logger, _ := zap.NewDevelopment()
 
 	cfg := &config.Config{
-		S3: config.S3Config{
+		S3: s3.Config{
 			Bucket: "test-bucket",
 		},
 	}

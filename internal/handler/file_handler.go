@@ -4,10 +4,10 @@ import (
 	"context"
 
 	filev1 "github.com/verizhang/file-manager/gen/go/file/v1"
-	"github.com/verizhang/file-manager/internal/errs"
 	"github.com/verizhang/file-manager/internal/handler/mapper"
 	"github.com/verizhang/file-manager/internal/interceptor"
 	"github.com/verizhang/file-manager/internal/service"
+	"github.com/verizhang/file-manager/pkg/errs"
 
 	"go.uber.org/zap"
 )
@@ -275,8 +275,6 @@ func (h *FileHandler) CreateDownloadUrl(
 		DownloadUrl: response.DownloadURL,
 	}, nil
 }
-
-
 
 // =====================================================
 // DELETE

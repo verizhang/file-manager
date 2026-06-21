@@ -10,13 +10,13 @@ import (
 	"github.com/joho/godotenv"
 	configs "github.com/verizhang/file-manager/internal/config"
 	"github.com/verizhang/file-manager/internal/consumer"
-	"github.com/verizhang/file-manager/internal/database"
-	"github.com/verizhang/file-manager/internal/logger"
-	"github.com/verizhang/file-manager/internal/messaging/rabbitmq"
 	"github.com/verizhang/file-manager/internal/repository/mysql"
 	"github.com/verizhang/file-manager/internal/service"
-	"github.com/verizhang/file-manager/internal/storage/s3"
-	"github.com/verizhang/file-manager/internal/virus-scanner/clamav"
+	database "github.com/verizhang/file-manager/pkg/database/mysql"
+	"github.com/verizhang/file-manager/pkg/logger"
+	"github.com/verizhang/file-manager/pkg/messaging/rabbitmq"
+	"github.com/verizhang/file-manager/pkg/storage/s3"
+	"github.com/verizhang/file-manager/pkg/virusscanner/clamav"
 	"go.uber.org/zap"
 )
 

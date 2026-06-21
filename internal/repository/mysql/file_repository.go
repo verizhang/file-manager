@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/verizhang/file-manager/internal/errs"
 	"github.com/verizhang/file-manager/internal/model"
 	"github.com/verizhang/file-manager/internal/repository"
 	"github.com/verizhang/file-manager/internal/repository/entity"
 	"github.com/verizhang/file-manager/internal/repository/mapper"
+	"github.com/verizhang/file-manager/pkg/errs"
 
 	"gorm.io/gorm"
 )

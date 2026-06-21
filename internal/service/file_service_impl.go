@@ -10,12 +10,12 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/verizhang/file-manager/internal/config"
-	"github.com/verizhang/file-manager/internal/errs"
-	"github.com/verizhang/file-manager/internal/messaging"
 	"github.com/verizhang/file-manager/internal/model"
 	"github.com/verizhang/file-manager/internal/repository"
-	"github.com/verizhang/file-manager/internal/storage"
-	virusscanner "github.com/verizhang/file-manager/internal/virus-scanner"
+	"github.com/verizhang/file-manager/pkg/errs"
+	"github.com/verizhang/file-manager/pkg/messaging"
+	"github.com/verizhang/file-manager/pkg/storage"
+	virusscanner "github.com/verizhang/file-manager/pkg/virusscanner"
 )
 
 const (
@@ -89,7 +89,7 @@ func (s *fileService) CreateUploadUrl(
 			Bucket:      s.cfg.S3.Bucket,
 			ObjectKey:   objectKey,
 			ContentType: req.ContentType,
-			Expiry:      s.cfg.S3.PresignedConfig.UploadExpireMinutes,
+			Expiry:      s.cfg.PresignedConfig.UploadExpireMinutes,
 		},
 	)
 	if err != nil {
@@ -286,7 +286,7 @@ func (s *fileService) CreateMultipartUploadUrl(
 			UploadID:    req.UploadID,
 			PartNumber:  req.PartNumber,
 			ContentType: file.ContentType,
-			Expiry:      s.cfg.S3.PresignedConfig.UploadExpireMinutes,
+			Expiry:      s.cfg.PresignedConfig.UploadExpireMinutes,
 		},
 	)
 	if err != nil {
@@ -455,7 +455,7 @@ func (s *fileService) CreateDownloadURL(
 		storage.GeneratePresignedDownloadURLOptions{
 			Bucket:    file.Bucket,
 			ObjectKey: file.ObjectKey,
-			Expiry:    s.cfg.S3.PresignedConfig.DownloadExpireMinutes,
+			Expiry:    s.cfg.PresignedConfig.DownloadExpireMinutes,
 		},
 	)
 	if err != nil {

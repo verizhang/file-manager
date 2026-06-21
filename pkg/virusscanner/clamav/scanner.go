@@ -3,19 +3,28 @@ package clamav
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/dutchcoders/go-clamd"
 
-	"github.com/verizhang/file-manager/internal/config"
-	"github.com/verizhang/file-manager/internal/errs"
-	virusscanner "github.com/verizhang/file-manager/internal/virus-scanner"
+	"github.com/verizhang/file-manager/pkg/errs"
+	virusscanner "github.com/verizhang/file-manager/pkg/virusscanner"
 )
+
+type Config struct {
+	Enabled   bool          `envconfig:"CLAMAV_ENABLED" default:"false"`
+	Host      string        `envconfig:"CLAMAV_HOST" default:"localhost"`
+	Port      int           `envconfig:"CLAMAV_PORT" default:"3310"`
+	Network   string        `envconfig:"CLAMAV_NETWORK" default:"tcp"`
+	ChunkSize int           `envconfig:"CLAMAV_CHUNK_SIZE" default:"1048576"`
+	Timeout   time.Duration `envconfig:"CLAMAV_TIMEOUT" default:"5m"`
+}
 
 type Scanner struct {
 	client *clamd.Clamd
 }
 
-func NewScanner(cfg config.ClamAVConfig) *Scanner {
+func NewScanner(cfg Config) *Scanner {
 	address := fmt.Sprintf(
 		"%s://%s:%d",
 		cfg.Network,

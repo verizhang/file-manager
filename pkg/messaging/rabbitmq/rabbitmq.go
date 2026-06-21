@@ -7,17 +7,24 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 	"go.uber.org/zap"
 
-	"github.com/verizhang/file-manager/internal/config"
-	"github.com/verizhang/file-manager/internal/logger"
-	"github.com/verizhang/file-manager/internal/messaging"
+	"github.com/verizhang/file-manager/pkg/logger"
+	"github.com/verizhang/file-manager/pkg/messaging"
 )
+
+type Config struct {
+	Host     string `envconfig:"RABBITMQ_HOST" required:"true"`
+	Port     int    `envconfig:"RABBITMQ_PORT" required:"true"`
+	User     string `envconfig:"RABBITMQ_USER" required:"true"`
+	Password string `envconfig:"RABBITMQ_PASSWORD" required:"true"`
+	VHost    string `envconfig:"RABBITMQ_VHOST" required:"true"`
+}
 
 type Client struct {
 	conn *amqp.Connection
 	ch   *amqp.Channel
 }
 
-func NewMessaging(cfg config.RabbitMQConfig) (*Client, error) {
+func NewMessaging(cfg Config) (*Client, error) {
 	amqpURL := fmt.Sprintf(
 		"amqp://%s:%d/",
 		cfg.Host,

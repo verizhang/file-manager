@@ -5,18 +5,22 @@ import (
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
+	database "github.com/verizhang/file-manager/pkg/database/mysql"
+	"github.com/verizhang/file-manager/pkg/messaging/rabbitmq"
+	"github.com/verizhang/file-manager/pkg/storage/s3"
+	"github.com/verizhang/file-manager/pkg/virusscanner/clamav"
 )
 
 type Config struct {
-	App       AppConfig
-	DB        DBConfig
-	S3        S3Config
-	Presigned PresignedConfig
-	Multipart MultipartConfig
-	File      FileConfig
-	ClamAV    ClamAVConfig
-	RateLimit RateLimitConfig
-	RabbitMQ  RabbitMQConfig
+	App             AppConfig
+	DB              database.MySQLConfig
+	S3              s3.Config
+	PresignedConfig PresignedConfig
+	Multipart       MultipartConfig
+	File            FileConfig
+	ClamAV          clamav.Config
+	RateLimit       RateLimitConfig
+	RabbitMQ        rabbitmq.Config
 }
 
 type AppConfig struct {
@@ -25,25 +29,6 @@ type AppConfig struct {
 	HTTPPort int    `envconfig:"APP_HTTP_PORT" default:"8080"`
 	GRPCPort int    `envconfig:"APP_GRPC_PORT" default:"9090"`
 	Debug    bool   `envconfig:"APP_DEBUG" default:"true"`
-}
-
-type DBConfig struct {
-	Host     string `envconfig:"DB_HOST" required:"true"`
-	Port     int    `envconfig:"DB_PORT" default:"3306"`
-	User     string `envconfig:"DB_USER" required:"true"`
-	Password string `envconfig:"DB_PASSWORD"`
-	Name     string `envconfig:"DB_NAME" required:"true"`
-	TLS      string `envconfig:"DB_TLS" default:"skip-verify"`
-}
-
-type S3Config struct {
-	Endpoint        string `envconfig:"S3_ENDPOINT" required:"true"`
-	AccessKey       string `envconfig:"S3_ACCESS_KEY" required:"true"`
-	SecretKey       string `envconfig:"S3_SECRET_KEY" required:"true"`
-	Bucket          string `envconfig:"S3_BUCKET" required:"true"`
-	UseSSL          bool   `envconfig:"S3_USE_SSL" default:"false"`
-	Region          string `envconfig:"S3_REGION" default:"us-east-1"`
-	PresignedConfig PresignedConfig
 }
 
 type PresignedConfig struct {
@@ -60,26 +45,9 @@ type FileConfig struct {
 	AllowedTypes []string `envconfig:"ALLOWED_FILE_TYPES"`
 }
 
-type ClamAVConfig struct {
-	Enabled   bool          `envconfig:"CLAMAV_ENABLED" default:"false"`
-	Host      string        `envconfig:"CLAMAV_HOST" default:"localhost"`
-	Port      int           `envconfig:"CLAMAV_PORT" default:"3310"`
-	Network   string        `envconfig:"CLAMAV_NETWORK" default:"tcp"`
-	ChunkSize int           `envconfig:"CLAMAV_CHUNK_SIZE" default:"1048576"`
-	Timeout   time.Duration `envconfig:"CLAMAV_TIMEOUT" default:"5m"`
-}
-
 type RateLimitConfig struct {
 	Request  int           `envconfig:"RATE_LIMIT_REQUEST" default:"100"`
 	Duration time.Duration `envconfig:"RATE_LIMIT_DURATION" default:"1m"`
-}
-
-type RabbitMQConfig struct {
-	Host     string `envconfig:"RABBITMQ_HOST" required:"true"`
-	Port     int    `envconfig:"RABBITMQ_PORT" required:"true"`
-	User     string `envconfig:"RABBITMQ_USER" required:"true"`
-	Password string `envconfig:"RABBITMQ_PASSWORD" required:"true"`
-	VHost    string `envconfig:"RABBITMQ_VHOST" required:"true"`
 }
 
 func Load() *Config {
@@ -100,7 +68,7 @@ func Load() *Config {
 		log.Fatalf("failed load s3 config: %v", err)
 	}
 
-	err = envconfig.Process("", &cfg.Presigned)
+	err = envconfig.Process("", &cfg.PresignedConfig)
 	if err != nil {
 		log.Fatalf("failed load presigned config: %v", err)
 	}
