@@ -72,24 +72,28 @@ Consumes `complete_upload` messages from RabbitMQ and calls `ScanFile()` in the 
 ```text
 cmd/
   api/                         API process
-  virus-scanner-worker/        Background virus scan worker
+  virusscannerworker/        Background virus scan worker
 
 internal/
   config/                      Environment-based configuration
   consumer/                    RabbitMQ message handlers
-  database/                    MySQL connection setup
-  errs/                        Domain errors and gRPC mapping
   handler/                     gRPC handlers and request validation
   interceptor/                 gRPC auth and request logging interceptors
-  messaging/                   Messaging abstraction and RabbitMQ adapter
+  mocks/                       Interface mocking for unit testing
   model/                       Domain models and statuses
   repository/                  File metadata repository abstraction
   repository/mysql/            MySQL repository implementation
+  server/                      Server initialization such as gRPC and HTTP
   service/                     File business workflows
+
+pkg/
+  virusscanner/               Virus scanner abstraction
+  virusscanner/clamav/        ClamAV implementation
   storage/                     Object storage abstraction
   storage/s3/                  S3-compatible storage implementation
-  virus-scanner/               Virus scanner abstraction
-  virus-scanner/clamav/        ClamAV implementation
+  messaging/                   Messaging abstraction and RabbitMQ adapter
+  database/                    MySQL connection setup
+  errs/                        Domain errors and gRPC mapping
 
 proto/
   file/v1/                     API contract
